@@ -13,12 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.service.PointsUserService;
+import com.fiscolpa.demo.util.MenusUtil;
 
 @Controller
 public class LoginController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
-	
+
 	@Autowired
 	private PointsUserService pointsUserService;
 
@@ -34,14 +35,15 @@ public class LoginController {
     	pointsUser.setUserPassword(password);
     	List<PointsUser> userList = pointsUserService.select(pointsUser);
     	if (userList.size() == 1) {
-    		logger.info("Login success!");
-    		session.setAttribute("user", new PointsUser());
+    		PointsUser currentUser = userList.get(0);
+    		logger.info("Login success! User Type:" + currentUser.getUserType());
+    		session.setAttribute("user", currentUser);
+    		session.setAttribute("menus", MenusUtil.getMenus(currentUser.getUserType()));
     		return "index";
     	} else {
     		logger.error("Login fail!");
     		return "redirect:/toLogin";
     	}
-    	
     }
     
 }

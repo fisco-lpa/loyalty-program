@@ -18,5 +18,19 @@
 </head>
 <body>
 
+<div class="sui-navbar">
+	<div class="navbar-inner"><a href="#" class="sui-brand">Fisco-lpa</a>
+		<ul class="sui-nav">
+		  	<li class="active"><a href="<%=path%>/">首页</a></li>
+		  	<c:forEach items="${menus}" var="menu">
+			<li><a href="<%=path%>/${menu.value}">${menu.name }</a></li>
+			</c:forEach>
+		</ul>
+		<ul class="sui-nav pull-right">
+	      	<li><a href="<%=path%>/toChangePwd">修改密码</a></li>
+	    </ul>
+	</div>
+</div>
+
 </body>
 </html>
