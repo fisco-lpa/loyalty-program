@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fiscolpa.demo.mapper.ConfigureDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.fiscolpa.demo.model.ConfigureDetail" >
+    <id column="category_id" property="categoryId" jdbcType="VARCHAR" />
+    <id column="detail_id" property="detailId" jdbcType="VARCHAR" />
+    <result column="detail_name" property="detailName" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    category_id, detail_id, detail_name, describe, create_time, create_user, update_time, 
+    update_user
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.fiscolpa.demo.model.ConfigureDetailKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from configure_detail
+    where category_id = #{categoryId,jdbcType=VARCHAR}
+      and detail_id = #{detailId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.fiscolpa.demo.model.ConfigureDetailKey" >
+    delete from configure_detail
+    where category_id = #{categoryId,jdbcType=VARCHAR}
+      and detail_id = #{detailId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fiscolpa.demo.model.ConfigureDetail" >
+    insert into configure_detail (category_id, detail_id, detail_name, 
+      describe, create_time, create_user, 
+      update_time, update_user)
+    values (#{categoryId,jdbcType=VARCHAR}, #{detailId,jdbcType=VARCHAR}, #{detailName,jdbcType=VARCHAR}, 
+      #{describe,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fiscolpa.demo.model.ConfigureDetail" >
+    insert into configure_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="detailId != null" >
+        detail_id,
+      </if>
+      <if test="detailName != null" >
+        detail_name,
+      </if>
+      <if test="describe != null" >
+        describe,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="detailId != null" >
+        #{detailId,jdbcType=VARCHAR},
+      </if>
+      <if test="detailName != null" >
+        #{detailName,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fiscolpa.demo.model.ConfigureDetail" >
+    update configure_detail
+    <set >
+      <if test="detailName != null" >
+        detail_name = #{detailName,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        describe = #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where category_id = #{categoryId,jdbcType=VARCHAR}
+      and detail_id = #{detailId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fiscolpa.demo.model.ConfigureDetail" >
+    update configure_detail
+    set detail_name = #{detailName,jdbcType=VARCHAR},
+      describe = #{describe,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where category_id = #{categoryId,jdbcType=VARCHAR}
+      and detail_id = #{detailId,jdbcType=VARCHAR}
+  </update>
+</mapper>

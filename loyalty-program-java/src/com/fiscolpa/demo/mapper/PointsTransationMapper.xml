@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fiscolpa.demo.mapper.PointsTransationMapper" >
+  <resultMap id="BaseResultMap" type="com.fiscolpa.demo.model.PointsTransation" >
+    <id column="trans_id" property="transId" jdbcType="VARCHAR" />
+    <result column="roll_out_account" property="rollOutAccount" jdbcType="VARCHAR" />
+    <result column="roll_in_account" property="rollInAccount" jdbcType="VARCHAR" />
+    <result column="trans_amount" property="transAmount" jdbcType="INTEGER" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="transfer_time" property="transferTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    trans_id, roll_out_account, roll_in_account, trans_amount, describe, transfer_time, 
+    create_time, create_user, update_time, update_user
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from points_transation
+    where trans_id = #{transId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from points_transation
+    where trans_id = #{transId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.fiscolpa.demo.model.PointsTransation" >
+    insert into points_transation (trans_id, roll_out_account, roll_in_account, 
+      trans_amount, describe, transfer_time, 
+      create_time, create_user, update_time, 
+      update_user)
+    values (#{transId,jdbcType=VARCHAR}, #{rollOutAccount,jdbcType=VARCHAR}, #{rollInAccount,jdbcType=VARCHAR}, 
+      #{transAmount,jdbcType=INTEGER}, #{describe,jdbcType=VARCHAR}, #{transferTime,jdbcType=TIMESTAMP}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.fiscolpa.demo.model.PointsTransation" >
+    insert into points_transation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="transId != null" >
+        trans_id,
+      </if>
+      <if test="rollOutAccount != null" >
+        roll_out_account,
+      </if>
+      <if test="rollInAccount != null" >
+        roll_in_account,
+      </if>
+      <if test="transAmount != null" >
+        trans_amount,
+      </if>
+      <if test="describe != null" >
+        describe,
+      </if>
+      <if test="transferTime != null" >
+        transfer_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="transId != null" >
+        #{transId,jdbcType=VARCHAR},
+      </if>
+      <if test="rollOutAccount != null" >
+        #{rollOutAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="rollInAccount != null" >
+        #{rollInAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="transAmount != null" >
+        #{transAmount,jdbcType=INTEGER},
+      </if>
+      <if test="describe != null" >
+        #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="transferTime != null" >
+        #{transferTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.fiscolpa.demo.model.PointsTransation" >
+    update points_transation
+    <set >
+      <if test="rollOutAccount != null" >
+        roll_out_account = #{rollOutAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="rollInAccount != null" >
+        roll_in_account = #{rollInAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="transAmount != null" >
+        trans_amount = #{transAmount,jdbcType=INTEGER},
+      </if>
+      <if test="describe != null" >
+        describe = #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="transferTime != null" >
+        transfer_time = #{transferTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where trans_id = #{transId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.fiscolpa.demo.model.PointsTransation" >
+    update points_transation
+    set roll_out_account = #{rollOutAccount,jdbcType=VARCHAR},
+      roll_in_account = #{rollInAccount,jdbcType=VARCHAR},
+      trans_amount = #{transAmount,jdbcType=INTEGER},
+      describe = #{describe,jdbcType=VARCHAR},
+      transfer_time = #{transferTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where trans_id = #{transId,jdbcType=VARCHAR}
+  </update>
+</mapper>
