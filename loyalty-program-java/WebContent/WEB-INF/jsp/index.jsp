@@ -29,6 +29,7 @@
 		<ul class="sui-nav pull-right">
 			<li><a href="<%=path%>/demo">样例</a></li>
 	      	<li><a href="<%=path%>/toChangePwd">修改密码</a></li>
+	      	<li><a href="<%=path%>/logout">退出</a></li>
 	    </ul>
 	</div>
 </div>
