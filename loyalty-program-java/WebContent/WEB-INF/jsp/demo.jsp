@@ -25,7 +25,7 @@
 <div class="wrapper">
     <div class="middle">
         <h1 style="padding: 50px 0 20px;">国家(地区)列表</h1>
-
+		<h3 style="padding: 0 0 10px 0"><a href="${pageContext.request.contextPath}/">返回首页</a></h3>
         <form action="${pageContext.request.contextPath}/list" method="post">
             <table class="gridtable" style="width:100%;">
                 <tr>

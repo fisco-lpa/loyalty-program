@@ -23,12 +23,12 @@ public class LoginController {
 	@Autowired
 	private PointsUserService pointsUserService;
 
-    @RequestMapping("toLogin")
+    @RequestMapping("/toLogin")
     public String toLogin() {
     	return "login";
     }
 
-    @RequestMapping("doLogin")
+    @RequestMapping("/doLogin")
     public String doLogin(@RequestParam String userName, @RequestParam String password, HttpSession session) {
     	PointsUser pointsUser = new PointsUser();
     	pointsUser.setUserName(userName);

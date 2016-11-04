@@ -23,7 +23,7 @@ public class CountryController {
 
     private String redirect_list = "redirect:list";
 
-    @RequestMapping(value = {"list", "demo", "demo.jsp", ""})
+    @RequestMapping(value = {"/list", "/demo", "/demo.jsp"})
     public ModelAndView getList(Country country, @RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "10") int rows) {
         ModelAndView result = new ModelAndView(page_list);
         List<Country> countryList = countryService.selectByCountry(country, page, rows);
@@ -34,7 +34,7 @@ public class CountryController {
         return result;
     }
 
-    @RequestMapping(value = "view", method = RequestMethod.GET)
+    @RequestMapping(value = "/view", method = RequestMethod.GET)
     public ModelAndView view(Country country) {
         ModelAndView result = new ModelAndView();
         if (country.getId() != null) {
@@ -44,7 +44,7 @@ public class CountryController {
         return result;
     }
 
-    @RequestMapping(value = "save", method = RequestMethod.POST)
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
     public ModelAndView save(Country country) {
         ModelAndView result = new ModelAndView(redirect_list);
         if (country.getId() != null) {
@@ -55,7 +55,7 @@ public class CountryController {
         return result;
     }
 
-    @RequestMapping("delete")
+    @RequestMapping("/delete")
     public String delete(Integer id) {
         countryService.delete(id);
         return redirect_list;

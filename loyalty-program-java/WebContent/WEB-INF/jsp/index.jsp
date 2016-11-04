@@ -11,7 +11,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
-<title>首页</title>
+<title>Demo - 首页</title>
 <link href="${pageContext.request.contextPath}/static/css/sui.min.css" rel="stylesheet">
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/sui.min.js"></script>
@@ -27,6 +27,7 @@
 			</c:forEach>
 		</ul>
 		<ul class="sui-nav pull-right">
+			<li><a href="<%=path%>/demo">样例</a></li>
 	      	<li><a href="<%=path%>/toChangePwd">修改密码</a></li>
 	    </ul>
 	</div>
