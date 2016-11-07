@@ -31,7 +31,7 @@ public class LoginController {
     @RequestMapping("/doLogin")
     public String doLogin(@RequestParam String userName, @RequestParam String password, HttpSession session) {
     	PointsUser pointsUser = new PointsUser();
-    	pointsUser.setUserName(userName);
+    	pointsUser.setPhoneNumber(userName);
     	pointsUser.setUserPassword(password);
     	List<PointsUser> userList = pointsUserService.select(pointsUser);
     	if (userList.size() == 1) {
@@ -41,8 +41,19 @@ public class LoginController {
     		session.setAttribute("menus", MenusUtil.getMenus(currentUser.getUserType()));
     		return "index";
     	} else {
-    		logger.error("Login fail!");
-    		return "redirect:/toLogin";
+    		pointsUser.setPhoneNumber(null);
+    		pointsUser.setUserName(userName);
+    		userList = pointsUserService.select(pointsUser);
+    		if (userList.size() == 1) {
+	    		PointsUser currentUser = userList.get(0);
+	    		logger.info("Login success! User Type:" + currentUser.getUserType());
+	    		session.setAttribute("user", currentUser);
+	    		session.setAttribute("menus", MenusUtil.getMenus(currentUser.getUserType()));
+	    		return "index";
+    		} else {
+	    		logger.error("Login fail!");
+	    		return "redirect:/toLogin";
+    		}
     	}
     }
     
