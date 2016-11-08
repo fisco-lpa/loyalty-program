@@ -305,3 +305,49 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 	}
 	return nil
 }
+
+// 更新table_count表
+func UpdateTableCount(stub shim.ChaincodeStubInterface, tableName string) (int64, error) {
+	var columns []shim.Column
+	col := shim.Column{Value: &shim.Column_String_{String_: tableName}}
+	columns = append(columns, col)
+	row, _ := stub.GetRow(Table_Count, columns) //row是否为空
+	totalNumber := row.Columns[1].GetInt64()
+	if len(row.Columns) == 0 {
+		//若没有数据，则插入总数表一条记录
+		totalNumber = 1
+		ok, err := stub.InsertRow(Table_Count, shim.Row{
+			Columns: []*shim.Column{
+				&shim.Column{Value: &shim.Column_String_{String_: tableName}}, //表名
+				&shim.Column{Value: &shim.Column_Int64{Int64: totalNumber}}},  //总数
+		})
+		if !ok {
+			return 0, err
+		}
+	} else {
+		//若有数据，则更新总数
+		totalNumber = totalNumber + 1
+		ok, err := stub.ReplaceRow(Table_Count, shim.Row{
+			Columns: []*shim.Column{
+				&shim.Column{Value: &shim.Column_String_{String_: tableName}}, //表名
+				&shim.Column{Value: &shim.Column_Int64{Int64: totalNumber}}},  //总数
+		})
+		if !ok {
+			return 0, err
+		}
+	}
+	return totalNumber, nil
+}
+
+// 更新行号表
+func UpdateRowNoTable(stub shim.ChaincodeStubInterface, rowNumTableName string, rowNum int64, key string) error {
+	ok, err := stub.InsertRow(rowNumTableName, shim.Row{
+		Columns: []*shim.Column{
+			&shim.Column{Value: &shim.Column_Int64{Int64: rowNum}},   //行号
+			&shim.Column{Value: &shim.Column_String_{String_: key}}}, //数据表主键
+	})
+	if !ok {
+		return err
+	}
+	return nil
+}

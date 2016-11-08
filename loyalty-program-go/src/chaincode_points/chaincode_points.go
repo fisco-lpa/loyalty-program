@@ -33,8 +33,8 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 	if err != nil {
 		return nil, errors.New("InsertPointsTransation method json Parse error.")
 	}
-	//插入积分交易记录
-	ok, err := stub.InsertRow(chaincode_common.Points_User, shim.Row{
+	//插入记录到积分交易表
+	ok, err := stub.InsertRow(chaincode_common.Points_Transation, shim.Row{
 		Columns: []*shim.Column{
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransId}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.RolloutAccount}},
@@ -48,46 +48,22 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateUser}}},
 	})
 	if !ok && err == nil {
-		return nil, errors.New("Points_Transaction insert failed.")
+		return nil, errors.New("Points_Transaction insertion failed.")
 	}
-	//判断总数表表是否有数据，若有数据则查出来+1
-	var columns []shim.Column
-	col := shim.Column{Value: &shim.Column_String_{String_: chaincode_common.Points_Transation}}
-	columns = append(columns, col)
-	row, _ := stub.GetRow(chaincode_common.Table_Count, columns) //row是否为空
-	totalNumber := row.Columns[1].GetInt64()
-	if len(row.Columns) == 0 {
-		//若没有数据，则插入总数表一条记录
-		totalNumber = 1
-		ok, err := stub.InsertRow(chaincode_common.Table_Count, shim.Row{
-			Columns: []*shim.Column{
-				&shim.Column{Value: &shim.Column_String_{String_: chaincode_common.Points_Transation}}, //表名
-				&shim.Column{Value: &shim.Column_Int64{Int64: totalNumber}}},                           //总数
-		})
-		if !ok && err == nil {
-			return nil, errors.New("Total_Count insert failed.")
-		}
-	} else {
-		//若有数据，则更新总数
-		totalNumber = totalNumber + 1
-		ok, err := stub.ReplaceRow(chaincode_common.Table_Count, shim.Row{
-			Columns: []*shim.Column{
-				&shim.Column{Value: &shim.Column_String_{String_: chaincode_common.Points_Transation}}, //表名
-				&shim.Column{Value: &shim.Column_Int64{Int64: totalNumber}}},                           //总数
-		})
-		if !ok && err == nil {
-			return nil, errors.New("update Table_Count failed.")
-		}
+
+	//更新table_count表
+	totalNo, err := chaincode_common.UpdateTableCount(stub, chaincode_common.Points_Transation)
+	if totalNo == 0 || err != nil {
+		return nil, errors.New("Total_Count insert failed")
 	}
-	//把获取的总数插入行号表中当主键
-	ok, err = stub.InsertRow(chaincode_common.Points_User_Rownum, shim.Row{
-		Columns: []*shim.Column{
-			&shim.Column{Value: &shim.Column_Int64{Int64: totalNumber}},              //行号
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransId}}}, //数据表主键
-	})
-	if !ok && err == nil {
+
+	//更新行号表
+	err = chaincode_common.UpdateRowNoTable(stub, chaincode_common.Points_Transation_Rownum, totalNo, transObject.TransId)
+
+	if err != nil {
 		return nil, errors.New("Points_Transaction_Rownum insert failed")
 	}
+
 	return nil, nil
 }
 
