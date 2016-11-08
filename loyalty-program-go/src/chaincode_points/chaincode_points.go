@@ -6,8 +6,17 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
-//注册
-func Test(stub shim.ChaincodeStubInterface) ([]byte, error) {
+func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+	return nil, nil
+}
+
+func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+	return nil, nil
+}
+
+func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 	return nil, nil
 }
