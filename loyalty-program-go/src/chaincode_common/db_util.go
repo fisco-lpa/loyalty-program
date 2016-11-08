@@ -26,6 +26,7 @@ const (
 
 //创建表
 func CreateTable(stub shim.ChaincodeStubInterface) error {
+
 	//创建用户表
 	err := stub.CreateTable(Points_User, []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "userId", Type: shim.ColumnDefinition_STRING, Key: true},
@@ -39,7 +40,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "updateUser", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		return errors.New("creat points_user is fail")
+		return errors.New("create table points_user is fail")
 	}
 	//创建用户行号表(新增)
 	err = stub.CreateTable(Points_User_Rownum, []*shim.ColumnDefinition{
@@ -48,7 +49,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 	})
 	if err != nil {
 		stub.DeleteTable(Points_User)
-		return errors.New("creat points_user_rownum is fail")
+		return errors.New("create table points_user_rownum is fail")
 	}
 	//创建账户表
 	err = stub.CreateTable(Account, []*shim.ColumnDefinition{
@@ -65,7 +66,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 	if err != nil {
 		stub.DeleteTable(Points_User)
 		stub.DeleteTable(Points_User_Rownum)
-		return errors.New("creat account is fail")
+		return errors.New("create table account is fail")
 	}
 	//创建账户行号表(新增)
 	err = stub.CreateTable(Account_Rownum, []*shim.ColumnDefinition{
@@ -76,7 +77,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Points_User)
 		stub.DeleteTable(Points_User_Rownum)
 		stub.DeleteTable(Account)
-		return errors.New("creat account_rownum is fail")
+		return errors.New("create table account_rownum is fail")
 	}
 	//创建账户类型表
 	err = stub.CreateTable(Account_Type, []*shim.ColumnDefinition{
@@ -92,7 +93,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Points_User_Rownum)
 		stub.DeleteTable(Account)
 		stub.DeleteTable(Account_Rownum)
-		return errors.New("creat account_type is fail")
+		return errors.New("create table account_type is fail")
 	}
 	//创建账户类型行号表(新增)
 	err = stub.CreateTable(Account_Type_Rownum, []*shim.ColumnDefinition{
@@ -105,7 +106,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Account)
 		stub.DeleteTable(Account_Rownum)
 		stub.DeleteTable(Account_Type)
-		return errors.New("creat account_type_rownum is fail")
+		return errors.New("create table account_type_rownum is fail")
 	}
 	//创建积分交易表
 	err = stub.CreateTable(Points_Transation, []*shim.ColumnDefinition{
@@ -127,7 +128,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Account_Rownum)
 		stub.DeleteTable(Account_Type)
 		stub.DeleteTable(Account_Type_Rownum)
-		return errors.New("creat points_transation is fail")
+		return errors.New("create table points_transation is fail")
 	}
 	//创建积分交易行号表(新增)
 	err = stub.CreateTable(Points_Transation_Rownum, []*shim.ColumnDefinition{
@@ -142,7 +143,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Account_Type)
 		stub.DeleteTable(Account_Type_Rownum)
 		stub.DeleteTable(Points_Transation)
-		return errors.New("creat points_transation_rownum is fail")
+		return errors.New("create table points_transation_rownum is fail")
 	}
 	//创建配置信息类别表
 	err = stub.CreateTable(Configure_Category, []*shim.ColumnDefinition{
@@ -162,7 +163,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Account_Type_Rownum)
 		stub.DeleteTable(Points_Transation)
 		stub.DeleteTable(Points_Transation_Rownum)
-		return errors.New("creat configure_category is fail")
+		return errors.New("create table configure_category is fail")
 	}
 	//创建配置信息类别行号表(新增)
 	err = stub.CreateTable(Configure_Category_Rownum, []*shim.ColumnDefinition{
@@ -179,7 +180,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Points_Transation)
 		stub.DeleteTable(Points_Transation_Rownum)
 		stub.DeleteTable(Configure_Category)
-		return errors.New("creat configure_category_rownum is fail")
+		return errors.New("create table configure_category_rownum is fail")
 	}
 	//创建配置信息明细表
 	err = stub.CreateTable(Configure_Detail, []*shim.ColumnDefinition{
@@ -203,7 +204,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Points_Transation_Rownum)
 		stub.DeleteTable(Configure_Category)
 		stub.DeleteTable(Configure_Category_Rownum)
-		return errors.New("creat configure_detail is fail")
+		return errors.New("create table configure_detail is fail")
 	}
 	//创建配置信息明细行号表(新增)
 	err = stub.CreateTable(Configure_Detail_Rownum, []*shim.ColumnDefinition{
@@ -222,7 +223,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Configure_Category)
 		stub.DeleteTable(Configure_Category_Rownum)
 		stub.DeleteTable(Configure_Detail)
-		return errors.New("creat configure_detail_rownum is fail")
+		return errors.New("create table configure_detail_rownum is fail")
 	}
 	//创建积分交易逐笔明细表
 	err = stub.CreateTable(Points_Transation_Detail, []*shim.ColumnDefinition{
@@ -257,7 +258,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Configure_Category_Rownum)
 		stub.DeleteTable(Configure_Detail)
 		stub.DeleteTable(Configure_Detail_Rownum)
-		return errors.New("creat points_transation_detail is fail")
+		return errors.New("create table points_transation_detail is fail")
 	}
 	//创建积分交易逐笔明细行号表(新增)
 	err = stub.CreateTable(Points_Transation_Detail_Rownum, []*shim.ColumnDefinition{
@@ -278,7 +279,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Configure_Detail)
 		stub.DeleteTable(Configure_Detail_Rownum)
 		stub.DeleteTable(Points_Transation_Detail)
-		return errors.New("creat points_transation_detail_rownum is fail")
+		return errors.New("create table points_transation_detail_rownum is fail")
 	}
 	//创建总数表
 	err = stub.CreateTable(Table_Count, []*shim.ColumnDefinition{
@@ -300,7 +301,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Configure_Detail_Rownum)
 		stub.DeleteTable(Points_Transation_Detail)
 		stub.DeleteTable(Points_Transation_Detail_Rownum)
-		return errors.New("creat table_count is fail")
+		return errors.New("create table table_count is fail")
 	}
 	return nil
 }
