@@ -31,8 +31,8 @@ public class MenusUtil {
 		
 		//用户菜单
 		List<ItemVo> userMenus = new ArrayList<ItemVo>();
-		userMenus.add(new ItemVo("进账积分查询", "jifen/toJinzhangjifenQuery"));
-		userMenus.add(new ItemVo("积分消费查询", "jifen/toJifenxiaofeiQuery"));
+		userMenus.add(new ItemVo("进账积分查询", "userIn"));
+		userMenus.add(new ItemVo("积分消费查询", "userOut"));
 		userMenus.add(new ItemVo("商品页", "shanghu/toShangpin"));
 		menus.put("3", userMenus);
 	}
