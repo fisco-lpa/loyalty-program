@@ -41,29 +41,33 @@
   <!-- 进账积分查询 -->
   <!-- rollInAccount参数是登录用户的账户，rollOutAccount是界面传进来的积分发放商户 -->
   <select id="selectByAccount" resultMap="BaseResultMap" parameterType="PointsTransationDetail" >
-    select a.trans_id,a.roll_out_account,a.create_time,a.expire_time,a.trans_amount trans_amount,bb.trans_amount_out cur_balance
-	from points_transation_detail a left join 
-		(select b.roll_in_account,b.source_detail_id,sum(b.trans_amount) trans_amount_out
-		from points_transation_detail b
-		where b.roll_out_account = #{rollInAccount,jdbcType=VARCHAR}
-		group by b.roll_in_account,b.source_detail_id) bb
-	on a.roll_out_account = bb.roll_in_account and a.detail_id = bb.source_detail_id
-	where a.roll_in_account = #{rollInAccount,jdbcType=VARCHAR}
-	   <if test="rollOutAccount != null and rollOutAccount != ''" >
-	      and a.roll_out_account = #{rollOutAccount,jdbcType=VARCHAR}
-	   </if>
-	   <if test="status != null and status != ''" ><!-- 未过期 -->
-	      and a.expire_time &gt;= now()
-	   </if>
-	   <if test="createUser != null and createUser != ''" ><!-- 过期 -->
-	      and a.expire_time &lt; now()
-	   </if>
-	   <if test="updateUser != null and updateUser != ''" ><!-- 发放起始日期 -->
-	      and a.create_time &gt;= date_format(#{updateUser,jdbcType=VARCHAR},'%Y-%m-%d')
-	   </if>
-	   <if test="merchant != null and merchant != ''" ><!-- 发放截止日期 -->
-	      and a.create_time &lt;= date_format(#{merchant,jdbcType=VARCHAR},'%Y-%m-%d')
-	   </if>
+	  select (@rowNO := @rowNo+1) AS trans_id,roll_out_account,create_time,expire_time,trans_amount,cur_balance from (
+	  
+	    select a.trans_id,a.roll_out_account,a.create_time,a.expire_time,a.trans_amount trans_amount,bb.trans_amount_out cur_balance
+		from points_transation_detail a left join 
+			(select b.roll_in_account,b.source_detail_id,sum(b.trans_amount) trans_amount_out
+			from points_transation_detail b
+			where b.roll_out_account = #{rollInAccount,jdbcType=VARCHAR}
+			group by b.roll_in_account,b.source_detail_id) bb
+		on a.roll_out_account = bb.roll_in_account and a.detail_id = bb.source_detail_id
+		where a.roll_in_account = #{rollInAccount,jdbcType=VARCHAR}
+		   <if test="rollOutAccount != null and rollOutAccount != ''" >
+		      and a.roll_out_account = #{rollOutAccount,jdbcType=VARCHAR}
+		   </if>
+		   <if test="status != null and status != ''" ><!-- 未过期 -->
+		      and a.expire_time &gt;= now()
+		   </if>
+		   <if test="createUser != null and createUser != ''" ><!-- 过期 -->
+		      and a.expire_time &lt; now()
+		   </if>
+		   <if test="updateUser != null and updateUser != ''" ><!-- 发放起始日期 -->
+		      and a.create_time &gt;= date_format(#{updateUser,jdbcType=VARCHAR},'%Y-%m-%d')
+		   </if>
+		   <if test="merchant != null and merchant != ''" ><!-- 发放截止日期 -->
+		      and a.create_time &lt;= date_format(#{merchant,jdbcType=VARCHAR},'%Y-%m-%d')
+		   </if>
+		   
+	  )x,(select @rowNO :=0) z
   </select>  
   
 </mapper>

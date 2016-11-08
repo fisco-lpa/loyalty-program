@@ -21,17 +21,21 @@
   <!-- 积分消费查询 -->
   <!-- rollOutAccount参数是登录用户的账户 -->
   <select id="selectByAccount" resultMap="BaseResultMap" parameterType="PointsTransation" >
-    select trans_id,roll_in_account,trans_amount,create_time,`describe`
-	from points_transation
-	where roll_out_account = #{rollOutAccount,jdbcType=VARCHAR}
-	   <if test="rollInAccount != null and rollInAccount != ''" ><!-- 界面传进来的商户 -->
-	      and roll_in_account = #{rollInAccount,jdbcType=VARCHAR}
-	   </if>
-	   <if test="updateUser != null and updateUser != ''" ><!-- 消费起始日期 -->
-	      and create_time &gt;= date_format(#{updateUser,jdbcType=VARCHAR},'%Y-%m-%d')
-	   </if>
-	   <if test="createUser != null and createUser != ''" ><!-- 消费截止日期 -->
-	      and create_time &lt;= date_format(#{createUser,jdbcType=VARCHAR},'%Y-%m-%d')
-	   </if>
+  	select (@rowNO := @rowNo+1) AS trans_id,roll_in_account,trans_amount,create_time,`describe` from (
+  
+	    select trans_id,roll_in_account,trans_amount,create_time,`describe`
+		from points_transation
+		where roll_out_account = #{rollOutAccount,jdbcType=VARCHAR}
+		   <if test="rollInAccount != null and rollInAccount != ''" ><!-- 界面传进来的商户 -->
+		      and roll_in_account = #{rollInAccount,jdbcType=VARCHAR}
+		   </if>
+		   <if test="updateUser != null and updateUser != ''" ><!-- 消费起始日期 -->
+		      and create_time &gt;= date_format(#{updateUser,jdbcType=VARCHAR},'%Y-%m-%d')
+		   </if>
+		   <if test="createUser != null and createUser != ''" ><!-- 消费截止日期 -->
+		      and create_time &lt;= date_format(#{createUser,jdbcType=VARCHAR},'%Y-%m-%d')
+		   </if>
+	   
+  	)x,(select @rowNO :=0) z
   </select> 
 </mapper>
