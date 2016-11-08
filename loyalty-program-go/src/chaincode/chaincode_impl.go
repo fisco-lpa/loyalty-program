@@ -3,11 +3,10 @@ package main
 import (
 	//"encoding/base64"
 
-	_ "chaincode_account"
+	"chaincode_account"
 	"chaincode_common"
 	_ "chaincode_query"
 	"chaincode_user"
-
 	//"encoding/json"
 	"errors"
 	"fmt"
@@ -26,8 +25,10 @@ func (t *RegisterChaincode) Init(stub shim.ChaincodeStubInterface) ([]byte, erro
 //调用方法
 func (t *RegisterChaincode) Invoke(stub shim.ChaincodeStubInterface) ([]byte, error) {
 	function, args := stub.GetFunctionAndParameters()
-	if function == "insertPointsUser" { //用户信息录入
+	if function == "InsertPointsUser" { //用户信息录入
 		return chaincode_user.InsertPointsUser(stub, args)
+	} else if function == "InsertAccount" { //账户表信息录入
+		return chaincode_account.InsertAccount(stub, args)
 	}
 
 	return nil, errors.New("调用invoke失败")
