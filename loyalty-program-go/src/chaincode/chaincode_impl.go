@@ -3,8 +3,11 @@ package main
 import (
 	//"encoding/base64"
 
+	_ "chaincode_account"
 	"chaincode_common"
+	_ "chaincode_query"
 	"chaincode_user"
+
 	//"encoding/json"
 	"errors"
 	"fmt"
