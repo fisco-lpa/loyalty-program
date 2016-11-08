@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fiscolpa.demo.mapper.UserPointsTransationDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.fiscolpa.demo.model.PointsTransationDetail" >
+    <id column="detail_id" property="detailId" jdbcType="VARCHAR" />
+    <result column="source_detail_id" property="sourceDetailId" jdbcType="VARCHAR" />
+    <result column="trans_id" property="transId" jdbcType="VARCHAR" />
+    <result column="expire_time" property="expireTime" jdbcType="TIMESTAMP" />
+    <result column="ext_ref" property="extRef" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="roll_out_account" property="rollOutAccount" jdbcType="VARCHAR" />
+    <result column="roll_in_account" property="rollInAccount" jdbcType="VARCHAR" />
+    <result column="trans_amount" property="transAmount" jdbcType="INTEGER" />
+    <result column="cur_balance" property="curBalance" jdbcType="INTEGER" />
+    <result column="credit_party" property="creditParty" jdbcType="VARCHAR" />
+    <result column="merchant" property="merchant" jdbcType="VARCHAR" />
+    <result column="transfer_time" property="transferTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    detail_id, source_detail_id, trans_id, expire_time, ext_ref, status, create_time, 
+    create_user, update_time, update_user, roll_out_account, roll_in_account, trans_amount, 
+    cur_balance, credit_party, merchant, transfer_time
+  </sql>
+ 
+  <!-- 总进账积分 -->
+  <select id="sumByRollInAccount" resultType="java.lang.Integer">    
+        select IFNULL(sum(trans_amount),0) trans_amount from points_transation_detail  
+        where roll_in_account = #{rollInAccount,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 总消费积分 -->
+  <select id="sumByRollOutAccount" resultType="java.lang.Integer">    
+        select IFNULL(sum(trans_amount),0) trans_amount from points_transation_detail  
+        where roll_out_account = #{rollOutAccount,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 进账积分查询 -->
+  <!-- rollInAccount参数是登录用户的账户，rollOutAccount是界面传进来的积分发放商户 -->
+  <select id="selectByAccount" resultMap="BaseResultMap" parameterType="PointsTransationDetail" >
+    select a.trans_id,a.roll_out_account,a.create_time,a.expire_time,sum(a.trans_amount) trans_amount,bb.trans_amount_out cur_balance
+	from points_transation_detail a left join 
+		(select b.roll_in_account,sum(b.trans_amount) trans_amount_out
+		from points_transation_detail b
+		where b.roll_out_account = #{rollInAccount,jdbcType=VARCHAR}
+		group by b.roll_in_account) bb
+	on a.roll_out_account = bb.roll_in_account
+	where a.roll_in_account = #{rollInAccount,jdbcType=VARCHAR}
+	   <if test="rollOutAccount != null and rollOutAccount != ''" >
+	      and a.roll_out_account = #{rollOutAccount,jdbcType=VARCHAR}
+	   </if>
+	   <if test="status != null and status != ''" ><!-- 未过期 -->
+	      and a.expire_time &gt;= now()
+	   </if>
+	   <if test="createUser != null and createUser != ''" ><!-- 过期 -->
+	      and a.expire_time &lt; now()
+	   </if>
+	   <if test="updateUser != null and updateUser != ''" ><!-- 发放起始日期 -->
+	      and a.create_time &gt;= date_format(#{updateUser,jdbcType=VARCHAR},'%Y-%m-%d')
+	   </if>
+	   <if test="merchant != null and merchant != ''" ><!-- 发放截止日期 -->
+	      and a.create_time &lt;= date_format(#{merchant,jdbcType=VARCHAR},'%Y-%m-%d')
+	   </if>
+	group by a.trans_id,a.roll_out_account,a.create_time,a.expire_time
+  </select>  
+  
+</mapper>

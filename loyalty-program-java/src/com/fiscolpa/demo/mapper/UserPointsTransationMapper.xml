@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fiscolpa.demo.mapper.UserPointsTransationMapper" >
+  <resultMap id="BaseResultMap" type="com.fiscolpa.demo.model.PointsTransation" >
+    <id column="trans_id" property="transId" jdbcType="VARCHAR" />
+    <result column="roll_out_account" property="rollOutAccount" jdbcType="VARCHAR" />
+    <result column="roll_in_account" property="rollInAccount" jdbcType="VARCHAR" />
+    <result column="trans_amount" property="transAmount" jdbcType="INTEGER" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="transfer_time" property="transferTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    trans_id, roll_out_account, roll_in_account, trans_amount, describe, transfer_time, 
+    create_time, create_user, update_time, update_user
+  </sql>
+  
+  <!-- 积分消费查询 -->
+  <!-- rollOutAccount参数是登录用户的账户 -->
+  <select id="selectByAccount" resultMap="BaseResultMap" parameterType="PointsTransation" >
+    select trans_id,roll_in_account,trans_amount,create_time,`describe`
+	from points_transation
+	where roll_out_account = #{rollOutAccount,jdbcType=VARCHAR}
+	   <if test="rollInAccount != null and rollInAccount != ''" ><!-- 界面传进来的商户 -->
+	      and roll_in_account = #{rollInAccount,jdbcType=VARCHAR}
+	   </if>
+	   <if test="updateUser != null and updateUser != ''" ><!-- 消费起始日期 -->
+	      and create_time &gt;= date_format(#{updateUser,jdbcType=VARCHAR},'%Y-%m-%d')
+	   </if>
+	   <if test="createUser != null and createUser != ''" ><!-- 消费截止日期 -->
+	      and create_time &lt;= date_format(#{createUser,jdbcType=VARCHAR},'%Y-%m-%d')
+	   </if>
+  </select> 
+</mapper>
