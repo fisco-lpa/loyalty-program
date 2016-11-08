@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fiscolpa.demo.mapper.MerchantTransactionMapper" >
+  <!-- 查询状态积分 -->
+  <select id="queryPoints" resultType="String" parameterType="com.fiscolpa.demo.model.PointsTransationExtends" >
+    select 
+    sum(pt.trans_amount) 
+    from points_transation pt
+      <trim prefix="where" prefixOverrides="and |or"> 
+      		<if test="rollOutAccount != null">
+				and pt.roll_out_account = #{rollOutAccount}
+			</if>
+			<if test="rollInAccount != null">
+				and pt.roll_in_account = #{rollInAccount}
+			</if>
+			<if test="transferType != null">
+				and pt.transfer_type = #{transferType}
+			</if>
+		</trim>
+  </select>
+  
+  <!-- 授信查询 -->
+  <select id="queryTransationList" resultType="com.fiscolpa.demo.model.PointsTransationExtends" 
+  		  parameterType="com.fiscolpa.demo.model.PointsTransationExtends" >
+    select 
+    pt.trans_id            transId, 
+    pt.roll_out_account    rollOutAccount, 
+    pt.roll_in_account     rollInAccount, 
+    pt.trans_amount        transAmount, 
+    pt.`describe`            `describe`, 
+    pt.transfer_time       transferTime,
+    pt.transfer_type 		transferType,
+    pt.create_time			createTime, 
+    pt.create_user			createUser, 
+    pt.update_time			updateTime, 
+    pt.update_user			updateUser
+    <if test='queryColumn=="use"'>
+    ,ifnull((
+    	SELECT
+			sum(ptd.trans_amount)
+		FROM
+			points_transation_detail ptd
+		WHERE
+			ptd.roll_out_account = pt.roll_in_account
+		AND ptd.credit_party = pt.roll_out_account
+		AND ptd.merchant = pt.roll_in_account
+		AND ptd.credit_create_time = pt.create_time
+	 ),0) usePoints
+    </if>
+    <if test='transferType=="1"'>
+    ,(select ptd.detail_id from points_transation_detail ptd where pt.trans_id = ptd.trans_id) detailId
+    </if>
+    <if test='transferType=="2"'>
+    ,(select ptd.expire_time from points_transation_detail ptd where pt.trans_id = ptd.trans_id limit 1) expireTime
+    </if>
+    <if test='transferType=="3"'>
+    ,(select ptd.credit_party from points_transation_detail ptd where pt.trans_id = ptd.trans_id) creditParty
+    </if>
+    from points_transation pt 
+      <trim prefix="where" prefixOverrides="and |or"> 
+			<if test="transId !=null">
+				and pt.trans_id = #{transId}
+			</if>
+			<if test="rollOutAccount != null">
+				and pt.roll_out_account = #{rollOutAccount}
+			</if>
+			<if test="rollInAccount != null">
+				and pt.roll_in_account = #{rollInAccount}
+			</if>
+			<if test="transferTime != null">
+				and pt.transfer_time = #{transferTime}
+			</if>
+			<if test="transferType != null">
+				and pt.transfer_type = #{transferType}
+			</if>
+			<if test="creditParty != null">
+				and EXISTS(  
+			    SELECT 1 FROM points_transation_detail ptd 
+			    WHERE ptd.trans_id = pt.trans_id
+			    and ptd.credit_party= #{creditParty}) 
+			</if>
+		</trim>
+  </select>
+  
+  
+  
+  <select id="queryTransationDetailList" resultType="com.fiscolpa.demo.model.PointsTransationDetailExtends" parameterType="com.fiscolpa.demo.model.PointsTransationDetailExtends" >
+  select 
+	ptd.detail_id			detailId,
+	ptd.source_detail_id	sourceDetailId,
+	ptd.trans_id			transId,
+	ptd.expire_time			expireTime,
+	ptd.ext_ref				extRef,
+	ptd.`status`,
+	ptd.create_time			createTime,
+	ptd.create_user			createUser,
+	ptd.update_time			updateTime,
+	ptd.update_user			updateUser,
+	ptd.roll_out_account	rollOutAccount,
+	ptd.roll_in_account		rollInAccount,	
+	ptd.trans_amount		transAmount,
+	ptd.cur_balance			curBalance,
+	ptd.credit_party		creditParty,
+	ptd.merchant,
+	ptd.credit_create_time	creditCreateTime,
+	ptd.transfer_time		transferTime
+    from points_transation_detail ptd
+    <trim prefix="where" prefixOverrides="and |or"> 
+			<if test="detailId !=null">
+				and ptd.detail_id = #{detailId}
+			</if>
+			<if test="sourceDetailId !=null">
+				and ptd.source_detail_id = #{sourceDetailId}
+			</if>
+			<if test="transId != null">
+				and ptd.trans_id = #{transId}
+			</if>
+			<if test="status != null">
+				and ptd.status = #{status}
+			</if>
+			<if test="rollOutAccount != null">
+				and ptd.roll_out_account = #{rollOutAccount}
+			</if>
+			<if test="rollInAccount != null">
+				and ptd.roll_in_account = #{rollInAccount}
+			</if>
+			<if test="creditParty != null">
+				and ptd.credit_party = #{creditParty}
+			</if>
+			<if test="merchant != null">
+				and ptd.merchant = #{merchant}
+			</if>
+			<if test="transferTime != null">
+				and ptd.transfer_time = #{transferTime}
+			</if>
+			<if test='expireTime == "1"'>
+				and ptd.expire_time >= now()
+				and cur_balance > 0
+				and EXISTS(  
+				    SELECT 1 FROM points_transation pt  
+				    WHERE pt.trans_id = ptd.trans_id
+				    and pt.transfer_type= #{expireTime})
+				order by expire_time,create_time
+			</if>
+			<if test="transferType != null">
+			and cur_balance > 0
+			and EXISTS(  
+			    SELECT 1 FROM points_transation pt  
+			    WHERE pt.trans_id = ptd.trans_id
+			    and pt.transfer_type= #{transferType}) 
+			</if>
+		</trim>
+  </select>
+  
+  <insert id="insertTransation" parameterType="java.util.List">
+    insert into points_transation (
+		    trans_id, 
+		    roll_out_account, 
+		    roll_in_account, 
+		    trans_amount, 
+		    `describe`, 
+		    transfer_time, 
+		    transfer_type,
+		    create_time, 
+		    create_user, 
+		    update_time, 
+		    update_user)
+    values 
+    <foreach collection="list" item="item" index="index" open="" close="" separator=",">
+    		(
+		    #{item.transId}, 
+		    #{item.rollOutAccount}, 
+		    #{item.rollInAccount}, 
+		    #{item.transAmount}, 
+		    #{item.describe}, 
+		    #{item.transferTime},
+		    #{item.transferType}, 
+		    now(), 
+		    #{item.createUser}, 
+		    now(), 
+		    #{item.updateUser}
+		    )
+		    </foreach>
+  </insert>
+  
+  
+	<insert id="insertTransationDetail" parameterType="java.util.List">
+	INSERT INTO points_transation_detail (
+		detail_id,
+		source_detail_id,
+		trans_id,
+		expire_time,
+		ext_ref,
+		`status`,
+		create_time,
+		create_user,
+		update_time,
+		update_user,
+		roll_out_account,
+		roll_in_account,
+		trans_amount,
+		cur_balance,
+		credit_party,
+		merchant,
+		credit_create_time,
+		transfer_time
+		)
+		VALUES
+		<foreach collection="list" item="item" index="index" open="" close="" separator=",">
+		(
+		#{item.detailId},
+        #{item.sourceDetailId},
+        #{item.transId},
+        #{item.expireTime},
+        #{item.extRef},
+        #{item.status},
+		now(),
+        #{item.createUser},
+		now(),
+        #{item.updateUser},
+        #{item.rollOutAccount},
+        #{item.rollInAccount},
+        #{item.transAmount},
+        #{item.curBalance},
+        #{item.creditParty},
+        #{item.merchant},
+        #{item.creditCreateTime},
+        #{item.transferTime}
+		)
+		</foreach>
+	</insert>
+  
+	<update id="updateCurBalance" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="" close="" separator=";">
+				update points_transation_detail
+				<trim prefix="set" suffixOverrides=",">
+			    	<if test="item.curBalance != null" >
+			        	cur_balance = #{item.curBalance},
+			      	</if>
+			      	<if test="item.status != null" >
+			       		`status` = #{item.status},
+			     	</if>
+			    </trim>
+			    where detail_id = #{item.detailId}
+		 </foreach>
+	</update>
+</mapper>
