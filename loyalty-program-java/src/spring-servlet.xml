@@ -11,12 +11,31 @@
 
 	<mvc:default-servlet-handler />
 
-	<mvc:annotation-driven />
+	<mvc:annotation-driven>
+<!-- 		<mvc:message-converters>
+			<ref bean="stringHttpMessageConverter" />
+			<ref bean="mappingJackson2HttpMessageConverter" />
+		</mvc:message-converters> -->
+	</mvc:annotation-driven>
 
 	<!-- 对静态资源文件的访问  restful-->     
 	<mvc:resources mapping="/static/**" location="/static/" />
 	
 	<context:component-scan base-package="com.fiscolpa.demo.controller" />
+
+<!--	<bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter" />
+
+	<bean id="mappingJackson2HttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json</value>
+				<value>application/xml</value>
+				<value>text/html</value>
+				<value>text/plain</value>
+				<value>text/xml</value>
+			</list>
+		</property>
+	</bean> -->
 
 	<!-- 配置SpringMVC的视图解析器 -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

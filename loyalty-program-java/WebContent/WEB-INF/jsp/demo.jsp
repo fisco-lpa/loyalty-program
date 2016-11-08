@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Mybatis分页插件 - 测试页面</title>
-    <script src="${pageContext.request.contextPath}/static/js/jquery-1.11.1.min.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/jquery-3.1.1.min.js"></script>
     <link href="${pageContext.request.contextPath}/static/css/style.css" rel="stylesheet" type="text/css"/>
     <style type="text/css">
         .pageDetail {

@@ -12,7 +12,7 @@
 <meta name="description" content="">
 <title>Demo - 登录</title>
 <link href="${pageContext.request.contextPath}/static/css/sui.min.css" rel="stylesheet">
-<script type="text/javascript" src="${pageContext.request.contextPath}/static/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/static/js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/sui.min.js"></script>
 </head>
 <body>
