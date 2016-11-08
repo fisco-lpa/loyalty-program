@@ -159,7 +159,7 @@
                 <tbody>
                 <c:forEach items="${pageInfo.list}" var="pointsTransationDetail">
                     <tr>
-                        <td>${pointsTransationDetail.detailId}</td>
+                        <td>${pointsTransationDetail.transId}</td>
                         <td>${pointsTransationDetail.rollOutAccount}</td>
                         <td>${pointsTransationDetail.transAmount}</td>
                         <td><fmt:formatDate value="${pointsTransationDetail.createTime}" pattern="yyyy年MM月dd日HH点mm分ss秒"/></td>
