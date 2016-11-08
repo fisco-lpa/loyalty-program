@@ -22,5 +22,7 @@ public interface IService<T> {
 
     List<T> selectByExample(Object example);
 
+    T selectOne(T entity);
+    
     //TODO 其他...
 }
