@@ -2,7 +2,13 @@ package com.fiscolpa.demo.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+
 public class Account {
+	
+    @Id
+    @Column(name = "account_id")
     private String accountId;
 
     private String userId;

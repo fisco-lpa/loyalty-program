@@ -11,7 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fiscolpa.demo.model.Account;
 import com.fiscolpa.demo.model.PointsUser;
+import com.fiscolpa.demo.service.AccountService;
 import com.fiscolpa.demo.service.PointsUserService;
 import com.fiscolpa.demo.util.MenusUtil;
 
@@ -22,6 +24,9 @@ public class LoginController {
 
 	@Autowired
 	private PointsUserService pointsUserService;
+	
+	@Autowired
+	private AccountService accountService;
 
     @RequestMapping("/toLogin")
     public String toLogin() {
@@ -47,6 +52,15 @@ public class LoginController {
     		if (userList.size() == 1) {
 	    		PointsUser currentUser = userList.get(0);
 	    		logger.info("Login success! User Type:" + currentUser.getUserType());
+	    		
+	    		// 查询用户的账户余额
+	    		Account account = new Account();
+	    		account.setUserId(currentUser.getUserId());
+	    		account.setAccountTypeId(currentUser.getUserType());
+	    		Account currentAccount = accountService.selectOne(account);
+	    		currentUser.setAccountId(currentAccount.getAccountId());
+	    		//currentUser.setAccountBalance(currentAccount.getAccountBalance());
+	    		
 	    		session.setAttribute("user", currentUser);
 	    		session.setAttribute("menus", MenusUtil.getMenus(currentUser.getUserType()));
 	    		return "index";
