@@ -5,6 +5,7 @@ import (
 
 	"chaincode_account"
 	"chaincode_common"
+	_ "chaincode_config"
 	_ "chaincode_query"
 	"chaincode_user"
 	//"encoding/json"

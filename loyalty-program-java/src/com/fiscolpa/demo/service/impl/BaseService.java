@@ -42,5 +42,8 @@ public abstract class BaseService<T> implements IService<T> {
         return mapper.selectByExample(example);
     }
 
+    public T selectOne(T entity) {
+    	return mapper.selectOne(entity);
+    }
     //TODO 其他...
 }
