@@ -15,11 +15,6 @@ import (
 type RegisterChaincode struct {
 }
 
-//用户信息录入
-func (t *RegisterChaincode) register(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	return chaincode_user.InsertPointsUser(stub)
-}
-
 //初始化创建表
 func (t *RegisterChaincode) Init(stub shim.ChaincodeStubInterface) ([]byte, error) {
 	return nil, chaincode_common.CreateTable(stub)
@@ -28,8 +23,8 @@ func (t *RegisterChaincode) Init(stub shim.ChaincodeStubInterface) ([]byte, erro
 //调用方法
 func (t *RegisterChaincode) Invoke(stub shim.ChaincodeStubInterface) ([]byte, error) {
 	function, args := stub.GetFunctionAndParameters()
-	if function == "register" { //用户信息录入
-		return t.register(stub, args)
+	if function == "insertPointsUser" { //用户信息录入
+		return chaincode_user.InsertPointsUser(stub, args)
 	}
 
 	return nil, errors.New("调用invoke失败")

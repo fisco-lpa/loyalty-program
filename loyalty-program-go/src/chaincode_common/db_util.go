@@ -6,10 +6,28 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
+const (
+	points_user                     = "points_user"
+	points_user_rownum              = "points_user_rownum"
+	account                         = "account"
+	account_rownum                  = "account_rownum"
+	account_type                    = "account_type"
+	account_type_rownum             = "account_type_rownum"
+	points_transation               = "points_transation"
+	points_transation_rownum        = "points_transation_rownum"
+	configure_category              = "configure_category"
+	configure_category_rownum       = "configure_category_rownum"
+	configure_detail                = "configure_detail"
+	configure_detail_rownum         = "configure_detail_rownum"
+	points_transation_detail        = "points_transation_detail"
+	points_transation_detail_rownum = "points_transation_detail_rownum"
+	table_count                     = "table_count"
+)
+
 //创建表
 func CreateTable(stub shim.ChaincodeStubInterface) error {
 	//创建用户表
-	err := stub.CreateTable("pointsUser", []*shim.ColumnDefinition{
+	err := stub.CreateTable("points_user", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "userId", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "userName", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "userPassword", Type: shim.ColumnDefinition_STRING, Key: false},
@@ -21,16 +39,16 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "updateUser", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		return errors.New("creat pointsUser is fail")
+		return errors.New("creat points_user is fail")
 	}
-	//创建用户行号表
-	err = stub.CreateTable("pointsUserNumber", []*shim.ColumnDefinition{
+	//创建用户行号表(新增)
+	err = stub.CreateTable("points_user_rownum", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "number", Type: shim.ColumnDefinition_INT64, Key: true},
 		&shim.ColumnDefinition{Name: "userId", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		return errors.New("creat pointsUserNumber is fail")
+		stub.DeleteTable("points_user")
+		return errors.New("creat points_user_rownum is fail")
 	}
 	//创建账户表
 	err = stub.CreateTable("account", []*shim.ColumnDefinition{
@@ -45,23 +63,23 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "updateUser", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		return errors.New("creat account is fail")
 	}
-	//创建账户行号表
-	err = stub.CreateTable("accountNumber", []*shim.ColumnDefinition{
+	//创建账户行号表(新增)
+	err = stub.CreateTable("account_rownum", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "number", Type: shim.ColumnDefinition_INT64, Key: true},
 		&shim.ColumnDefinition{Name: "accountId", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		return errors.New("creat accountNumber is fail")
+		return errors.New("creat account_rownum is fail")
 	}
 	//创建账户类型表
-	err = stub.CreateTable("accountType", []*shim.ColumnDefinition{
+	err = stub.CreateTable("account_type", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "accountTypeId", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "describe", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "createTime", Type: shim.ColumnDefinition_STRING, Key: false},
@@ -70,27 +88,27 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "updateUser", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		return errors.New("creat accountType is fail")
+		stub.DeleteTable("account_rownum")
+		return errors.New("creat account_type is fail")
 	}
-	//创建账户类型行号表
-	err = stub.CreateTable("accountTypeNumber", []*shim.ColumnDefinition{
+	//创建账户类型行号表(新增)
+	err = stub.CreateTable("account_type_rownum", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "number", Type: shim.ColumnDefinition_INT64, Key: true},
 		&shim.ColumnDefinition{Name: "accountTypeId", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		stub.DeleteTable("accountType")
-		return errors.New("creat accountTypeNumber is fail")
+		stub.DeleteTable("account_rownum")
+		stub.DeleteTable("account_type")
+		return errors.New("creat account_type_rownum is fail")
 	}
 	//创建积分交易表
-	err = stub.CreateTable("pointsTransation", []*shim.ColumnDefinition{
+	err = stub.CreateTable("points_transation", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "transId", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "rollOutAccount", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "rollInAccount", Type: shim.ColumnDefinition_STRING, Key: false},
@@ -103,31 +121,31 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "updateUser", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		stub.DeleteTable("accountType")
-		stub.DeleteTable("accountTypeNumber")
-		return errors.New("creat pointsTransation is fail")
+		stub.DeleteTable("account_rownum")
+		stub.DeleteTable("account_type")
+		stub.DeleteTable("account_type_rownum")
+		return errors.New("creat points_transation is fail")
 	}
-	//创建积分交易行号表
-	err = stub.CreateTable("pointsTransationNumber", []*shim.ColumnDefinition{
+	//创建积分交易行号表(新增)
+	err = stub.CreateTable("points_transation_rownum", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "number", Type: shim.ColumnDefinition_INT64, Key: true},
 		&shim.ColumnDefinition{Name: "transId", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		stub.DeleteTable("accountType")
-		stub.DeleteTable("accountTypeNumber")
-		stub.DeleteTable("pointsTransation")
-		return errors.New("creat pointsTransationNumber is fail")
+		stub.DeleteTable("account_rownum")
+		stub.DeleteTable("account_type")
+		stub.DeleteTable("account_type_rownum")
+		stub.DeleteTable("points_transation")
+		return errors.New("creat points_transation_rownum is fail")
 	}
 	//创建配置信息类别表
-	err = stub.CreateTable("configureCategory", []*shim.ColumnDefinition{
+	err = stub.CreateTable("configure_category", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "categoryId", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "categoryName", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "createTime", Type: shim.ColumnDefinition_STRING, Key: false},
@@ -136,35 +154,35 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "updateUser", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		stub.DeleteTable("accountType")
-		stub.DeleteTable("accountTypeNumber")
-		stub.DeleteTable("pointsTransation")
-		stub.DeleteTable("pointsTransationNumber")
-		return errors.New("creat configureCategory is fail")
+		stub.DeleteTable("account_rownum")
+		stub.DeleteTable("account_type")
+		stub.DeleteTable("account_type_rownum")
+		stub.DeleteTable("points_transation")
+		stub.DeleteTable("points_transation_rownum")
+		return errors.New("creat configure_category is fail")
 	}
-	//创建配置信息类别行号表
-	err = stub.CreateTable("configureCategoryNumber", []*shim.ColumnDefinition{
+	//创建配置信息类别行号表(新增)
+	err = stub.CreateTable("configure_category_rownum", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "number", Type: shim.ColumnDefinition_INT64, Key: true},
 		&shim.ColumnDefinition{Name: "categoryId", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		stub.DeleteTable("accountType")
-		stub.DeleteTable("accountTypeNumber")
-		stub.DeleteTable("pointsTransation")
-		stub.DeleteTable("pointsTransationNumber")
-		stub.DeleteTable("configureCategory")
-		return errors.New("creat configureCategoryNumber is fail")
+		stub.DeleteTable("account_rownum")
+		stub.DeleteTable("account_type")
+		stub.DeleteTable("account_type_rownum")
+		stub.DeleteTable("points_transation")
+		stub.DeleteTable("points_transation_rownum")
+		stub.DeleteTable("configure_category")
+		return errors.New("creat configure_category_rownum is fail")
 	}
 	//创建配置信息明细表
-	err = stub.CreateTable("configureDetail", []*shim.ColumnDefinition{
+	err = stub.CreateTable("configure_detail", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "detailId", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "detailName", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "categoryId", Type: shim.ColumnDefinition_STRING, Key: false},
@@ -175,39 +193,39 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "updateUser", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		stub.DeleteTable("accountType")
-		stub.DeleteTable("accountTypeNumber")
-		stub.DeleteTable("pointsTransation")
-		stub.DeleteTable("pointsTransationNumber")
-		stub.DeleteTable("configureCategory")
-		stub.DeleteTable("configureCategoryNumber")
-		return errors.New("creat configureDetail is fail")
+		stub.DeleteTable("account_rownum")
+		stub.DeleteTable("account_type")
+		stub.DeleteTable("account_type_rownum")
+		stub.DeleteTable("points_transation")
+		stub.DeleteTable("points_transation_rownum")
+		stub.DeleteTable("configure_category")
+		stub.DeleteTable("configure_category_rownum")
+		return errors.New("creat configure_detail is fail")
 	}
-	//创建配置信息明细行号表
-	err = stub.CreateTable("configureDetailNumber", []*shim.ColumnDefinition{
+	//创建配置信息明细行号表(新增)
+	err = stub.CreateTable("configure_detail_rownum", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "number", Type: shim.ColumnDefinition_INT64, Key: true},
 		&shim.ColumnDefinition{Name: "detailId", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		stub.DeleteTable("accountType")
-		stub.DeleteTable("accountTypeNumber")
-		stub.DeleteTable("pointsTransation")
-		stub.DeleteTable("pointsTransationNumber")
-		stub.DeleteTable("configureCategory")
-		stub.DeleteTable("configureCategoryNumber")
-		stub.DeleteTable("configureDetail")
-		return errors.New("creat configureDetailNumber is fail")
+		stub.DeleteTable("account_rownum")
+		stub.DeleteTable("account_type")
+		stub.DeleteTable("account_type_rownum")
+		stub.DeleteTable("points_transation")
+		stub.DeleteTable("points_transation_rownum")
+		stub.DeleteTable("configure_category")
+		stub.DeleteTable("configure_category_rownum")
+		stub.DeleteTable("configure_detail")
+		return errors.New("creat configure_detail_rownum is fail")
 	}
 	//创建积分交易逐笔明细表
-	err = stub.CreateTable("pointsTransationDetail", []*shim.ColumnDefinition{
+	err = stub.CreateTable("points_transation_detail", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "detailId", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "sourceDetailId", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "transId", Type: shim.ColumnDefinition_STRING, Key: false},
@@ -227,62 +245,62 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "transferTime", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		stub.DeleteTable("accountType")
-		stub.DeleteTable("accountTypeNumber")
-		stub.DeleteTable("pointsTransation")
-		stub.DeleteTable("pointsTransationNumber")
-		stub.DeleteTable("configureCategory")
-		stub.DeleteTable("configureCategoryNumber")
-		stub.DeleteTable("configureDetail")
-		stub.DeleteTable("configureDetailNumber")
-		return errors.New("creat pointsTransationDetail is fail")
+		stub.DeleteTable("account_rownum")
+		stub.DeleteTable("account_type")
+		stub.DeleteTable("account_type_rownum")
+		stub.DeleteTable("points_transation")
+		stub.DeleteTable("points_transation_rownum")
+		stub.DeleteTable("configure_category")
+		stub.DeleteTable("configure_category_rownum")
+		stub.DeleteTable("configure_detail")
+		stub.DeleteTable("configure_detail_rownum")
+		return errors.New("creat points_transation_detail is fail")
 	}
-	//创建积分交易逐笔明细行号表
-	err = stub.CreateTable("pointsTransationDetailNumber", []*shim.ColumnDefinition{
+	//创建积分交易逐笔明细行号表(新增)
+	err = stub.CreateTable("points_transation_detail_rownum", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "number", Type: shim.ColumnDefinition_INT64, Key: true},
 		&shim.ColumnDefinition{Name: "detailId", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		stub.DeleteTable("accountType")
-		stub.DeleteTable("accountTypeNumber")
-		stub.DeleteTable("pointsTransation")
-		stub.DeleteTable("pointsTransationNumber")
-		stub.DeleteTable("configureCategory")
-		stub.DeleteTable("configureCategoryNumber")
-		stub.DeleteTable("configureDetail")
-		stub.DeleteTable("configureDetailNumber")
-		stub.DeleteTable("pointsTransationDetail")
-		return errors.New("creat pointsTransationDetailNumber is fail")
+		stub.DeleteTable("account_rownum")
+		stub.DeleteTable("account_type")
+		stub.DeleteTable("account_type_rownum")
+		stub.DeleteTable("points_transation")
+		stub.DeleteTable("points_transation_rownum")
+		stub.DeleteTable("configure_category")
+		stub.DeleteTable("configure_category_rownum")
+		stub.DeleteTable("configure_detail")
+		stub.DeleteTable("configure_detail_rownum")
+		stub.DeleteTable("points_transation_detail")
+		return errors.New("creat points_transation_detail_rownum is fail")
 	}
 	//创建总数表
-	err = stub.CreateTable("totalNumber", []*shim.ColumnDefinition{
+	err = stub.CreateTable("table_count", []*shim.ColumnDefinition{
 		&shim.ColumnDefinition{Name: "tableName", Type: shim.ColumnDefinition_STRING, Key: true},
 		&shim.ColumnDefinition{Name: "totalAccount", Type: shim.ColumnDefinition_INT64, Key: false},
 	})
 	if err != nil {
-		stub.DeleteTable("pointsUser")
-		stub.DeleteTable("pointsUserNumber")
+		stub.DeleteTable("points_user")
+		stub.DeleteTable("points_user_rownum")
 		stub.DeleteTable("account")
-		stub.DeleteTable("accountNumber")
-		stub.DeleteTable("accountType")
-		stub.DeleteTable("accountTypeNumber")
-		stub.DeleteTable("pointsTransation")
-		stub.DeleteTable("pointsTransationNumber")
-		stub.DeleteTable("configureCategory")
-		stub.DeleteTable("configureCategoryNumber")
-		stub.DeleteTable("configureDetail")
-		stub.DeleteTable("configureDetailNumber")
-		stub.DeleteTable("pointsTransationDetail")
-		stub.DeleteTable("pointsTransationDetailNumber")
-		return errors.New("creat totalNumber is fail")
+		stub.DeleteTable("account_rownum")
+		stub.DeleteTable("account_type")
+		stub.DeleteTable("account_type_rownum")
+		stub.DeleteTable("points_transation")
+		stub.DeleteTable("points_transation_rownum")
+		stub.DeleteTable("configure_category")
+		stub.DeleteTable("configure_category_rownum")
+		stub.DeleteTable("configure_detail")
+		stub.DeleteTable("configure_detail_rownum")
+		stub.DeleteTable("points_transation_detail")
+		stub.DeleteTable("points_transation_detail_rownum")
+		return errors.New("creat table_count is fail")
 	}
 	return nil
 }
