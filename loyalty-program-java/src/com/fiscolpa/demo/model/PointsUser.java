@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 public class PointsUser {
 	
@@ -27,6 +28,11 @@ public class PointsUser {
 
     private String updateUser;
 
+    @Transient
+    private String accountId;
+    @Transient
+    private Integer accountBalance;
+    
     public String getUserId() {
         return userId;
     }
@@ -98,4 +104,21 @@ public class PointsUser {
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser == null ? null : updateUser.trim();
     }
+
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+
+	public Integer getAccountBalance() {
+		return accountBalance;
+	}
+
+	public void setAccountBalance(Integer accountBalance) {
+		this.accountBalance = accountBalance;
+	}
+    
 }
