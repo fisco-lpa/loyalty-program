@@ -11,17 +11,14 @@ import (
 
 //积分交易记录对象
 type PointsTransaction struct {
-	TransId        string //积分交易ID
-	RolloutAccount string //转出账户
-	RollinAccount  string //转入账户
-	TransAmount    string //交易积分数量
-	Description    string //描述
-	TransferTime   string //交易时间
-	TransferType   string //交易类型
-	CreateTime     string //创建时间
-	CreateUser     string //创建人
-	UpdateTime     string //修改时间
-	UpdateUser     string //修改人
+	TransId        string                       //积分交易ID
+	RolloutAccount string                       //转出账户
+	RollinAccount  string                       //转入账户
+	TransAmount    string                       //交易积分数量
+	Description    string                       //描述
+	TransferTime   string                       //交易时间
+	TransferType   string                       //交易类型
+	AuditObj       chaincode_common.AuditObject //audit object
 }
 
 func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
@@ -45,10 +42,10 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.Description}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransferTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransferType}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.CreateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.CreateUser}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.UpdateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.UpdateUser}}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateUser}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateUser}}},
 	})
 	if !ok && err == nil {
 		return nil, errors.New("Points_Transaction insert failed.")
