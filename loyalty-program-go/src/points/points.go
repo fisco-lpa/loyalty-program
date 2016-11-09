@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"log"
 	"util"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -26,11 +27,13 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 	//base解码
 	arg, err := base64.StdEncoding.DecodeString(args[0])
 	if err != nil {
+		log.Println("decode transObject error..")
 		return nil, errors.New("InsertPointsTransation method base64 decoding error.")
 	}
 	//解析
 	err = json.Unmarshal(arg, &transObject)
 	if err != nil {
+		log.Println("Unmarshal transObject error..")
 		return nil, errors.New("InsertPointsTransation method json Parse error.")
 	}
 	//插入记录到积分交易表
@@ -47,22 +50,27 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateUser}}},
 	})
-	if !ok && err == nil {
+	if !ok {
+		log.Println("InsertRow transObject error..")
 		return nil, errors.New("Points_Transaction insertion failed.")
 	}
 
 	//更新table_count表
 	totalNo, err := util.UpdateTableCount(stub, util.Points_Transation)
 	if totalNo == 0 || err != nil {
-		return nil, errors.New("Total_Count insert failed")
+		log.Println("update table_count error..")
+		return nil, errors.New("Total_Count update failed")
 	}
 
 	//更新行号表
 	err = util.UpdateRowNoTable(stub, util.Points_Transation_Rownum, transObject.TransId, totalNo)
 
 	if err != nil {
+		log.Println("update Points_Transaction_Rownum error..")
 		return nil, errors.New("Points_Transaction_Rownum insert failed")
 	}
+
+	log.Println("InsertPointsTransation sucess!")
 
 	return nil, nil
 }
