@@ -43,7 +43,7 @@ public class LoginController {
     		PointsUser currentUser = userList.get(0);
     		logger.info("Login success! User Type:" + currentUser.getUserType());
     		session.setAttribute("user", currentUser);
-    		session.setAttribute("menus", MenusUtil.getMenus(currentUser.getUserType()));
+    		session.setAttribute("menus", MenusUtil.getMenus(String.valueOf(currentUser.getUserType())));
     		return "index";
     	} else {
     		pointsUser.setPhoneNumber(null);
@@ -62,7 +62,7 @@ public class LoginController {
 	    		//currentUser.setAccountBalance(currentAccount.getAccountBalance());
 	    		
 	    		session.setAttribute("user", currentUser);
-	    		session.setAttribute("menus", MenusUtil.getMenus(currentUser.getUserType()));
+	    		session.setAttribute("menus", MenusUtil.getMenus(String.valueOf(currentUser.getUserType())));
 	    		return "index";
     		} else {
 	    		logger.error("Login fail!");
