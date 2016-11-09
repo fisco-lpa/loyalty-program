@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fiscolpa.demo.mapper.PointsTransationExchangeMapper" >
+  <resultMap id="BaseResultMap" type="com.fiscolpa.demo.model.PointsTransation" >
+    <id column="trans_id" property="transId" jdbcType="VARCHAR" />
+    <result column="roll_out_account" property="rollOutAccount" jdbcType="VARCHAR" />
+    <result column="roll_in_account" property="rollInAccount" jdbcType="VARCHAR" />
+    <result column="trans_amount" property="transAmount" jdbcType="INTEGER" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="transfer_time" property="transferTime" jdbcType="TIMESTAMP" />
+    <result column="transfer_type" property="transferType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    trans_id, roll_out_account, roll_in_account, trans_amount, describe, transfer_time, transfer_type,
+    create_time, create_user, update_time, update_user
+  </sql>
+
+  <insert id="insertExchange"  parameterType="com.fiscolpa.demo.model.PointsTransation" >
+    insert into points_transation (trans_id, roll_out_account, roll_in_account, 
+      trans_amount,transfer_time,transfer_type,create_time,create_user,update_time,update_user)
+    values (#{transId,jdbcType=VARCHAR}, #{rollOutAccount,jdbcType=VARCHAR}, #{rollInAccount,jdbcType=VARCHAR}, 
+      #{transAmount,jdbcType=INTEGER}, #{transferTime,jdbcType=TIMESTAMP}, #{transferType,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR})
+  </insert>
+
+  
+ 
+   
+</mapper>
