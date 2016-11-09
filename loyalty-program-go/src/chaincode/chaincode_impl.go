@@ -1,17 +1,10 @@
 package main
 
 import (
-	//"encoding/base64"
-
-	"account"
-	_ "config"
-	"points"
-	_ "query"
-	"user"
-	"util"
-	//"encoding/json"
 	"errors"
 	"fmt"
+	"util"
+	"wrapper"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -26,18 +19,16 @@ func (t *RegisterChaincode) Init(stub shim.ChaincodeStubInterface, function stri
 
 //调用方法
 func (t *RegisterChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	//function, args := stub.GetFunctionAndParameters()
-
-	if function == "InsertPointsUser" { //用户信息录入
-		return user.InsertPointsUser(stub, args)
-	} else if function == "InsertAccount" { //账户表信息录入
-		return account.InsertAccount(stub, args)
-	} else if function == "InsertPointsTransation" { // 积分交易信息录入
-		return points.InsertPointsTransation(stub, args)
-	} else if function == "UpdatePointsTransationDetail" { // 积分交易逐笔明细表信息更新
-		return points.UpdatePointsTransationDetail(stub, args)
-	} else if function == "InsertPointsTransationDetail" { // 积分交易逐笔明细表信息录入
-		return points.InsertPointsTransationDetail(stub, args)
+	if function == "SignUp" { //用户注册
+		return wrapper.SignUp(stub, args)
+	} else if function == "SignIn" { //用户登录
+		return wrapper.SignIn(stub, args)
+	} else if function == "CreditPoints" { // 授信积分
+		return wrapper.CreditPoints(stub, args)
+	} else if function == "ConsumePoints" { // 消费积分
+		return wrapper.ConsumePoints(stub, args)
+	} else if function == "AccpetPoints" { // 承兑积分
+		return wrapper.AccpetPoints(stub, args)
 	}
 
 	return nil, errors.New("调用invoke失败")
