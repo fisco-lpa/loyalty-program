@@ -12,5 +12,9 @@
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
 	</resultMap>
-
+	<update id="updatePwd" parameterType="com.fiscolpa.demo.model.PointsUser" >
+    update points_user 
+    set user_password = #{userPassword,jdbcType=VARCHAR} 
+    where user_name = #{userName,jdbcType=VARCHAR}
+  	</update>
 </mapper>
