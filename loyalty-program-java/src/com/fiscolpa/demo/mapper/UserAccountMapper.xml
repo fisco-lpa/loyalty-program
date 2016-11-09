@@ -28,8 +28,15 @@
         where b.user_name = #{userName,jdbcType=VARCHAR}
   </select>
   
+  <!-- 修改账户余额 -->
   <update id="updateAccountByBalance" parameterType="com.fiscolpa.demo.model.Account">
   	  update account set account_balance = #{accountBalance}
   	  where account_id = #{accountId}
   </update>
+  
+  <!-- 查询账户ID -->
+  <select id="getUserByAccountId" resultType="java.lang.String">    
+      select (select a.account_id  from account a where a.user_id = pu.user_id and a.account_type_id = pu.user_type) accountId
+	  from points_user pu where pu.phone_number = #{phoneNumber}
+  </select>
 </mapper>

@@ -48,13 +48,23 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 	@Transactional
 	@Override
 	public String sevePoints(PointsTransationExtends pt) {
+		//根据用户手机号查询查询账户ID
+		String accountId = ua.getUserByAccountId(pt.getRollInAccount());
+		if(StringUtils.isNullOrEmpty(accountId)) return "00003";//没有配置账户
+		pt.setRollInAccount(accountId);
 		//获取账户余额
-		int balance = ua.sumByPrimaryKey(pt.getRollInAccount());
+		int balance = ua.sumByPrimaryKey(pt.getRollOutAccount());
 		if(balance<pt.getTransAmount())return "00001";//余额不足
-		//组装账户信息
-		Account account = new Account();
-		account.setAccountId(pt.getRollInAccount());
-		account.setAccountBalance(balance+pt.getTransAmount());
+		//修改商户的
+		Account out = new Account();
+		out.setAccountId(pt.getRollOutAccount());
+		out.setAccountBalance(balance-pt.getTransAmount());
+		
+		//修改会员的
+		int  userBalance = ua.sumByPrimaryKey(pt.getRollInAccount());
+		Account in = new Account();
+		in.setAccountId(pt.getRollInAccount());
+		in.setAccountBalance(userBalance+pt.getTransAmount());
 		
 		List<PointsTransationExtends> ptList = new ArrayList<>();
 		String transId = UUIDGenerator.getUUID();
@@ -103,6 +113,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 				Integer surplus = pd.getCurBalance()-transAmount;
 				up.setCurBalance(surplus);
 			}else{
+				transAmount-=pd.getCurBalance();
 				save.setTransAmount(pd.getCurBalance());
 				save.setCurBalance(pd.getCurBalance());
 				up.setCurBalance(0);
@@ -115,7 +126,8 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		mtm.insertTransation(ptList);
 		mtm.insertTransationDetail(salist);
 		mtm.updateCurBalance(upList);
-		ua.updateAccountByBalance(account);
+		ua.updateAccountByBalance(out);
+		ua.updateAccountByBalance(in);
 		
 		return "00000";//交易正常
 	}
@@ -147,8 +159,8 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 				//交易ID
 				pt.setTransAmount(detail.getTransAmount());
 				pt.setTransId(transId);
-				pt.setTransferTime("2016-11-07 18:34:00");
-				pt.setTransferType("3");
+				pt.setTransferTime(DateUtil.getDateTime());
+				pt.setTransferType("4");
 				pt.setCreateUser("admin");
 				pt.setUpdateUser("admin");
 				map.put(accept, pt);

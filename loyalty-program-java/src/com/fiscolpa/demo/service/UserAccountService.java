@@ -9,4 +9,6 @@ public interface UserAccountService{
 	String getAccountByUserName(String userName);
 	
 	void updateAccountByBalance(Account account);
+	
+	String getUserByAccountId(String phoneNumber);
 }

@@ -28,6 +28,11 @@ public class UserAccountServiceImpl implements UserAccountService {
 		userAccountMapper.updateAccountByBalance(account);
 	}
 
+	@Override
+	public String getUserByAccountId(String phoneNumber) {
+		return userAccountMapper.getUserByAccountId(phoneNumber);
+	}
+
 
 	
 }
