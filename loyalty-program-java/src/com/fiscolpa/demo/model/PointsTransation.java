@@ -22,8 +22,18 @@ public class PointsTransation {
     private Date updateTime;
 
     private String updateUser;
+    
+    private String transferType;
 
-    public String getTransId() {
+    public String getTransferType() {
+		return transferType;
+	}
+
+	public void setTransferType(String transferType) {
+		this.transferType = transferType;
+	}
+
+	public String getTransId() {
         return transId;
     }
 

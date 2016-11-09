@@ -16,9 +16,9 @@ public class MenusUtil {
 		
 		//授信方菜单
 		List<ItemVo> bankMenus = new ArrayList<ItemVo>();
-		bankMenus.add(new ItemVo("授信", "jifen/toShouxin"));
-		bankMenus.add(new ItemVo("授信查询", "jifen/toShouxinQuery"));
-		bankMenus.add(new ItemVo("承兑查询", "jifen/toChengduiQuery"));
+		bankMenus.add(new ItemVo("授信", "/creditParty/goCreditPage"));
+		bankMenus.add(new ItemVo("授信查询", "/creditParty/goCreditQueryPage"));
+		bankMenus.add(new ItemVo("承兑查询", "/creditParty/goAcceptQueryPage"));
 		menus.put("1", bankMenus);
 		
 		//商户菜单

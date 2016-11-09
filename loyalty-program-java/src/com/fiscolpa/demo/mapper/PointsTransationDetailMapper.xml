@@ -20,6 +20,29 @@
     <result column="merchant" property="merchant" jdbcType="VARCHAR" />
     <result column="transfer_time" property="transferTime" jdbcType="TIMESTAMP" />
   </resultMap>
+    <resultMap id="PointsTransationDetailVoMap" type="com.fiscolpa.demo.vo.PointsTransationDetailVo" >
+    <id column="detail_id" property="detailId" jdbcType="VARCHAR" />
+    <result column="source_detail_id" property="sourceDetailId" jdbcType="VARCHAR" />
+    <result column="trans_id" property="transId" jdbcType="VARCHAR" />
+    <result column="expire_time" property="expireTime" jdbcType="TIMESTAMP" />
+    <result column="ext_ref" property="extRef" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="roll_out_account" property="rollOutAccount" jdbcType="VARCHAR" />
+    <result column="roll_in_account" property="rollInAccount" jdbcType="VARCHAR" />
+    <result column="trans_amount" property="transAmount" jdbcType="INTEGER" />
+    <result column="cur_balance" property="curBalance" jdbcType="INTEGER" />
+    <result column="credit_party" property="creditParty" jdbcType="VARCHAR" />
+    <result column="merchant" property="merchant" jdbcType="VARCHAR" />
+    <result column="transfer_time" property="transferTime" jdbcType="TIMESTAMP" />
+    <result column="credit_create_time" property="creditCreateTime" jdbcType="TIMESTAMP" />
+    <result column="rollOutAccountName" property="rollOutAccountName" jdbcType="VARCHAR" />
+    <result column="rollInAccountName" property="rollInAccountName" jdbcType="VARCHAR" />
+    <result column="acceptedPointsNum" property="acceptedPointsNum" jdbcType="INTEGER" />
+  </resultMap>
   <sql id="Base_Column_List" >
     detail_id, source_detail_id, trans_id, expire_time, ext_ref, status, create_time, 
     create_user, update_time, update_user, roll_out_account, roll_in_account, trans_amount, 
@@ -41,13 +64,13 @@
       create_time, create_user, update_time, 
       update_user, roll_out_account, roll_in_account, 
       trans_amount, cur_balance, credit_party, 
-      merchant, transfer_time)
+      merchant, transfer_time,credit_create_time)
     values (#{detailId,jdbcType=VARCHAR}, #{sourceDetailId,jdbcType=VARCHAR}, #{transId,jdbcType=VARCHAR}, 
       #{expireTime,jdbcType=TIMESTAMP}, #{extRef,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateUser,jdbcType=VARCHAR}, #{rollOutAccount,jdbcType=VARCHAR}, #{rollInAccount,jdbcType=VARCHAR}, 
       #{transAmount,jdbcType=INTEGER}, #{curBalance,jdbcType=INTEGER}, #{creditParty,jdbcType=VARCHAR}, 
-      #{merchant,jdbcType=VARCHAR}, #{transferTime,jdbcType=TIMESTAMP})
+      #{merchant,jdbcType=VARCHAR}, #{transferTime,jdbcType=TIMESTAMP}, #{creditCreateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.fiscolpa.demo.model.PointsTransationDetail" >
     insert into points_transation_detail
@@ -232,4 +255,82 @@
       transfer_time = #{transferTime,jdbcType=TIMESTAMP}
     where detail_id = #{detailId,jdbcType=VARCHAR}
   </update>
+  <select id="getCreditPartyCreditDetailList" resultMap="PointsTransationDetailVoMap" parameterType="com.fiscolpa.demo.vo.PointsTransationVo" >
+    select p.* FROM(
+		SELECT
+			ptd.*, (
+				SELECT
+					user_name
+				FROM
+					points_user pu,
+					account a
+				WHERE
+					pu.user_id = a.user_id
+				AND a.account_id = ptd.roll_out_account
+			) rollOutAccountName,
+			(
+				SELECT
+					user_name
+				FROM
+					points_user pu,
+					account a
+				WHERE
+					pu.user_id = a.user_id
+				AND a.account_id = ptd.roll_in_account
+			) rollInAccountName,
+			(
+				SELECT
+					count(ptd2.trans_amount)
+				FROM
+					points_transation_detail ptd2
+				WHERE
+					ptd2.credit_party = ptd2.roll_in_account
+				AND ptd2.roll_in_account = ptd.credit_party
+				AND ptd2.credit_create_time = ptd.credit_create_time
+				AND ptd2.merchant = ptd.merchant
+			) acceptedPointsNum
+		FROM
+			points_transation_detail ptd
+		WHERE
+			ptd.roll_out_account =  #{rollOutAccount}
+			  <if test="rollInAccount != null and rollInAccount != '' " >
+		        and ptd.roll_in_account = #{rollInAccount}
+		      </if>
+		      <if test="startTime != null and startTime != '' ">
+		        <![CDATA[ and ptd.transfer_time >= #{startTime} ]]>     
+		      </if>
+		      <if test="endTime != null and endTime != '' ">
+		        <![CDATA[ and ptd.transfer_time <= #{endTime} ]]> 
+		      </if>
+		)p
+		where 1=1
+		  <if test="rollInAccountName != null and rollInAccountName != '' ">
+	        and rollInAccountName like CONCAT('%', #{rollInAccountName},'%')
+	      </if>
+  </select>
+  
+  <select id="getCreditPartyAcceptDetailList" resultMap="PointsTransationDetailVoMap" parameterType="com.fiscolpa.demo.vo.PointsTransationVo" >
+  		SELECT
+			ptd.*, pu.user_name rollOutAccountName
+		FROM
+			points_transation_detail ptd,
+			account a,
+			points_user pu
+		WHERE
+			pu.user_id = a.user_id
+		AND a.account_id = ptd.roll_out_account
+		AND ptd.roll_in_account =  #{rollInAccount}
+		 <if test="rollOutAccount != null and rollOutAccount != '' " >
+	        and ptd.roll_out_account = #{rollOutAccount}
+	      </if>
+	      <if test="rollOutAccountName != null and rollOutAccountName != '' " >
+	        and rollOutAccountName like CONCAT('%', #{rollOutAccountName},'%')
+	      </if>
+		 <if test="startTime != null and startTime != '' ">
+	       <![CDATA[ and ptd.transfer_time >= #{startTime} ]]>     
+	     </if>
+	     <if test="endTime != null and endTime != '' " >
+	       <![CDATA[ and ptd.transfer_time <= #{endTime} ]]>     
+	     </if>
+  </select>
 </mapper>

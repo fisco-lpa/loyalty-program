@@ -11,4 +11,34 @@
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
 	</resultMap>
+	<resultMap id="AccountVoMap" type="com.fiscolpa.demo.vo.AccountVo" >
+    <id column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="account_balance" property="accountBalance" jdbcType="INTEGER" />
+    <result column="account_type_id" property="accountTypeId" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+  </resultMap>
+  
+<!--   获取账户列表 -->
+  <select id="getAllAccountByType" resultMap="AccountVoMap" parameterType="java.lang.String" >
+    SELECT
+		a.account_id ,
+		(
+			SELECT
+				pu.user_name
+			FROM
+				points_user pu
+			WHERE
+				pu.user_id = a.user_id
+		) user_Name
+	FROM
+		account a
+	WHERE
+		a.account_type_id = #{accountType}
+  </select>
+  
 </mapper>

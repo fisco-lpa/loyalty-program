@@ -36,8 +36,18 @@ public class PointsTransationDetail {
     private String merchant;
 
     private Date transferTime;
+    
+    private Date creditCreateTime;
 
-    public String getDetailId() {
+    public Date getCreditCreateTime() {
+		return creditCreateTime;
+	}
+
+	public void setCreditCreateTime(Date creditCreateTime) {
+		this.creditCreateTime = creditCreateTime;
+	}
+
+	public String getDetailId() {
         return detailId;
     }
 

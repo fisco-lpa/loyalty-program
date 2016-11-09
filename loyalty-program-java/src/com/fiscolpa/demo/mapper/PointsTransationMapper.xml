@@ -29,13 +29,13 @@
   </delete>
   <insert id="insert" parameterType="com.fiscolpa.demo.model.PointsTransation" >
     insert into points_transation (trans_id, roll_out_account, roll_in_account, 
-      trans_amount, describe, transfer_time, 
+      trans_amount, `describe`, transfer_time, 
       create_time, create_user, update_time, 
-      update_user)
+      update_user,transfer_type)
     values (#{transId,jdbcType=VARCHAR}, #{rollOutAccount,jdbcType=VARCHAR}, #{rollInAccount,jdbcType=VARCHAR}, 
       #{transAmount,jdbcType=INTEGER}, #{describe,jdbcType=VARCHAR}, #{transferTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateUser,jdbcType=VARCHAR})
+      #{updateUser,jdbcType=VARCHAR},#{transferType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.fiscolpa.demo.model.PointsTransation" >
     insert into points_transation
