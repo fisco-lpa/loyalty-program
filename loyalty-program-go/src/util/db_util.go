@@ -1,4 +1,4 @@
-package chaincode_common
+package util
 
 import (
 	"errors"

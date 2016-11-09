@@ -1,10 +1,10 @@
-package chaincode_user
+package user
 
 import (
-	"chaincode_common"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"util"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -35,7 +35,7 @@ func InsertPointsUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, 
 		return nil, errors.New("InsertPointsUser method json Parse error.")
 	}
 	//插入用户表
-	ok, err := stub.InsertRow(chaincode_common.Points_User, shim.Row{
+	ok, err := stub.InsertRow(util.Points_User, shim.Row{
 		Columns: []*shim.Column{
 			&shim.Column{Value: &shim.Column_String_{String_: data.UserId}},      //用户ID
 			&shim.Column{Value: &shim.Column_String_{String_: data.UserName}},    //用户名称
@@ -53,12 +53,12 @@ func InsertPointsUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, 
 	var columns []shim.Column
 	col := shim.Column{Value: &shim.Column_String_{String_: "points_user"}}
 	columns = append(columns, col)
-	row, _ := stub.GetRow(chaincode_common.Table_Count, columns) //row是否为空
+	row, _ := stub.GetRow(util.Table_Count, columns) //row是否为空
 	totalNumber := row.Columns[1].GetInt64()
 	if len(row.Columns) == 0 {
 		//若没有数据，则插入总数表一条记录
 		totalNumber = 1
-		ok, err := stub.InsertRow(chaincode_common.Table_Count, shim.Row{
+		ok, err := stub.InsertRow(util.Table_Count, shim.Row{
 			Columns: []*shim.Column{
 				&shim.Column{Value: &shim.Column_String_{String_: "points_user"}}, //表名
 				&shim.Column{Value: &shim.Column_Int64{Int64: totalNumber}}},      //总数
@@ -69,7 +69,7 @@ func InsertPointsUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, 
 	} else {
 		//若有数据，则更新总数
 		totalNumber = totalNumber + 1
-		ok, err := stub.ReplaceRow(chaincode_common.Table_Count, shim.Row{
+		ok, err := stub.ReplaceRow(util.Table_Count, shim.Row{
 			Columns: []*shim.Column{
 				&shim.Column{Value: &shim.Column_String_{String_: "points_user"}}, //表名
 				&shim.Column{Value: &shim.Column_Int64{Int64: totalNumber}}},      //总数
@@ -79,7 +79,7 @@ func InsertPointsUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, 
 		}
 	}
 	//把获取的总数插入行号表中当主键
-	ok, err = stub.InsertRow(chaincode_common.Points_User_Rownum, shim.Row{
+	ok, err = stub.InsertRow(util.Points_User_Rownum, shim.Row{
 		Columns: []*shim.Column{
 			&shim.Column{Value: &shim.Column_Int64{Int64: totalNumber}},      //行号
 			&shim.Column{Value: &shim.Column_String_{String_: data.UserId}}}, //数据表主键

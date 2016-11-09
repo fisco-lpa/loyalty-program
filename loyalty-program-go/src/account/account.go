@@ -1,4 +1,4 @@
-package chaincode_account
+package account
 
 import (
 	"encoding/base64"

@@ -1,4 +1,4 @@
-package chaincode_query
+package config
 
 import (
 	//"errors"
