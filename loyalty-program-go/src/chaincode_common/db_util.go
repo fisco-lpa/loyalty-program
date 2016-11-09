@@ -340,8 +340,8 @@ func UpdateTableCount(stub shim.ChaincodeStubInterface, tableName string) (int64
 }
 
 // 更新行号表
-func UpdateRowNoTable(stub shim.ChaincodeStubInterface, rowNumTableName string, rowNum int64, key string) error {
-	ok, err := stub.InsertRow(rowNumTableName, shim.Row{
+func UpdateRowNoTable(stub shim.ChaincodeStubInterface, rowNumTable, key string, rowNum int64) error {
+	ok, err := stub.InsertRow(rowNumTable, shim.Row{
 		Columns: []*shim.Column{
 			&shim.Column{Value: &shim.Column_Int64{Int64: rowNum}},   //行号
 			&shim.Column{Value: &shim.Column_String_{String_: key}}}, //数据表主键

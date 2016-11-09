@@ -58,7 +58,7 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 	}
 
 	//更新行号表
-	err = chaincode_common.UpdateRowNoTable(stub, chaincode_common.Points_Transation_Rownum, totalNo, transObject.TransId)
+	err = chaincode_common.UpdateRowNoTable(stub, chaincode_common.Points_Transation_Rownum, transObject.TransId, totalNo)
 
 	if err != nil {
 		return nil, errors.New("Points_Transaction_Rownum insert failed")
