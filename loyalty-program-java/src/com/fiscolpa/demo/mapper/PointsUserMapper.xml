@@ -6,11 +6,15 @@
 		<result column="user_name" property="userName" jdbcType="VARCHAR" />
 		<result column="user_password" property="userPassword" jdbcType="VARCHAR" />
 		<result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
-		<result column="user_type" property="userType" jdbcType="VARCHAR" />
+		<result column="user_type" property="userType" jdbcType="INTEGER" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
 	</resultMap>
-
+	<update id="updatePwd" parameterType="com.fiscolpa.demo.model.PointsUser" >
+    update points_user 
+    set user_password = #{userPassword,jdbcType=VARCHAR} 
+    where user_name = #{userName,jdbcType=VARCHAR}
+  	</update>
 </mapper>
