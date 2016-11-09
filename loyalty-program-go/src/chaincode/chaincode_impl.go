@@ -20,13 +20,13 @@ type RegisterChaincode struct {
 }
 
 //初始化创建表
-func (t *RegisterChaincode) Init(stub shim.ChaincodeStubInterface) ([]byte, error) {
+func (t *RegisterChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	return nil, util.CreateTable(stub)
 }
 
 //调用方法
-func (t *RegisterChaincode) Invoke(stub shim.ChaincodeStubInterface) ([]byte, error) {
-	function, args := stub.GetFunctionAndParameters()
+func (t *RegisterChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	//function, args := stub.GetFunctionAndParameters()
 
 	if function == "InsertPointsUser" { //用户信息录入
 		return user.InsertPointsUser(stub, args)
@@ -44,7 +44,7 @@ func (t *RegisterChaincode) Invoke(stub shim.ChaincodeStubInterface) ([]byte, er
 }
 
 //查询
-func (t *RegisterChaincode) Query(stub shim.ChaincodeStubInterface) ([]byte, error) {
+func (t *RegisterChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	//function, args := stub.GetFunctionAndParameters()
 	return nil, errors.New("调用query失败")
 }
