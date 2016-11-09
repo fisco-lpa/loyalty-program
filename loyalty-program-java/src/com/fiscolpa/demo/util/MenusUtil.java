@@ -23,10 +23,10 @@ public class MenusUtil {
 		
 		//商户菜单
 		List<ItemVo> storeMenus = new ArrayList<ItemVo>();
-		storeMenus.add(new ItemVo("授信查询", "shangcheng/toShouxinQuery"));
-		storeMenus.add(new ItemVo("积分发放", "shangcheng/toJifenfafang"));
-		storeMenus.add(new ItemVo("积分发放查询", "shangcheng/toJifenfafangQuery"));
-		storeMenus.add(new ItemVo("积分承兑查询", "shangcheng/toJifenchengduiQuery"));
+		storeMenus.add(new ItemVo("授信查询", "merchant/merchantTransaction"));
+		storeMenus.add(new ItemVo("积分发放", "merchant/reqSevePoints"));
+		storeMenus.add(new ItemVo("积分发放查询", "merchant/querySentOutQuery"));
+		storeMenus.add(new ItemVo("积分承兑查询", "merchant/queryCredit"));
 		menus.put("2", storeMenus);
 		
 		//用户菜单

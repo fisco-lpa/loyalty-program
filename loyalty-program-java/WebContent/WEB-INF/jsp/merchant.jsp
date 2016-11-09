@@ -17,16 +17,16 @@
 </head>
 
 <body>
-<form class="sui-form form-horizontal sui-validate" action="<%=path%>/queryPoints"  method="post">
+<form class="sui-form form-horizontal sui-validate" action="<%=path%>/merchant/queryPoints"  method="post">
 <input type="submit" value="授信查询" />
 </form>
-<form class="sui-form form-horizontal sui-validate" action="<%=path%>/reqSevePoints"  method="post">
+<form class="sui-form form-horizontal sui-validate" action="<%=path%>/merchant/reqSevePoints"  method="post">
 <input type="submit" value="积分发放" />
 </form>
-<form class="sui-form form-horizontal sui-validate" action="<%=path%>/querySentOutQuery"  method="post">
+<form class="sui-form form-horizontal sui-validate" action="<%=path%>/merchant/querySentOutQuery"  method="post">
 <input type="submit" value="积分发放查询" />
 </form>
-<form class="sui-form form-horizontal sui-validate" action="<%=path%>/queryCredit"  method="post">
+<form class="sui-form form-horizontal sui-validate" action="<%=path%>/merchant/queryCredit"  method="post">
 <input type="submit" value="积分承兑" />
 </form>
 </body>

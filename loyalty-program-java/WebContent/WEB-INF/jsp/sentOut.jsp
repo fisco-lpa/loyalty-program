@@ -17,7 +17,7 @@
 </head>
 
 <body>
-<form class="sui-form form-horizontal sui-validate" action="<%=path%>/sevePoints"  method="post">
+<form class="sui-form form-horizontal sui-validate" action="<%=path%>/merchant/sevePoints"  method="post">
 
 <div style="float:left;width: 580px;">
 	<table>

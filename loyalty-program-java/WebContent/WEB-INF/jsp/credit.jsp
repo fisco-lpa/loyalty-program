@@ -55,10 +55,10 @@ function jump(url) {
 				<td>图片:</td>
 			</tr>
 			<tr>
-				<td>ID:<span id="dff">${dff}</span></td>
+				<td>ID:<span id="dff">${id}</span></td>
 			</tr>
 			<tr>
-				<td>名称:<span id="dff">${dff}</span></td>
+				<td>名称:<span id="dff">${name}</span></td>
 			</tr>
 			<tr>
 				<td>待发放积分:<span id="dff">${dff}</span></td>
@@ -99,7 +99,7 @@ function jump(url) {
 		</td>
 	</tr>
 </table>
-<form class="sui-form form-horizontal sui-validate" action="<%=path%>/reqAccept"  method="post">
+<form class="sui-form form-horizontal sui-validate" action="<%=path%>/merchant/reqAccept"  method="post">
 	<table id="cx">
 	<tr>
 		<td style="width: 50px; text-align: center;">全选</td>

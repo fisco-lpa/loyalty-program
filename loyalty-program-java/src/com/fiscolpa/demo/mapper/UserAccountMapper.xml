@@ -27,4 +27,9 @@
         select account_id from account a join points_user b on a.user_id = b.user_id
         where b.user_name = #{userName,jdbcType=VARCHAR}
   </select>
+  
+  <update id="updateAccountByBalance" parameterType="com.fiscolpa.demo.model.Account">
+  	  update account set account_balance = #{accountBalance}
+  	  where account_id = #{accountId}
+  </update>
 </mapper>

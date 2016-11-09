@@ -12,8 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fiscolpa.demo.mapper.MerchantTransactionMapper;
 import com.fiscolpa.demo.model.PointsTransationExtends;
+import com.fiscolpa.demo.model.Account;
 import com.fiscolpa.demo.model.PointsTransationDetailExtends;
 import com.fiscolpa.demo.service.MerchantTransactionService;
+import com.fiscolpa.demo.service.UserAccountService;
+import com.fiscolpa.demo.util.DateUtil;
 import com.fiscolpa.demo.util.UUIDGenerator;
 import com.mysql.jdbc.StringUtils;
 
@@ -23,9 +26,13 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 	@Autowired
 	private MerchantTransactionMapper mtm;
 	
+	@Autowired
+	private UserAccountService ua;
+	
 	@Override
 	public String queryPoints(PointsTransationExtends pt) {
-		return mtm.queryPoints(pt);
+		String points = mtm.queryPoints(pt);
+		return StringUtils.isNullOrEmpty(points)?"0":points;
 	}
 
 	@Override
@@ -40,12 +47,20 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 	
 	@Transactional
 	@Override
-	public void sevePoints(PointsTransationExtends pt) {
+	public String sevePoints(PointsTransationExtends pt) {
+		//获取账户余额
+		int balance = ua.sumByPrimaryKey(pt.getRollInAccount());
+		if(balance<pt.getTransAmount())return "00001";//余额不足
+		//组装账户信息
+		Account account = new Account();
+		account.setAccountId(pt.getRollInAccount());
+		account.setAccountBalance(balance+pt.getTransAmount());
+		
 		List<PointsTransationExtends> ptList = new ArrayList<>();
 		String transId = UUIDGenerator.getUUID();
 		//交易ID
 		pt.setTransId(transId);
-		pt.setTransferTime("2016-11-07 18:34:00");
+		pt.setTransferTime(DateUtil.getDateTime());
 		pt.setTransferType("2");
 		pt.setCreateUser("admin");
 		pt.setUpdateUser("admin");
@@ -62,6 +77,8 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		List<PointsTransationDetailExtends> salist = new ArrayList<PointsTransationDetailExtends>();
 		//修改
 		List<PointsTransationDetailExtends> upList = new ArrayList<PointsTransationDetailExtends>();
+		
+		
 		for (int i = 0; i < ptdl.size(); i++) {
 			PointsTransationDetailExtends pd = ptdl.get(i);
 			//新增流水
@@ -74,7 +91,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			save.setRollInAccount(pt.getRollInAccount());
 			if(StringUtils.isNullOrEmpty(pt.getExpireTime())){
 				//save.setExpireTime(pt.getExpireTime());
-				save.setExpireTime("2017-11-07 18:34:00");
+				save.setExpireTime(DateUtil.addYear(1));
 			}
 			//修改当前剩余
 			PointsTransationDetailExtends up = new PointsTransationDetailExtends();
@@ -94,23 +111,27 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			upList.add(up);
 		}
 		
-		if(salist.size()>0){
-			mtm.insertTransation(ptList);
-			mtm.insertTransationDetail(salist);
-			mtm.updateCurBalance(upList);
-		}
+		if(salist.size()<=0) return "00002";//交易失败
+		mtm.insertTransation(ptList);
+		mtm.insertTransationDetail(salist);
+		mtm.updateCurBalance(upList);
+		ua.updateAccountByBalance(account);
+		
+		return "00000";//交易正常
 	}
 
 	@Override
-	public void seveAccept(PointsTransationDetailExtends ptd) {
+	public String seveAccept(PointsTransationDetailExtends ptd) {
+		//获取所以未过期的积分
+		List<PointsTransationDetailExtends> ptdl = queryTransationDetailList(ptd);
+		if(ptdl.size()<=0) return "00001"; //没有可兑换的积分
+		
 		//新增
 		List<PointsTransationDetailExtends> salist = new ArrayList<PointsTransationDetailExtends>();
 		//修改
 		List<PointsTransationDetailExtends> upList = new ArrayList<PointsTransationDetailExtends>();
 		//合并同一个承兑商的积分
     	Map<String, PointsTransationExtends> map = new HashMap<String, PointsTransationExtends>();
-		//获取所以未过期的积分
-		List<PointsTransationDetailExtends> ptdl = queryTransationDetailList(ptd);
 		for (int i = 0; i < ptdl.size(); i++) {
 			PointsTransationDetailExtends detail = ptdl.get(i);
 			String accept = detail.getCreditParty();
@@ -155,11 +176,12 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		for (Map.Entry<String, PointsTransationExtends> entry : map.entrySet()) {
 			ptList.add(entry.getValue());
 		}
-		if(salist.size()>0){
-			mtm.insertTransation(ptList);
-			mtm.insertTransationDetail(salist);
-			mtm.updateCurBalance(upList);
-		}
+		if(salist.size()<=0) return "00002";//交易失败
+		mtm.insertTransation(ptList);
+		mtm.insertTransationDetail(salist);
+		mtm.updateCurBalance(upList);
+		
+		return "00000"; //交易正常
 	}
 	
 	

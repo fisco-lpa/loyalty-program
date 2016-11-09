@@ -92,10 +92,10 @@
 				<td>图片:</td>
 			</tr>
 			<tr>
-				<td>ID:<span id="dff">${dff}</span></td>
+				<td>ID:<span id="dff">${id}</span></td>
 			</tr>
 			<tr>
-				<td>名称:<span id="dff">${dff}</span></td>
+				<td>名称:<span id="dff">${name}</span></td>
 			</tr>
 			<tr>
 				<td>待发放积分:<span id="dff">${dff}</span></td>

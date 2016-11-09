@@ -10,7 +10,6 @@ import com.fiscolpa.demo.model.PointsTransationDetailExtends;
 @Service
 public interface MerchantTransactionService{
 	
-	//授信查询--------------------------------------------------------------------------
 	/**
 	 * 更具类型查询积分 待发积分、已发送、已承兑
 	 * @param roll_in_account, transfer_type
@@ -34,33 +33,17 @@ public interface MerchantTransactionService{
 	 */
 	public List<PointsTransationDetailExtends> queryTransationDetailList(PointsTransationDetailExtends ptd);
 	
-	//积分发放--------------------------------------------------------------------------
-	/**
-	 * 
-	 * 获取账户积分
-	 * @param userId
-	 * @return
-		public List<PointsTransationDetail> queryAccountPoints(String userId);
-	 */
-
 	/**
 	 * 插入积分
 	 * （写入points_transation、points_transation_detail表，修改使用那条积分的余额）
 	 * @param pt
 	 */
-	public void sevePoints(PointsTransationExtends pt);
-	
-	/**
-	 * 修改当前积分记录
-	 * @param ptd
-	
-	public void updateCurrentPoints(PointsTransationDetail ptd);
-	 */
+	public String sevePoints(PointsTransationExtends pt);
 	
 	/**
 	 * 商户发起承兑
 	 * @param pt
 	 */
-	public void seveAccept(PointsTransationDetailExtends ptd);
+	public String seveAccept(PointsTransationDetailExtends ptd);
 	
 }
