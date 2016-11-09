@@ -18,7 +18,7 @@ public class PointsUser {
 
     private String phoneNumber;
 
-    private String userType;
+    private Integer userType;
 
     private Date createTime;
 
@@ -65,12 +65,12 @@ public class PointsUser {
         this.phoneNumber = phoneNumber == null ? null : phoneNumber.trim();
     }
 
-    public String getUserType() {
+    public Integer getUserType() {
         return userType;
     }
 
-    public void setUserType(String userType) {
-        this.userType = userType == null ? null : userType.trim();
+    public void setUserType(Integer userType) {
+        this.userType = userType;
     }
 
     public Date getCreateTime() {

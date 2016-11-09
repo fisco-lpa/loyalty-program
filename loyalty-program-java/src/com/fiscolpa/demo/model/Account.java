@@ -15,7 +15,7 @@ public class Account {
 
     private Integer accountBalance;
 
-    private String accountTypeId;
+    private Integer accountTypeId;
 
     private Date createTime;
 
@@ -49,12 +49,12 @@ public class Account {
         this.accountBalance = accountBalance;
     }
 
-    public String getAccountTypeId() {
+    public Integer getAccountTypeId() {
         return accountTypeId;
     }
 
-    public void setAccountTypeId(String accountTypeId) {
-        this.accountTypeId = accountTypeId == null ? null : accountTypeId.trim();
+    public void setAccountTypeId(Integer accountTypeId) {
+        this.accountTypeId = accountTypeId;
     }
 
     public Date getCreateTime() {
