@@ -9,16 +9,16 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
-type RegisterChaincode struct {
+type PointsChaincode struct {
 }
 
 //初始化创建表
-func (t *RegisterChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+func (t *PointsChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	return nil, util.CreateTable(stub)
 }
 
 //调用方法
-func (t *RegisterChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+func (t *PointsChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	if function == "SignUp" { //用户注册
 		return wrapper.SignUp(stub, args)
 	} else if function == "SignIn" { //用户登录
@@ -35,14 +35,14 @@ func (t *RegisterChaincode) Invoke(stub shim.ChaincodeStubInterface, function st
 }
 
 //查询
-func (t *RegisterChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+func (t *PointsChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
 	//function, args := stub.GetFunctionAndParameters()
 	return nil, errors.New("调用query失败")
 }
 
 func main() {
 
-	err := shim.Start(new(RegisterChaincode))
+	err := shim.Start(new(PointsChaincode))
 	if err != nil {
 		fmt.Printf("Error starting chaincode: %s", err)
 	}
