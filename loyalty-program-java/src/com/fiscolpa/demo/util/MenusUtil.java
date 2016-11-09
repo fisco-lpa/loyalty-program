@@ -33,7 +33,7 @@ public class MenusUtil {
 		List<ItemVo> userMenus = new ArrayList<ItemVo>();
 		userMenus.add(new ItemVo("进账积分查询", "userIn"));
 		userMenus.add(new ItemVo("积分消费查询", "userOut"));
-		userMenus.add(new ItemVo("商品页", "shanghu/toShangpin"));
+		userMenus.add(new ItemVo("商品页", "goods"));
 		menus.put("3", userMenus);
 	}
 	
