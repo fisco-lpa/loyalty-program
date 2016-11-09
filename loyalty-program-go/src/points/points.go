@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"log"
 	"util"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
