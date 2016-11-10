@@ -1,5 +1,7 @@
 package com.fiscolpa.demo.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +33,24 @@ public class PointsExchangeTransationServiceImpl implements PointsExchangeTransa
 		
 		return pointsTransationDetailMapper.insert(pointsTransationDetail);
 	}
+	
+	@Override
+	public int selectAccountBalance(String id) {
+		
+		return pointsTransationExchangeMapper.selectAccountBalance(id);
+	}
 
+
+	@Override
+	public List<PointsTransationDetail> queryTransationDetailList(PointsTransationDetail ptd) {
+		
+		return  pointsTransationExchangeMapper.selectAllJiFen(ptd);
+	}
+
+
+	@Override
+	public int updateByPrimaryKeySelective(PointsTransationDetail record) {
+		// TODO Auto-generated method stub
+		return pointsTransationExchangeMapper.updateByPrimaryKeySelective(record);
+	}
 }
