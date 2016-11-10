@@ -1,8 +1,6 @@
 package points
 
 import (
-	"encoding/base64"
-	"encoding/json"
 	"errors"
 	"log"
 	"util"
@@ -43,14 +41,7 @@ type PointsTransactionDetail struct {
 	OperFlag         string           // 操作标积 0-新增，1-修改，2-删除
 }
 
-func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	// 解析传入数据
-	transObject := new(PointsTransaction)
-	err := util.ParseJsonAndDecode(transObject, args)
-	if err != nil {
-		log.Println("Error occurred when parsing json")
-		return nil, errors.New("Error occurred when parsing json.")
-	}
+func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *PointsTransaction) error {
 
 	//插入记录到积分交易表
 	ok, err := stub.InsertRow(util.Points_Transation, shim.Row{
@@ -66,14 +57,14 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 	})
 	if !ok {
 		log.Println("InsertRow transObject error..")
-		return nil, errors.New("Points_Transaction insertion failed.")
+		return errors.New("Points_Transaction insertion failed.")
 	}
 
 	//更新table_count表
 	totalNo, err := util.UpdateTableCount(stub, util.Points_Transation)
 	if totalNo == 0 || err != nil {
 		log.Println("update table_count error..")
-		return nil, errors.New("Total_Count update failed")
+		return errors.New("Total_Count update failed")
 	}
 
 	//更新行号表
@@ -81,23 +72,15 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 
 	if err != nil {
 		log.Println("update Points_Transaction_Rownum error..")
-		return nil, errors.New("Points_Transaction_Rownum insert failed")
+		return errors.New("Points_Transaction_Rownum insert failed")
 	}
 
 	log.Println("InsertPointsTransation sucess!")
 
-	return nil, nil
+	return nil
 }
 
-func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
-	// 解析传入数据
-	pointsDetail := new(PointsTransactionDetail)
-	err := util.ParseJsonAndDecode(pointsDetail, args)
-	if err != nil {
-		log.Println("Error occurred when parsing json")
-		return nil, errors.New("Error occurred when parsing json.")
-	}
+func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail *PointsTransactionDetail) error {
 
 	//插入记录到积分交易逐笔流水表
 	ok, err := stub.InsertRow(util.Points_Transation, shim.Row{
@@ -120,14 +103,14 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, args []strin
 	})
 	if !ok {
 		log.Println("InsertRow pointsDetail error..")
-		return nil, errors.New("Points_Transaction_Detail insertion failed.")
+		return errors.New("Points_Transaction_Detail insertion failed.")
 	}
 
 	//更新table_count表
 	totalNo, err := util.UpdateTableCount(stub, util.Points_Transation)
 	if totalNo == 0 || err != nil {
 		log.Println("update table_count error..")
-		return nil, errors.New("Total_Count update failed")
+		return errors.New("Total_Count update failed")
 	}
 
 	//更新行号表
@@ -135,24 +118,24 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, args []strin
 
 	if err != nil {
 		log.Println("update Points_Transaction_Rownum error..")
-		return nil, errors.New("Points_Transaction_Rownum insert failed")
+		return errors.New("Points_Transaction_Rownum insert failed")
 	}
 
 	log.Println("InsertPointsTransationDetail sucess!")
 
-	return nil, nil
+	return nil
 }
 
-func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, args []string) error {
 	// 解析传入数据
 	pointsDetail := new(PointsTransactionDetail)
 	err := util.ParseJsonAndDecode(pointsDetail, args)
 	if err != nil {
 		log.Println("Error occurred when parsing json")
-		return nil, errors.New("Error occurred when parsing json.")
+		return errors.New("Error occurred when parsing json.")
 	}
 
 	// to do:
 
-	return nil, nil
+	return nil
 }
