@@ -1,13 +1,20 @@
 package main
 
 import (
-	"log"
-	"points"
+	"account"
+	"fmt"
+	//"log"
 )
 
-func main() {
+type AccountInterface interface {
+}
 
-	log.Printf("My first log...")
-	points.TestPoints()
+func main2() {
+	aa := new(account.Account)
+	test(aa)
+	fmt.Println("test1..........")
+}
 
+func test(acc AccountInterface) {
+	fmt.Println("test2..........")
 }
