@@ -38,10 +38,10 @@ func ParseJson(data SuperObject, arg string) error {
 	err := json.Unmarshal(bytes, data)
 	if err != nil {
 		log.Println("ParseJson json Unmarshal error.")
-		return nil, err
+		return err
 	}
 	fmt.Println("----------------------------------")
 	fmt.Println(data)
 	fmt.Println("Parse json is ok.")
-	return &data, nil
+	return nil
 }
