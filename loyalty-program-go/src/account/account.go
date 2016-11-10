@@ -1,8 +1,6 @@
 package account
 
 import (
-	"encoding/base64"
-	"encoding/json"
 	"errors"
 	//"log"
 	"util"
@@ -28,20 +26,7 @@ type AccountType struct {
 }
 
 //账户信息录入
-func InsertAccount(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
-	var data Account
-	//base64解码
-	arg, err := base64.StdEncoding.DecodeString(args[0])
-	if err != nil {
-		return nil, errors.New("InsertAccount base64 decode error.")
-	}
-
-	//解析数据
-	err = json.Unmarshal(arg, &data)
-	if err != nil {
-		return nil, errors.New("InsertAccount json Parse error.")
-	}
+func InsertAccount(stub shim.ChaincodeStubInterface, data Account) ([]byte, error) {
 
 	//往账户表插入数据
 	ok, err := stub.InsertRow(util.Account, shim.Row{
@@ -115,21 +100,8 @@ func InsertAccount(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 	return nil, nil
 }
 
-//账户信息录入
-func InsertAccountType(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
-	var data AccountType
-	//base64解码
-	arg, err := base64.StdEncoding.DecodeString(args[0])
-	if err != nil {
-		return nil, errors.New("InsertAccountType base64 decode error.")
-	}
-
-	//解析数据
-	err = json.Unmarshal(arg, &data)
-	if err != nil {
-		return nil, errors.New("InsertAccountType json Parse error.")
-	}
+//账户信息类型录入
+func InsertAccountType(stub shim.ChaincodeStubInterface, data AccountType) ([]byte, error) {
 
 	//往账户表插入数据
 	ok, err := stub.InsertRow(util.Account_Type, shim.Row{
