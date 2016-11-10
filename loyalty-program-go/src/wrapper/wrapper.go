@@ -6,6 +6,13 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
+type CreditPointsTransData struct {
+	Account                 *util.Account
+	PointsTransaction       *util.PointsTransaction
+	PointsTransactionDetail *util.PointsTransactionDetail
+	AuditObj                *util.AuditObject
+}
+
 //注册
 func SignUp(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
@@ -20,7 +27,21 @@ func SignIn(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 //授信积分
 func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	var transObject CreditPointsTransData
+	//base64解码
+	arg, err := base64.StdEncoding.DecodeString(args[0])
+	if err != nil {
+		return nil, errors.New("CreditPoints base64 decode error.")
+	}
+	//解析数据
+	err = json.Unmarshal(arg, &transObject)
+	if err != nil {
+		return nil, errors.New("CreditPoints json Parse error.")
+	}
+	//账户信息表更新
+	if transObject.Account.OperFlag == "1" {
 
+	}
 	return nil, nil
 }
 
