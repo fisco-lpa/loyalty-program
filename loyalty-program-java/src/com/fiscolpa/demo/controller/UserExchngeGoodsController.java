@@ -28,6 +28,7 @@ import com.fiscolpa.demo.service.MerchantTransactionService;
 import com.fiscolpa.demo.service.PointsExchangeTransationService;
 import com.fiscolpa.demo.service.UserAccountService;
 import com.fiscolpa.demo.util.IDCreator;
+import com.fiscolpa.demo.util.PointsTransactionEnum;
 import com.fiscolpa.demo.util.UUIDGenerator;
 import com.mysql.jdbc.StringUtils;
 
@@ -60,8 +61,9 @@ public class UserExchngeGoodsController {
 		PointsUser currentUser=(PointsUser) session.getAttribute("user");
 
 		PointsTransation pointsTransation=new PointsTransation();
-		//ID
-		String TransId = IDCreator.getInstance().getID("JF_EXCHANGE", "");
+		//交易ID
+		String TransId = PointsTransactionEnum.BUY.getBeginning()+UUIDGenerator.getUUID();
+		//String TransId = IDCreator.getInstance().getID("JF_EXCHANGE", "");
 		pointsTransation.setTransId(TransId);
 		pointsTransation.setCreateTime(date);
 		pointsTransation.setCreateUser(currentUser.getCreateUser());
@@ -122,11 +124,13 @@ public class UserExchngeGoodsController {
 			//新增流水
 			PointsTransationDetail save = new PointsTransationDetail();
 			BeanUtils.copyProperties(pd,save);
-			String detailIdIncrese = IDCreator.getInstance().getID("EXCHANGE_DETIAL", "");
+			String detailIdIncrese = PointsTransactionEnum.BUY.getBeginning()+UUIDGenerator.getUUID();
+		//	String detailIdIncrese = IDCreator.getInstance().getID("EXCHANGE_DETIAL", "");
 			save.setDetailId(detailIdIncrese);
 			save.setSourceDetailId(pd.getDetailId());
-			save.setRollOutAccount(pointsTransationDetail.getRollOutAccount());
-			save.setRollInAccount(pointsTransationDetail.getRollInAccount());
+			save.setTransId(TransId);
+			save.setRollOutAccount(currentUser.getAccountId());
+			save.setRollInAccount(accountMallId);
 			save.setCreditCreateTime(date);
 			save.setUpdateTime(date);
 			save.setTransferTime(date);
