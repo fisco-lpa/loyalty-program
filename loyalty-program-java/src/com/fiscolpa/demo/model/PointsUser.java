@@ -32,6 +32,8 @@ public class PointsUser {
     private String accountId;
     @Transient
     private Integer accountBalance;
+    @Transient
+    private String userTypeStr;
     
     public String getUserId() {
         return userId;
@@ -119,6 +121,14 @@ public class PointsUser {
 
 	public void setAccountBalance(Integer accountBalance) {
 		this.accountBalance = accountBalance;
+	}
+
+	public String getUserTypeStr() {
+		return userTypeStr;
+	}
+
+	public void setUserTypeStr(String userTypeStr) {
+		this.userTypeStr = userTypeStr;
 	}
     
 }

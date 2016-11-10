@@ -1,10 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
+%>
 <html>
 <head>
     <title>Mybatis分页插件 - 测试页面</title>
-    <script src="${pageContext.request.contextPath}/static/js/jquery-3.1.1.min.js"></script>
-    <link href="${pageContext.request.contextPath}/static/css/style.css" rel="stylesheet" type="text/css"/>
+	<link href="<%=path %>/static/css/sui.min.css" rel="stylesheet">
+	<link href="${pageContext.request.contextPath}/static/css/style.css" rel="stylesheet" type="text/css"/>
+	<script type="text/javascript" src="href="<%=path %>/static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="href="<%=path %>/static/js/sui.min.js"></script>
     <style type="text/css">
         .pageDetail {
             display: none;
@@ -22,10 +28,13 @@
     </script>
 </head>
 <body>
+
+
+<%@ include file="include/top.jsp" %>
+
 <div class="wrapper">
     <div class="middle">
         <h1 style="padding: 50px 0 20px;">国家(地区)列表</h1>
-		<h3 style="padding: 0 0 10px 0"><a href="${pageContext.request.contextPath}/">返回首页</a></h3>
         <form action="${pageContext.request.contextPath}/list" method="post">
             <table class="gridtable" style="width:100%;">
                 <tr>
@@ -157,7 +166,6 @@
             </table>
         </c:if>
     </div>
-    <div class="push"></div>
 </div>
 </body>
 </html>

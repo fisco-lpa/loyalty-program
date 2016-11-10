@@ -34,7 +34,8 @@
     pt.create_user			createUser, 
     pt.update_time			updateTime, 
     pt.update_user			updateUser
-    <if test='queryColumn=="use"'>
+    <if test='transferType=="1"'>
+    ,(select ptd.detail_id from points_transation_detail ptd where pt.trans_id = ptd.trans_id) detailId
     ,ifnull((
     	SELECT
 			sum(ptd.trans_amount)
@@ -42,13 +43,8 @@
 			points_transation_detail ptd
 		WHERE
 			ptd.roll_out_account = pt.roll_in_account
-		AND ptd.credit_party = pt.roll_out_account
-		AND ptd.merchant = pt.roll_in_account
-		AND ptd.credit_create_time = pt.create_time
+		AND ptd.source_detail_id = (select ptd.detail_id from points_transation_detail ptd where pt.trans_id = ptd.trans_id)
 	 ),0) usePoints
-    </if>
-    <if test='transferType=="1"'>
-    ,(select ptd.detail_id from points_transation_detail ptd where pt.trans_id = ptd.trans_id) detailId
     </if>
     <if test='transferType=="2"'>
     ,(select ptd.expire_time from points_transation_detail ptd where pt.trans_id = ptd.trans_id limit 1) expireTime
@@ -148,8 +144,10 @@
 				    and pt.transfer_type= #{expireTime})
 				order by expire_time,create_time
 			</if>
-			<if test="transferType != null">
+			<if  test="curBalance != null">
 			and cur_balance > 0
+			</if>
+			<if test="transferType != null">
 			and EXISTS(  
 			    SELECT 1 FROM points_transation pt  
 			    WHERE pt.trans_id = ptd.trans_id

@@ -11,10 +11,16 @@
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+		<result column="userTypeStr" property="userTypeStr" jdbcType="VARCHAR" />
 	</resultMap>
 	<update id="updatePwd" parameterType="com.fiscolpa.demo.model.PointsUser" >
     update points_user 
     set user_password = #{userPassword,jdbcType=VARCHAR} 
     where user_name = #{userName,jdbcType=VARCHAR}
   	</update>
+  	
+  	<select id="selectUserAndUserType" parameterType="com.fiscolpa.demo.model.PointsUser" resultMap="BaseResultMap">
+  		select u.*, t.describe as userTypeStr from points_user u left join account_type t on u.user_type = t.account_type_id 
+  		where u.user_password = #{userPassword} and (u.user_name = #{userName} or u.phone_number = #{userName})
+  	</select>
 </mapper>
