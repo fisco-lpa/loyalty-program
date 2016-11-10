@@ -18,6 +18,7 @@ import com.fiscolpa.demo.model.PointsTransationExtends;
 import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.model.PointsTransationDetailExtends;
 import com.fiscolpa.demo.service.MerchantTransactionService;
+import com.fiscolpa.demo.util.PointsTransactionEnum;
 import com.mysql.jdbc.StringUtils;
 
 
@@ -40,15 +41,15 @@ public class MerchantController {
 		result.addObject("id", currentUser.getUserId());
 		PointsTransationExtends pt = new PointsTransationExtends();
 		pt.setRollInAccount(currentUser.getAccountId());
-		pt.setTransferType("1");
+		pt.setTransferType(PointsTransactionEnum.CREDIT.getSign());
         result.addObject("dff", mts.queryPoints(pt));
         PointsTransationExtends pt1 = new PointsTransationExtends();
         pt1.setRollOutAccount(currentUser.getAccountId());
-		pt1.setTransferType("2");
+		pt1.setTransferType(PointsTransactionEnum.GRANT.getSign());
         result.addObject("yff", mts.queryPoints(pt1));
         PointsTransationExtends pt2 = new PointsTransationExtends();
         pt2.setRollOutAccount(currentUser.getAccountId());
-		pt2.setTransferType("3");
+		pt2.setTransferType(PointsTransactionEnum.ACCEPT.getSign());
         result.addObject("ycd", mts.queryPoints(pt2));
         return result;
 	}
@@ -66,14 +67,14 @@ public class MerchantController {
 			pt.setRollOutAccount(null);
 		}
 		pt.setRollInAccount(currentUser.getAccountId());
-		pt.setTransferType("1");
+		pt.setTransferType(PointsTransactionEnum.CREDIT.getSign());
 		pt.setQueryColumn("use");
 		return mts.queryTransationList(pt);
 	}
 	
 	@RequestMapping(value="/queryTransationDetailList",method = RequestMethod.POST)
 	public @ResponseBody List<PointsTransationDetailExtends> queryTransationDetailList(HttpSession session,HttpServletRequest request,@ModelAttribute("ptd") PointsTransationDetailExtends ptd){
-		ptd.setTransferType("2");
+		ptd.setTransferType(PointsTransactionEnum.GRANT.getSign());
 		return mts.queryTransationDetailList(ptd);
 	}
 	
@@ -101,7 +102,7 @@ public class MerchantController {
 	public @ResponseBody List<PointsTransationExtends> querySentOutQueryList(HttpSession session,HttpServletRequest request,@ModelAttribute("pt") PointsTransationExtends pt){
 		PointsUser currentUser = (PointsUser) session.getAttribute("user");
 		pt.setRollOutAccount(currentUser.getAccountId());
-		pt.setTransferType("2");
+		pt.setTransferType(PointsTransactionEnum.GRANT.getSign());
 		return mts.queryTransationList(pt);
 	}
 	
@@ -118,7 +119,7 @@ public class MerchantController {
 		}
 		PointsUser currentUser = (PointsUser) session.getAttribute("user");
 		pt.setRollInAccount(currentUser.getAccountId());
-		pt.setTransferType("3");
+		pt.setTransferType(PointsTransactionEnum.BUY.getSign());
 		return mts.queryTransationList(pt);
 	}
 	
@@ -126,7 +127,7 @@ public class MerchantController {
 	public String reqAccept(HttpSession session,HttpServletRequest request,@ModelAttribute("ptd") PointsTransationDetailExtends ptd){
 		PointsUser currentUser = (PointsUser) session.getAttribute("user");
 		ptd.setRollInAccount(currentUser.getAccountId());
-		ptd.setTransferType("3");
+		ptd.setTransferType(PointsTransactionEnum.BUY.getSign());
 		mts.seveAccept(ptd);
 		return "credit";
 	}

@@ -17,6 +17,7 @@ import com.fiscolpa.demo.model.PointsTransationDetailExtends;
 import com.fiscolpa.demo.service.MerchantTransactionService;
 import com.fiscolpa.demo.service.UserAccountService;
 import com.fiscolpa.demo.util.DateUtil;
+import com.fiscolpa.demo.util.PointsTransactionEnum;
 import com.fiscolpa.demo.util.UUIDGenerator;
 import com.mysql.jdbc.StringUtils;
 
@@ -67,13 +68,13 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		in.setAccountBalance(userBalance+pt.getTransAmount());
 		
 		List<PointsTransationExtends> ptList = new ArrayList<>();
-		String transId = UUIDGenerator.getUUID();
+		String transId = PointsTransactionEnum.GRANT.getBeginning()+UUIDGenerator.getUUID();
 		//交易ID
 		pt.setTransId(transId);
 		pt.setTransferTime(DateUtil.getDateTime());
-		pt.setTransferType("2");
-		pt.setCreateUser("admin");
-		pt.setUpdateUser("admin");
+		pt.setTransferType(PointsTransactionEnum.GRANT.getSign());
+		pt.setCreateUser(pt.getRollOutAccount());
+		pt.setUpdateUser(pt.getRollOutAccount());
 		//交易总表
 		ptList.add(pt);
 		//交易积分
@@ -94,7 +95,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			//新增流水
 			PointsTransationDetailExtends save = new PointsTransationDetailExtends();
 			BeanUtils.copyProperties(pd,save);
-			save.setDetailId(UUIDGenerator.getUUID());
+			save.setDetailId(PointsTransactionEnum.GRANT.getBeginning()+UUIDGenerator.getUUID());
 			save.setTransId(transId);
 			save.setSourceDetailId(pd.getDetailId());
 			save.setRollOutAccount(pt.getRollOutAccount());
@@ -147,7 +148,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		for (int i = 0; i < ptdl.size(); i++) {
 			PointsTransationDetailExtends detail = ptdl.get(i);
 			String accept = detail.getCreditParty();
-			String transId = UUIDGenerator.getUUID();
+			String transId = PointsTransactionEnum.ACCEPT.getBeginning()+UUIDGenerator.getUUID();
 			if(map.containsKey(accept)){
 				Integer amount = map.get(accept).getTransAmount();
 				amount+=detail.getTransAmount();
@@ -160,15 +161,15 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 				pt.setTransAmount(detail.getTransAmount());
 				pt.setTransId(transId);
 				pt.setTransferTime(DateUtil.getDateTime());
-				pt.setTransferType("4");
-				pt.setCreateUser("admin");
-				pt.setUpdateUser("admin");
+				pt.setTransferType(PointsTransactionEnum.ACCEPT.getSign());
+				pt.setCreateUser(ptd.getRollInAccount());
+				pt.setUpdateUser(ptd.getRollInAccount());
 				map.put(accept, pt);
 			}
 			//新增流水
 			PointsTransationDetailExtends save = new PointsTransationDetailExtends();
 			BeanUtils.copyProperties(detail,save);
-			save.setDetailId(UUIDGenerator.getUUID());
+			save.setDetailId(PointsTransactionEnum.ACCEPT.getBeginning()+UUIDGenerator.getUUID());
 			save.setTransId(transId);
 			save.setSourceDetailId(detail.getDetailId());
 			save.setRollOutAccount(ptd.getRollInAccount());
