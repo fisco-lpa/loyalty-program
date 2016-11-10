@@ -165,21 +165,35 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 		return errors.New("Points_Transaction_Rownum insert failed")
 	}
 
-	log.Println("InsertPointsTransationDetail sucess!")
+	log.Println("InsertPointsTransationDetail success!")
 
 	return nil
 }
 
-func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, args []string) error {
-	// 解析传入数据
-	pointsDetail := new(PointsTransactionDetail)
-	err := util.ParseJsonAndDecode(pointsDetail, args)
-	if err != nil {
-		log.Println("Error occurred when parsing json")
-		return errors.New("Error occurred when parsing json.")
-	}
+// 更新积分明细表
+func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail *PointsTransactionDetail) error {
+	stub.ReplaceRow(util.Points_Transation_Detail, shim.Row{
+		Columns: []*shim.Column{
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.DetailId}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.SourceDetailId}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.TransId}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.RolloutAccount}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.RollinAccount}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.TransAmount}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.ExpireTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.ExtRef}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.TransferTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CurBalance}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.Merchant}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditCreateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditParty}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateUser}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateUser}}},
+	})
 
-	// to do:
+	log.Println("UpdatePointsTransationDetail success!")
 
 	return nil
 }
