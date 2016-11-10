@@ -1,7 +1,11 @@
 package com.fiscolpa.demo.vo;
 
-public class ItemVo {
+import java.io.Serializable;
 
+public class ItemVo implements Serializable {
+
+	private static final long serialVersionUID = -7720685114048366256L;
+	
 	private String name;
 	private String value;
 	

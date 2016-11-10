@@ -8,4 +8,6 @@ public interface PointsUserService extends IService<PointsUser> {
 
 	public List<PointsUser> select(PointsUser pointsUser);
 	
+	List<PointsUser> selectUserAndUserType(PointsUser pointsUser);
+	
 }

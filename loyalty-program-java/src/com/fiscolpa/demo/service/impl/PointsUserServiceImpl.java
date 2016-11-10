@@ -19,4 +19,8 @@ public class PointsUserServiceImpl extends BaseService<PointsUser> implements Po
 		return pointsUserMapper.select(pointsUser);
 	}
 
+	public List<PointsUser> selectUserAndUserType(PointsUser pointsUser) {
+		return pointsUserMapper.selectUserAndUserType(pointsUser);
+	}
+
 }

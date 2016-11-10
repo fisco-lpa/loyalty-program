@@ -36,39 +36,27 @@ public class LoginController {
     @RequestMapping("/doLogin")
     public String doLogin(@RequestParam String userName, @RequestParam String password, HttpSession session) {
     	PointsUser pointsUser = new PointsUser();
-    	pointsUser.setPhoneNumber(userName);
+    	pointsUser.setUserName(userName);
     	pointsUser.setUserPassword(password);
-    	List<PointsUser> userList = pointsUserService.select(pointsUser);
+    	List<PointsUser> userList = pointsUserService.selectUserAndUserType(pointsUser);
     	if (userList.size() == 1) {
     		PointsUser currentUser = userList.get(0);
     		logger.info("Login success! User Type:" + currentUser.getUserType());
+    		
+    		// 查询用户的账户余额
+    		Account account = new Account();
+    		account.setUserId(currentUser.getUserId());
+    		account.setAccountTypeId(currentUser.getUserType());
+    		Account currentAccount = accountService.selectOne(account);
+    		currentUser.setAccountId(currentAccount.getAccountId());
+    		
     		session.setAttribute("user", currentUser);
     		session.setAttribute("menus", MenusUtil.getMenus(String.valueOf(currentUser.getUserType())));
     		return "index";
-    	} else {
-    		pointsUser.setPhoneNumber(null);
-    		pointsUser.setUserName(userName);
-    		userList = pointsUserService.select(pointsUser);
-    		if (userList.size() == 1) {
-	    		PointsUser currentUser = userList.get(0);
-	    		logger.info("Login success! User Type:" + currentUser.getUserType());
-	    		
-	    		// 查询用户的账户余额
-	    		Account account = new Account();
-	    		account.setUserId(currentUser.getUserId());
-	    		account.setAccountTypeId(currentUser.getUserType());
-	    		Account currentAccount = accountService.selectOne(account);
-	    		currentUser.setAccountId(currentAccount.getAccountId());
-	    		//currentUser.setAccountBalance(currentAccount.getAccountBalance());
-	    		
-	    		session.setAttribute("user", currentUser);
-	    		session.setAttribute("menus", MenusUtil.getMenus(String.valueOf(currentUser.getUserType())));
-	    		return "index";
-    		} else {
-	    		logger.error("Login fail!");
-	    		return "redirect:/toLogin";
-    		}
-    	}
+		} else {
+    		logger.error("Login fail!");
+    		return "redirect:/toLogin";
+		}
     }
     
     @RequestMapping("/logout")
