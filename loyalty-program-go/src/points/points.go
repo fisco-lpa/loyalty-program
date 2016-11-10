@@ -20,6 +20,7 @@ type PointsTransaction struct {
 	TransferTime   string           //交易时间
 	TransferType   string           //交易类型
 	AuditObj       util.AuditObject //audit object
+	OperFlag       string           // 操作标积 0-新增，1-修改，2-删除
 }
 
 //积分交易明细对象
@@ -39,22 +40,18 @@ type PointsTransactionDetail struct {
 	CreditParty      string           //授信方账户
 	Merchant         string           // 商户账户
 	AuditObj         util.AuditObject //audit object
+	OperFlag         string           // 操作标积 0-新增，1-修改，2-删除
 }
 
 func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	var transObject PointsTransaction
-	//base解码
-	arg, err := base64.StdEncoding.DecodeString(args[0])
+	// 解析传入数据
+	transObject := new(PointsTransaction)
+	err := util.ParseJsonAndDecode(transObject, args)
 	if err != nil {
-		log.Println("decode transObject error..")
-		return nil, errors.New("InsertPointsTransation method base64 decoding error.")
+		log.Println("Error occurred when parsing json")
+		return nil, errors.New("Error occurred when parsing json.")
 	}
-	//解析
-	err = json.Unmarshal(arg, &transObject)
-	if err != nil {
-		log.Println("Unmarshal transObject error..")
-		return nil, errors.New("InsertPointsTransation method json Parse error.")
-	}
+
 	//插入记录到积分交易表
 	ok, err := stub.InsertRow(util.Points_Transation, shim.Row{
 		Columns: []*shim.Column{
@@ -65,9 +62,7 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransferTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransferType}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateUser}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateUser}}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateUser}}},
 	})
 	if !ok {
 		log.Println("InsertRow transObject error..")
@@ -95,19 +90,15 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 }
 
 func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	var pointsDetail PointsTransactionDetail
-	//base解码
-	arg, err := base64.StdEncoding.DecodeString(args[0])
+
+	// 解析传入数据
+	pointsDetail := new(PointsTransactionDetail)
+	err := util.ParseJsonAndDecode(pointsDetail, args)
 	if err != nil {
-		log.Println("decode pointsDetail error..")
-		return nil, errors.New("InsertPointsTransationDetail method base64 decoding error.")
+		log.Println("Error occurred when parsing json")
+		return nil, errors.New("Error occurred when parsing json.")
 	}
-	//解析
-	err = json.Unmarshal(arg, &pointsDetail)
-	if err != nil {
-		log.Println("Unmarshal pointsDetail error..")
-		return nil, errors.New("InsertPointsTransationDetail method json Parse error.")
-	}
+
 	//插入记录到积分交易逐笔流水表
 	ok, err := stub.InsertRow(util.Points_Transation, shim.Row{
 		Columns: []*shim.Column{
@@ -125,9 +116,7 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, args []strin
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditCreateTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditParty}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateUser}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateUser}}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateUser}}},
 	})
 	if !ok {
 		log.Println("InsertRow pointsDetail error..")
@@ -155,6 +144,15 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, args []strin
 }
 
 func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	// 解析传入数据
+	pointsDetail := new(PointsTransactionDetail)
+	err := util.ParseJsonAndDecode(pointsDetail, args)
+	if err != nil {
+		log.Println("Error occurred when parsing json")
+		return nil, errors.New("Error occurred when parsing json.")
+	}
+
+	// to do:
 
 	return nil, nil
 }
