@@ -43,13 +43,13 @@ func SignIn(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 }
 
 //授信积分
-func CreditPoints(stub shim.ChaincodeStubInterface, args []string) error {
+func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	// 解析传入数据
 	creditObject := new(CreditPointsTransData)
 	err := util.ParseJsonAndDecode(creditObject, args)
 	if err != nil {
 		log.Println("Error occurred when parsing json")
-		return errors.New("Error occurred when parsing json.")
+		return nil, errors.New("Error occurred when parsing json.")
 	}
 
 	//账户信息表更新
@@ -57,7 +57,7 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) error {
 		err := account.UpdateAccount(stub, creditObject.Account)
 		if err != nil {
 			log.Println("Error occurred when performing UpdateAccount")
-			return errors.New("Error occurred when performing UpdateAccount.")
+			return nil, errors.New("Error occurred when performing UpdateAccount.")
 		}
 
 	} else {
@@ -69,7 +69,7 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) error {
 		err := points.InsertPointsTransation(stub, creditObject.PointsTransaction)
 		if err != nil {
 			log.Println("Error occurred when performing InsertPointsTransation")
-			return errors.New("Error occurred when performing InsertPointsTransation.")
+			return nil, errors.New("Error occurred when performing InsertPointsTransation.")
 		}
 
 	} else {
@@ -81,7 +81,7 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) error {
 		err := points.InsertPointsTransationDetail(stub, creditObject.PointsTransactionDetail)
 		if err != nil {
 			log.Println("Error occurred when performing InsertPointsTransationDetail")
-			return errors.New("Error occurred when performing InsertPointsTransationDetail.")
+			return nil, errors.New("Error occurred when performing InsertPointsTransationDetail.")
 		}
 
 	} else {
@@ -90,7 +90,7 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) error {
 
 	log.Println("credit points is ok!!")
 
-	return nil
+	return nil, nil
 }
 
 //消费积分
