@@ -48,7 +48,7 @@ public class MerchantController {
         result.addObject("yff", mts.queryPoints(pt1));
         PointsTransationExtends pt2 = new PointsTransationExtends();
         pt2.setRollOutAccount(currentUser.getAccountId());
-		pt2.setTransferType("3");
+		pt2.setTransferType("4");
         result.addObject("ycd", mts.queryPoints(pt2));
         return result;
 	}
