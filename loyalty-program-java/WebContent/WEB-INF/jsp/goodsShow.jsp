@@ -47,7 +47,7 @@ img {
 			<nav class="navbar navbar-inverse navbar-static-top">
 				<div class="container">
 					<div class="navbar-header">
-						<a class="navbar-brand" href="#">富德商城</a>
+						<a class="navbar-brand" href="${pageContext.request.contextPath}">富德商城</a>
 					</div>
 					<div id="navbar" class="navbar-collapse collapse">
 						<ul class="nav navbar-nav navbar-right"
@@ -76,12 +76,12 @@ img {
 									class="img-responsive" alt="">
 									<div>
 										<h4>商品名称：购物卡</h4>
-										<small>所需积分：2000</small>
+										<small>所需积分：200</small>
 									</div>
 								</a>
 								<p>
 									<a class="btn btn-danger" style="width: 150px"
-										onclick='gotobuy("购物卡","2000");' role="button">购买</a>
+										onclick='gotobuy("购物卡","200");' role="button">购买</a>
 
 								</p>
 							</div>
@@ -91,12 +91,12 @@ img {
 									class="img-responsive" alt="">
 									<div>
 										<h4>商品名称：优惠卷</h4>
-										<small>所需积分：1400</small>
+										<small>所需积分：140</small>
 									</div>
 								</a>
 								<p>
 									<a class="btn btn-danger" style="width: 150px"
-										onclick='gotobuy("优惠卷","1400");' role="button">购买</a>
+										onclick='gotobuy("优惠卷","140");' role="button">购买</a>
 
 								</p>
 							</div>
@@ -119,12 +119,14 @@ img {
 				type: "GET",
 	            async: false,
 				url :"${pageContext.request.contextPath}/buyGoods",
-				data : {goodsName : style,pointsNum : number},
+				data : {goodsName : style,pointsNum : number,accountMallId:'2'},
 				dataType : "json",
 				success : function(msg) {
 					console.log(msg);
 					if(msg=='1111')
 					alert("购买成功！！！");
+					else
+						alert("余额不够！！！");
 				}
 			});
 		}
