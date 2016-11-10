@@ -23,7 +23,7 @@ func main() {
 	//printValue(data)
 
 	var str string = `{"AcceptanceName":"shakespeare","AssetAmount":"1234.67","Ac":{"OwnerName":"one","EnterpriseID":"12"}}`
-	_, err := util.ParseJson(data, str)
+	_, err := util.ParseJson2(data, str)
 	if err != nil {
 		fmt.Println("error............")
 		return
