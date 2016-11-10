@@ -46,7 +46,7 @@
 		<div class="control-group">
 			<label class="control-label"></label>
 			<div class="controls">
-				<button type="submit" class="sui-btn btn-primary">登录</button>
+				<button type="submit" class="sui-btn btn-primary">修改密码</button>
 			</div>
 		</div>
 		</form>

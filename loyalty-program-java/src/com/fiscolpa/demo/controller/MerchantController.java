@@ -68,7 +68,6 @@ public class MerchantController {
 		}
 		pt.setRollInAccount(currentUser.getAccountId());
 		pt.setTransferType(PointsTransactionEnum.CREDIT.getSign());
-		pt.setQueryColumn("use");
 		return mts.queryTransationList(pt);
 	}
 	
@@ -128,6 +127,7 @@ public class MerchantController {
 		PointsUser currentUser = (PointsUser) session.getAttribute("user");
 		ptd.setRollInAccount(currentUser.getAccountId());
 		ptd.setTransferType(PointsTransactionEnum.BUY.getSign());
+		ptd.setCurBalance(0);
 		mts.seveAccept(ptd);
 		return "credit";
 	}

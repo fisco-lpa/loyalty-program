@@ -82,6 +82,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		PointsTransationDetailExtends ptd = new PointsTransationDetailExtends();
 		ptd.setRollInAccount(pt.getRollOutAccount());
 		ptd.setExpireTime("1");
+		ptd.setCurBalance(0);
 		//获取所以未过期的积分
 		List<PointsTransationDetailExtends> ptdl = queryTransationDetailList(ptd);
 		//新增
