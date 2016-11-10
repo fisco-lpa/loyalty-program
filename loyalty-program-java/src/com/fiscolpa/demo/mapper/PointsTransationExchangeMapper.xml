@@ -28,8 +28,105 @@
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{updateUser,jdbcType=VARCHAR})
   </insert>
-
+	 <select id="selectAccountBalance" resultType="int" parameterType="java.lang.String" >
+    select 
+   account_balance
+    from account where account_id= #{accountId}
+    
+  </select>
   
- 
    
+  <select id="selectAllJiFen" resultType="com.fiscolpa.demo.model.PointsTransationDetail" parameterType="com.fiscolpa.demo.model.PointsTransationDetail" >
+  select 
+	ptd.detail_id			detailId,
+	ptd.source_detail_id	sourceDetailId,
+	ptd.trans_id			transId,
+	ptd.expire_time			expireTime,
+	ptd.ext_ref				extRef,
+	ptd.`status`,
+	ptd.create_time			createTime,
+	ptd.create_user			createUser,
+	ptd.update_time			updateTime,
+	ptd.update_user			updateUser,
+	ptd.roll_out_account	rollOutAccount,
+	ptd.roll_in_account		rollInAccount,	
+	ptd.trans_amount		transAmount,
+	ptd.cur_balance			curBalance,
+	ptd.credit_party		creditParty,
+	ptd.merchant,
+	ptd.credit_create_time	creditCreateTime,
+	ptd.transfer_time		transferTime
+    from points_transation_detail ptd
+    <trim prefix="where" prefixOverrides="and |or"> 
+			
+			
+			<if test="rollInAccount != null">
+				and ptd.roll_in_account = #{rollInAccount}
+			</if>
+			<if test="curBalance != null">
+				and ptd.cur_balance != '0'
+			</if>
+			
+				and ptd.expire_time >= now()
+				and cur_balance > 0 order by expireTime
+		
+		</trim>
+  </select>
+   
+   
+   
+   <update id="updateByPrimaryKeySelective" parameterType="com.fiscolpa.demo.model.PointsTransationDetail" >
+    update points_transation_detail
+    <set >
+      <if test="sourceDetailId != null" >
+        source_detail_id = #{sourceDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="transId != null" >
+        trans_id = #{transId,jdbcType=VARCHAR},
+      </if>
+      <if test="expireTime != null" >
+        expire_time = #{expireTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extRef != null" >
+        ext_ref = #{extRef,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+      <if test="rollOutAccount != null" >
+        roll_out_account = #{rollOutAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="rollInAccount != null" >
+        roll_in_account = #{rollInAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="transAmount != null" >
+        trans_amount = #{transAmount,jdbcType=INTEGER},
+      </if>
+      <if test="curBalance != null" >
+        cur_balance = #{curBalance,jdbcType=INTEGER},
+      </if>
+      <if test="creditParty != null" >
+        credit_party = #{creditParty,jdbcType=VARCHAR},
+      </if>
+      <if test="merchant != null" >
+        merchant = #{merchant,jdbcType=VARCHAR},
+      </if>
+      <if test="transferTime != null" >
+        transfer_time = #{transferTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where detail_id = #{detailId,jdbcType=VARCHAR}
+  </update>
 </mapper>

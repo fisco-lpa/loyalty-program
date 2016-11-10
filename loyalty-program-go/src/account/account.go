@@ -201,20 +201,7 @@ func InsertAccountType(stub shim.ChaincodeStubInterface, args []string) ([]byte,
 }
 
 //更新账户表信息
-func updateAccount(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-	var data Account
-	//base64解码
-	arg, err := base64.StdEncoding.DecodeString(args[0])
-	if err != nil {
-		return nil, errors.New("updateAccount base64 decode error.")
-	}
-
-	//解析数据
-	err = json.Unmarshal(arg, &data)
-	if err != nil {
-		return nil, errors.New("updateAccount json Parse error.")
-	}
-
+func UpdateAccount(stub shim.ChaincodeStubInterface, data *Account) error {
 	var columns []shim.Column
 	col := shim.Column{Value: &shim.Column_String_{String_: data.AccountId}}
 	columns = append(columns, col)
@@ -233,8 +220,8 @@ func updateAccount(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 				&shim.Column{Value: &shim.Column_String_{String_: data.AuditObj.UpdateUser}}},   //修改人
 		})
 		if !ok && err == nil {
-			return nil, errors.New("method updateAccount Account ReplaceRow failed.")
+			return errors.New("method updateAccount Account ReplaceRow failed.")
 		}
 	}
-	return nil, nil
+	return nil
 }
