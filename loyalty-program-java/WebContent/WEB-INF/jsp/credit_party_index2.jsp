@@ -29,6 +29,7 @@
         <h1 style="padding: 50px 0 20px;">当前用户【${user.userName}】</h1>
 		<h3 style="padding: 0 0 10px 0"><a href="${pageContext.request.contextPath}/">返回首页</a></h3>
         <form action="${pageContext.request.contextPath}/creditParty/goCreditQueryPage" method="get">
+        <input type="hidden" name="rollOutAccount" value="${user.accountId}"/>
             <table class="gridtable" style="width:100%;">
                 <tr>
                     <th>商户ID：</th>
@@ -76,7 +77,7 @@
                         		<a href="${pageContext.request.contextPath}/creditParty/goAcceptQueryPage?rollInAccount=${vo.rollOutAccount}&merchant=${vo.merchant}&creditParty=${vo.creditParty}&creditCreateTime=${vo.creditCreateTime}">${vo.acceptedPointsNum}</a>
                         	</c:if>
                         </td>
-                        <td><td><fmt:formatDate value="${vo.createTime}" pattern="yyyy年MM月dd日HH点mm分ss秒"/>
+                        <td><fmt:formatDate value="${vo.createTime}" pattern="yyyy年MM月dd日HH点mm分ss秒"/></td>
                     </tr>
                 </c:forEach>
                 </tbody>
