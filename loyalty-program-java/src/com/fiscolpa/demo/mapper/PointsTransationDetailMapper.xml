@@ -280,7 +280,7 @@
 			) rollInAccountName,
 			(
 				SELECT
-					count(ptd2.trans_amount)
+					sum(ptd2.trans_amount)
 				FROM
 					points_transation_detail ptd2
 				WHERE
