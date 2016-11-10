@@ -1,5 +1,7 @@
 package com.fiscolpa.demo.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -41,9 +43,8 @@ public class PointsTransationServiceImpl implements PointsTransationService {
 	@Override
 	public int addCredit(PointsTransation pointsTransation) {
 		//insert交易表
-		String transId = UUIDGenerator.getUUID();
+		String transId = new StringBuffer("PT").append(UUIDGenerator.getUUID()).toString();
 		pointsTransation.setTransId(transId);
-//		SimpleDateFormat dateFormater=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date time=new Date();
 //		String time = dateFormater.format(date);
 //		System.out.print(dateFormater.format(date));
@@ -57,7 +58,7 @@ public class PointsTransationServiceImpl implements PointsTransationService {
 		pointsTransationMapper.insert(pointsTransation);
 		//insert交易明细表
 		PointsTransationDetail pointsTransationDetail = new PointsTransationDetail();
-		String detailId = UUIDGenerator.getUUID();
+		String detailId = new StringBuffer("PTD").append(UUIDGenerator.getUUID()).toString();
 		pointsTransationDetail.setDetailId(detailId);
 		pointsTransationDetail.setTransId(pointsTransation.getTransId());//积分交易ID
 		pointsTransationDetail.setCreateUser(pointsTransation.getCreateUser());//
@@ -66,6 +67,14 @@ public class PointsTransationServiceImpl implements PointsTransationService {
 		pointsTransationDetail.setUpdateTime(time);
 		pointsTransationDetail.setTransferTime(time);
 		pointsTransationDetail.setExtRef("1111");
+		SimpleDateFormat dateFormater=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = null;
+		try {
+			date = dateFormater.parse("9999-12-31 23:59:59");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		pointsTransationDetail.setExpireTime(date);
 		//TODO Q:授信创建时间，是在mysql写还是在java代码里写？若在sql里，需要单独的insert语句（或者insert加个判断）
 		//TODO 主键--流水号，创建时间，修改时间，创建人，修改人，交易时间，待定
 		pointsTransationDetail.setRollInAccount(pointsTransation.getRollInAccount());//转入账户
