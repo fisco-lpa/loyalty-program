@@ -2,14 +2,17 @@ package wrapper
 
 import (
 	//"errors"
+	"account"
+	"points"
+	"util"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
 type CreditPointsTransData struct {
-	Account                 *util.Account
-	PointsTransaction       *util.PointsTransaction
-	PointsTransactionDetail *util.PointsTransactionDetail
+	Account                 *account.Account
+	PointsTransaction       *points.PointsTransaction
+	PointsTransactionDetail *points.PointsTransactionDetail
 	AuditObj                *util.AuditObject
 }
 

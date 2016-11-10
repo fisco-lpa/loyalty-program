@@ -20,6 +20,7 @@ type PointsTransaction struct {
 	TransferTime   string           //交易时间
 	TransferType   string           //交易类型
 	AuditObj       util.AuditObject //audit object
+	OperFlag       string           // 操作标积 0-新增，1-修改，2-删除
 }
 
 //积分交易明细对象
@@ -39,6 +40,7 @@ type PointsTransactionDetail struct {
 	CreditParty      string           //授信方账户
 	Merchant         string           // 商户账户
 	AuditObj         util.AuditObject //audit object
+	OperFlag         string           // 操作标积 0-新增，1-修改，2-删除
 }
 
 func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
@@ -65,9 +67,7 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, args []string) ([]
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransferTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransferType}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateUser}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateUser}}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateUser}}},
 	})
 	if !ok {
 		log.Println("InsertRow transObject error..")
@@ -125,9 +125,7 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, args []strin
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditCreateTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditParty}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateUser}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateUser}}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateUser}}},
 	})
 	if !ok {
 		log.Println("InsertRow pointsDetail error..")
