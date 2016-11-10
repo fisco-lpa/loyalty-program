@@ -2,7 +2,6 @@ package com.fiscolpa.demo.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fiscolpa.demo.model.Account;
 import com.fiscolpa.demo.model.PointsTransation;
 import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.service.AccountService;
@@ -66,9 +64,10 @@ public class CreditPartyController {
      * @param pointsTransation
      */
     @RequestMapping(value = "/creditParty/goCreditPage", method = RequestMethod.GET)
-    public ModelAndView goCreditPage(String accountId) {
+    public ModelAndView goCreditPage(HttpSession session) {
     	ModelAndView result = new ModelAndView("credit_party_credit");
-    	result.addObject("rollOutAccount", "2");
+    	PointsUser user = (PointsUser)session.getAttribute("user");
+    	result.addObject("user", user);
     	List<AccountVo> merchants = accountService.getAllMerchant(MERCHANT_ACCOUNT_TYPE);
     	result.addObject("merchants", merchants);
     	return result;
@@ -84,11 +83,11 @@ public class CreditPartyController {
     	PointsUser user = (PointsUser)session.getAttribute("user");
 //    	String userId = user.getUserId();
     	//获取账户信息
-    	Account account = accountService.getAccount("2");//TODO 
+//    	Account account = accountService.getAccount("2");//TODO 
     	ModelAndView result = new ModelAndView("credit_party_index2");
-    	result.addObject("account",account);
+//    	result.addObject("account",account);
     	result.addObject("user",user);
-    	pointsTransationVo.setRollOutAccount("2");
+    	pointsTransationVo.setRollOutAccount(user.getAccountId());
         List<PointsTransationDetailVo> list = pointsTransationService.getCreditPartyCreditDetailList(pointsTransationVo, page, rows);
         result.addObject("pageInfo", new PageInfo<PointsTransationDetailVo>(list));
         result.addObject("queryParam", pointsTransationVo);
@@ -107,12 +106,12 @@ public class CreditPartyController {
     	PointsUser user = (PointsUser)session.getAttribute("user");
 //    	String userId = user.getUserId();
     	//获取账户信息
-    	Account account = accountService.getAccount("2");
+//    	Account account = accountService.getAccount("2");
     	ModelAndView result = new ModelAndView("credit_party_accept2");
-    	result.addObject("account",account);
+//    	result.addObject("account",account);
     	result.addObject("user",user);
     	
-    	pointsTransationVo.setRollInAccount(account.getAccountId());
+    	pointsTransationVo.setRollInAccount(user.getAccountId());
         List<PointsTransationDetailVo> list = pointsTransationService.queryPointsTransationDetail(pointsTransationVo, page, rows);
         result.addObject("pageInfo", new PageInfo<PointsTransationDetailVo>(list));
         result.addObject("queryParam", pointsTransationVo);

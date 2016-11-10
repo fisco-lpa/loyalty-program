@@ -72,6 +72,12 @@
 			</if>
 			<if test="transferType != null">
 				and pt.transfer_type = #{transferType}
+				<if test='transferType=="3"'>
+				    and EXISTS(  
+				    SELECT 1 FROM points_transation_detail ptd 
+				    WHERE ptd.trans_id = pt.trans_id
+				    and ptd.cur_balance>0)
+				</if>
 			</if>
 			<if test="creditParty != null">
 				and EXISTS(  

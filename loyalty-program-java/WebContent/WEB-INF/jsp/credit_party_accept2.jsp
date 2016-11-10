@@ -29,7 +29,7 @@
         <h1 style="padding: 50px 0 20px;">当前用户【${user.userName}】</h1>
 		<h3 style="padding: 0 0 10px 0"><a href="${pageContext.request.contextPath}/">返回首页</a></h3>
         <form action="${pageContext.request.contextPath}/creditParty/goAcceptQueryPage" method="get">
-        <input type="hidden" name="rollInAccount" value="${account.accountId}"/>
+        <input type="hidden" name="rollInAccount" value="${user.accountId}"/>
             <table class="gridtable" style="width:100%;">
                 <tr>
                     <tr>

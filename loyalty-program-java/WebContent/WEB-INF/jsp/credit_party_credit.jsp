@@ -21,9 +21,9 @@
 <div style="position:absolute; top:50%; left:50%; width:480px; height:240px; margin-left:-240px; margin-top:-120px; border: 1px solid #333333;">
 	<div style="margin-top:70px;margin-left:60px;">
 	<form class="sui-form form-horizontal sui-validate" action="<%=path%>/creditParty/credit" method="post">
+	<input type="hidden" name="rollOutAccount" value="${user.accountId}"/>
 		<div class="control-group">
 			<label for="userName" class="control-label">商户名称：</label>
-			<input type="hidden" name="rollOutAccount" value="${rollOutAccount}"/>
 			<div class="controls">
 				<select name="rollInAccount">
 					<c:forEach items="${merchants}" var="merchant">
