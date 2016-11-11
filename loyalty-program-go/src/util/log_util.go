@@ -13,7 +13,7 @@ import (
 //)
 
 func init() {
-	path, _ := GetHomePathForWindows()
+	path, _ := GetHomePathForUnix()
 	fileName := path + "\\" + "blockchain.log"
 	fmt.Println("log file path is :" + fileName)
 	logFileName := flag.String("log", fileName, "Log file name")
