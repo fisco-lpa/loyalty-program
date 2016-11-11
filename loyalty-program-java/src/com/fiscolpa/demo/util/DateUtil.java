@@ -435,7 +435,7 @@ public class DateUtil {
      * @return 
      */  
     public static synchronized String getDatePattern() {  
-        defaultDatePattern = "yyyy-MM-dd";  
+        defaultDatePattern = "yyyy-MM-dd HH:mm:ss";  
         return defaultDatePattern;  
     }  
   
