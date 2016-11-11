@@ -5,7 +5,7 @@
 		<id column="account_id" property="accountId" jdbcType="VARCHAR" />
 		<result column="user_id" property="userId" jdbcType="VARCHAR" />
 		<result column="account_balance" property="accountBalance" jdbcType="INTEGER" />
-		<result column="account_type_id" property="accountTypeId" jdbcType="INTEGER" />
+		<result column="account_type_id" property="accountTypeId" jdbcType="VARCHAR" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
@@ -15,7 +15,7 @@
     <id column="account_id" property="accountId" jdbcType="VARCHAR" />
     <result column="user_id" property="userId" jdbcType="VARCHAR" />
     <result column="account_balance" property="accountBalance" jdbcType="INTEGER" />
-    <result column="account_type_id" property="accountTypeId" jdbcType="INTEGER" />
+    <result column="account_type_id" property="accountTypeId" jdbcType="VARCHAR" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="create_user" property="createUser" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
