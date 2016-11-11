@@ -14,20 +14,17 @@ type CreditPointsTransData struct {
 	Account                 *account.Account
 	PointsTransaction       *points.PointsTransaction
 	PointsTransactionDetail *points.PointsTransactionDetail
-	AuditObj                *util.AuditObject
 }
 
 type ConsumePointsTransData struct {
 	AccountList                 []*account.Account
 	PointsTransaction           *points.PointsTransaction
 	PointsTransactionDetailList []*points.PointsTransactionDetail
-	AuditObj                    *util.AuditObject
 }
 type AccpetPointsTransData struct {
 	AccountList                 []*account.Account
 	PointsTransaction           *points.PointsTransaction
 	PointsTransactionDetailList []*points.PointsTransactionDetail
-	AuditObj                    *util.AuditObject
 }
 
 //注册
