@@ -17,6 +17,8 @@ func ParseJsonAndDecode(data SuperObject, args []string) error {
 		log.Println("ParseJson base64 decode error.")
 		return err
 	}
+	log.Println("data after decode:" + string(arg[:]))
+	fmt.Println("data after decode:" + string(arg[:]))
 
 	//解析数据
 	err = json.Unmarshal(arg, data)

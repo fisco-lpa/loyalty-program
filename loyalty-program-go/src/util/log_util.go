@@ -14,7 +14,7 @@ import (
 
 func init() {
 	path, _ := GetHomePathForUnix()
-	fileName := path + "\\" + "blockchain.log"
+	fileName := path + "/" + "blockchain.log"
 	fmt.Println("log file path is :" + fileName)
 	logFileName := flag.String("log", fileName, "Log file name")
 
@@ -35,6 +35,8 @@ func init() {
 
 	// 可以通过log.SetFlags()自定议你想要表达的格式
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+
+	log.Println("This is the first log info............................")
 
 	fmt.Println("Log file has been created.")
 }
