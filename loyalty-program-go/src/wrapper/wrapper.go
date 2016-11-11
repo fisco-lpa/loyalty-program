@@ -17,6 +17,19 @@ type CreditPointsTransData struct {
 	AuditObj                *util.AuditObject
 }
 
+type ConsumePointsTransData struct {
+	AccountList                 []*account.Account
+	PointsTransaction           *points.PointsTransaction
+	PointsTransactionDetailList []*points.PointsTransactionDetail
+	AuditObj                    *util.AuditObject
+}
+type AccpetPointsTransData struct {
+	AccountList                 []*account.Account
+	PointsTransaction           *points.PointsTransaction
+	PointsTransactionDetailList []*points.PointsTransactionDetail
+	AuditObj                    *util.AuditObject
+}
+
 //注册
 func SignUp(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
@@ -82,12 +95,67 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 
 //消费积分
 func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	// 解析传入数据
+	data := new(ConsumePointsTransData)
+	err := util.ParseJsonAndDecode(data, args)
+	if err != nil {
+		log.Println("Error occurred when parsing json")
+		return nil, errors.New("Error occurred when parsing json.")
+	}
+	for i := 0; i < len(data.AccountList); i++ {
+		//如果标识符为0就对账户表新增否则修改
+		if data.AccountList[i].OperFlag == "0" {
+			account.InsertAccount(stub, *data.AccountList[i])
+		} else {
+			account.UpdateAccount(stub, data.AccountList[i])
+		}
+	}
+	//如果标识符为0就对积分交易表新增否则报错返回
+	if data.PointsTransaction.OperFlag == "0" {
+		points.InsertPointsTransation(stub, data.PointsTransaction)
+	} else {
+		return nil, errors.New("输入标识符有误")
+	}
+	for i := 0; i < len(data.PointsTransactionDetailList); i++ {
+		if data.PointsTransactionDetailList[i].OperFlag == "0" {
+			points.InsertPointsTransationDetail(stub, data.PointsTransactionDetailList[i])
+		} else {
+			points.UpdatePointsTransationDetail(stub, data.PointsTransactionDetailList[i])
+		}
+	}
 
 	return nil, nil
 }
 
 //承兑积分
 func AccpetPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
+	// 解析传入数据
+	data := new(AccpetPointsTransData)
+	err := util.ParseJsonAndDecode(data, args)
+	if err != nil {
+		log.Println("Error occurred when parsing json")
+		return nil, errors.New("Error occurred when parsing json.")
+	}
+	for i := 0; i < len(data.AccountList); i++ {
+		//如果标识符为0就对账户表新增否则修改
+		if data.AccountList[i].OperFlag == "0" {
+			account.InsertAccount(stub, *data.AccountList[i])
+		} else {
+			account.UpdateAccount(stub, data.AccountList[i])
+		}
+	}
+	//如果标识符为0就对积分交易表新增否则报错返回
+	if data.PointsTransaction.OperFlag == "0" {
+		points.InsertPointsTransation(stub, data.PointsTransaction)
+	} else {
+		return nil, errors.New("输入标识符有误")
+	}
+	for i := 0; i < len(data.PointsTransactionDetailList); i++ {
+		if data.PointsTransactionDetailList[i].OperFlag == "0" {
+			points.InsertPointsTransationDetail(stub, data.PointsTransactionDetailList[i])
+		} else {
+			points.UpdatePointsTransationDetail(stub, data.PointsTransactionDetailList[i])
+		}
+	}
 	return nil, nil
 }

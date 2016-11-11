@@ -53,7 +53,9 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *Point
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransferTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransferType}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateUser}}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateUser}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateUser}}},
 	})
 	if !ok {
 		log.Println("InsertRow transObject error..")
@@ -63,14 +65,34 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *Point
 	//更新table_count表
 	totalNo, err := util.UpdateTableCount(stub, util.Points_Transation)
 	if totalNo == 0 || err != nil {
+		// 回滚积分交易表记录
+		stub.DeleteRow(util.Points_Transation, []shim.Column{shim.Column{Value: &shim.Column_String_{String_: transObject.TransId}}})
+
 		log.Println("update table_count error..")
 		return errors.New("Total_Count update failed")
 	}
 
 	//更新行号表
 	err = util.UpdateRowNoTable(stub, util.Points_Transation_Rownum, transObject.TransId, totalNo)
-
 	if err != nil {
+		// 回滚积分交易表
+		stub.DeleteRow(util.Points_Transation, []shim.Column{shim.Column{Value: &shim.Column_String_{String_: transObject.TransId}}})
+
+		// 回滚table_count表
+		var columns []shim.Column
+		col := shim.Column{Value: &shim.Column_String_{String_: util.Points_Transation}}
+		columns = append(columns, col)
+		row, _ := stub.GetRow(util.Table_Count, columns) //row是否为空
+		if len(row.Columns) == 1 {
+			stub.DeleteRow(util.Table_Count, []shim.Column{shim.Column{Value: &shim.Column_String_{String_: util.Points_Transation}}})
+		} else {
+			stub.ReplaceRow(util.Table_Count, shim.Row{
+				Columns: []*shim.Column{
+					&shim.Column{Value: &shim.Column_String_{String_: util.Points_Transation}}, //表名
+					&shim.Column{Value: &shim.Column_Int64{Int64: totalNo - 1}}},               //总数
+			})
+		}
+
 		log.Println("update Points_Transaction_Rownum error..")
 		return errors.New("Points_Transaction_Rownum insert failed")
 	}
@@ -83,7 +105,7 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *Point
 func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail *PointsTransactionDetail) error {
 
 	//插入记录到积分交易逐笔流水表
-	ok, err := stub.InsertRow(util.Points_Transation, shim.Row{
+	ok, err := stub.InsertRow(util.Points_Transation_Detail, shim.Row{
 		Columns: []*shim.Column{
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.DetailId}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.SourceDetailId}},
@@ -99,7 +121,9 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditCreateTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditParty}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateUser}}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateUser}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateUser}}},
 	})
 	if !ok {
 		log.Println("InsertRow pointsDetail error..")
@@ -107,35 +131,69 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 	}
 
 	//更新table_count表
-	totalNo, err := util.UpdateTableCount(stub, util.Points_Transation)
+	totalNo, err := util.UpdateTableCount(stub, util.Points_Transation_Detail)
 	if totalNo == 0 || err != nil {
+		// 回滚积分交易明细表记录
+		stub.DeleteRow(util.Points_Transation_Detail, []shim.Column{shim.Column{Value: &shim.Column_String_{String_: pointsDetail.DetailId}}})
+
 		log.Println("update table_count error..")
 		return errors.New("Total_Count update failed")
 	}
 
 	//更新行号表
 	err = util.UpdateRowNoTable(stub, util.Points_Transation_Rownum, pointsDetail.DetailId, totalNo)
-
 	if err != nil {
+		// 回滚积分交易表
+		stub.DeleteRow(util.Points_Transation_Detail, []shim.Column{shim.Column{Value: &shim.Column_String_{String_: pointsDetail.DetailId}}})
+
+		// 回滚table_count表
+		var columns []shim.Column
+		col := shim.Column{Value: &shim.Column_String_{String_: util.Points_Transation_Detail}}
+		columns = append(columns, col)
+		row, _ := stub.GetRow(util.Table_Count, columns) //row是否为空
+		if len(row.Columns) == 1 {
+			stub.DeleteRow(util.Table_Count, []shim.Column{shim.Column{Value: &shim.Column_String_{String_: util.Points_Transation_Detail}}})
+		} else {
+			stub.ReplaceRow(util.Table_Count, shim.Row{
+				Columns: []*shim.Column{
+					&shim.Column{Value: &shim.Column_String_{String_: util.Points_Transation_Detail}}, //表名
+					&shim.Column{Value: &shim.Column_Int64{Int64: totalNo - 1}}},                      //总数
+			})
+		}
+
 		log.Println("update Points_Transaction_Rownum error..")
 		return errors.New("Points_Transaction_Rownum insert failed")
 	}
 
-	log.Println("InsertPointsTransationDetail sucess!")
+	log.Println("InsertPointsTransationDetail success!")
 
 	return nil
 }
 
-func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, args []string) error {
-	// 解析传入数据
-	pointsDetail := new(PointsTransactionDetail)
-	err := util.ParseJsonAndDecode(pointsDetail, args)
-	if err != nil {
-		log.Println("Error occurred when parsing json")
-		return errors.New("Error occurred when parsing json.")
-	}
+// 更新积分明细表
+func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail *PointsTransactionDetail) error {
+	stub.ReplaceRow(util.Points_Transation_Detail, shim.Row{
+		Columns: []*shim.Column{
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.DetailId}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.SourceDetailId}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.TransId}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.RolloutAccount}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.RollinAccount}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.TransAmount}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.ExpireTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.ExtRef}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.TransferTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CurBalance}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.Merchant}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditCreateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditParty}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateUser}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateUser}}},
+	})
 
-	// to do:
+	log.Println("UpdatePointsTransationDetail success!")
 
 	return nil
 }
