@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"points"
+	"user"
 	"util"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -25,6 +26,11 @@ type AccpetPointsTransData struct {
 	AccountList                 []*account.Account
 	PointsTransaction           *points.PointsTransaction
 	PointsTransactionDetailList []*points.PointsTransactionDetail
+}
+
+type InitTableData struct {
+	PointsUser []*user.PointsUser
+	Account    []*account.Account
 }
 
 //注册
@@ -154,5 +160,23 @@ func AccpetPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 			points.UpdatePointsTransationDetail(stub, data.PointsTransactionDetailList[i])
 		}
 	}
+	return nil, nil
+}
+
+//初始化数据
+func InitData(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	data := new(InitTableData)
+	err := util.ParseJsonAndDecode(data, args)
+	if err != nil {
+		log.Println("Error occurred when parsing json")
+		return nil, errors.New("Error occurred when parsing json.")
+	}
+	for i := 0; i < len(data.PointsUser); i++ {
+		user.InsertPointsUser(stub, *data.PointsUser[i])
+	}
+	for j := 0; j < len(data.Account); j++ {
+		account.InsertAccount(stub, *data.Account[j])
+	}
+
 	return nil, nil
 }

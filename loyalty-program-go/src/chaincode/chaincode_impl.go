@@ -40,6 +40,8 @@ func (t *PointsChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 		log.Println("AccpetPoints,args = " + args[0])
 		fmt.Println("AccpetPoints,args = " + args[0])
 		return wrapper.AccpetPoints(stub, args)
+	} else if function == "InitData" {
+		return wrapper.InitData(stub, args)
 	}
 
 	return nil, errors.New("调用invoke失败")

@@ -10,35 +10,43 @@ import (
 
 //积分交易记录对象
 type PointsTransaction struct {
-	TransId        string           //积分交易ID
-	RolloutAccount string           //转出账户
-	RollinAccount  string           //转入账户
-	TransAmount    string           //交易积分数量
-	Description    string           //描述
-	TransferTime   string           //交易时间
-	TransferType   string           //交易类型
-	AuditObj       util.AuditObject //audit object
-	OperFlag       string           // 操作标积 0-新增，1-修改，2-删除
+	TransId        string //积分交易ID
+	RolloutAccount string //转出账户
+	RollinAccount  string //转入账户
+	TransAmount    string //交易积分数量
+	Description    string //描述
+	TransferTime   string //交易时间
+	TransferType   string //交易类型
+	CreateTime     string //创建时间
+	CreateUser     string //创建人
+	UpdateTime     string //修改时间
+	UpdateUser     string //修改人
+	//AuditObj       util.AuditObject //audit object
+	OperFlag string // 操作标积 0-新增，1-修改，2-删除
 }
 
 //积分交易明细对象
 type PointsTransactionDetail struct {
-	DetailId         string           //逐笔明细流水号
-	SourceDetailId   string           //来源流水号
-	TransId          string           //积分交易ID
-	RolloutAccount   string           //转出账户
-	RollinAccount    string           //转入账户
-	TransAmount      string           //交易积分数量
-	ExpireTime       string           //过期时间
-	ExtRef           string           //外部引用
-	Status           string           // 状态  0-冻结，1-正常
-	CurBalance       string           //当笔积分剩余数量
-	TransferTime     string           //交易时间
-	CreditCreateTime string           //授信创建时间
-	CreditParty      string           //授信方账户
-	Merchant         string           // 商户账户
-	AuditObj         util.AuditObject //audit object
-	OperFlag         string           // 操作标积 0-新增，1-修改，2-删除
+	DetailId         string //逐笔明细流水号
+	SourceDetailId   string //来源流水号
+	TransId          string //积分交易ID
+	RolloutAccount   string //转出账户
+	RollinAccount    string //转入账户
+	TransAmount      string //交易积分数量
+	ExpireTime       string //过期时间
+	ExtRef           string //外部引用
+	Status           string // 状态  0-冻结，1-正常
+	CurBalance       string //当笔积分剩余数量
+	TransferTime     string //交易时间
+	CreditCreateTime string //授信创建时间
+	CreditParty      string //授信方账户
+	Merchant         string // 商户账户
+	CreateTime       string //创建时间
+	CreateUser       string //创建人
+	UpdateTime       string //修改时间
+	UpdateUser       string //修改人
+	//AuditObj         util.AuditObject //audit object
+	OperFlag string // 操作标积 0-新增，1-修改，2-删除
 }
 
 func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *PointsTransaction) error {
@@ -52,10 +60,10 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *Point
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.Description}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransferTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: transObject.TransferType}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.CreateUser}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: transObject.AuditObj.UpdateUser}}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.CreateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.CreateUser}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.UpdateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: transObject.UpdateUser}}},
 	})
 	if !ok {
 		log.Println("InsertRow transObject error..")
@@ -120,10 +128,10 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.Merchant}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditCreateTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditParty}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateUser}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateUser}}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreateUser}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.UpdateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.UpdateUser}}},
 	})
 	if !ok {
 		log.Println("InsertRow pointsDetail error..")
@@ -187,10 +195,10 @@ func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.Merchant}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditCreateTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreditParty}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.CreateUser}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateTime}},
-			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.AuditObj.UpdateUser}}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.CreateUser}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.UpdateTime}},
+			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.UpdateUser}}},
 	})
 
 	log.Println("UpdatePointsTransationDetail success!")
