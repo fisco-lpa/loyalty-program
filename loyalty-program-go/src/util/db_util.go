@@ -1,7 +1,9 @@
 package util
 
 import (
+	"encoding/base64"
 	"errors"
+	"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -353,4 +355,15 @@ func UpdateRowNoTable(stub shim.ChaincodeStubInterface, rowNumTable, key string,
 		return err
 	}
 	return nil
+}
+
+// 查询表中总行数
+func QueryTableLines(stub shim.ChaincodeStubInterface, tableName string) ([]byte, error) {
+	var columns []shim.Column
+	col := shim.Column{Value: &shim.Column_String_{String_: tableName}}
+	columns = append(columns, col)
+	row, _ := stub.GetRow(Table_Count, columns) //row是否为空
+	totalNumber := row.Columns[1].GetInt64()
+	jsonResp := `{"totalAccount":"` + strconv.FormatInt(totalNumber, 10) + `"}`
+	return []byte(base64.StdEncoding.EncodeToString([]byte(`{"status":"OK","errMsg":"查询成功","data":` + jsonResp + `}`))), nil
 }
