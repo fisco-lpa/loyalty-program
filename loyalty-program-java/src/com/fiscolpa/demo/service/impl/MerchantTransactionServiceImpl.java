@@ -65,14 +65,12 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		Account out = new Account();
 		out.setAccountId(pt.getRollOutAccount());
 		out.setAccountBalance(balance-pt.getTransAmount());
-		out.setOperFlag(PointsTransactionEnum.UPDATE.getSign());
 		
 		//修改会员的
 		int  userBalance = ua.sumByPrimaryKey(pt.getRollInAccount());
 		Account in = new Account();
 		in.setAccountId(pt.getRollInAccount());
 		in.setAccountBalance(userBalance+pt.getTransAmount());
-		in.setOperFlag(PointsTransactionEnum.UPDATE.getSign());
 		
 		List<PointsTransationExtends> ptList = new ArrayList<>();
 		String transId = PointsTransactionEnum.GRANT.getBeginning()+UUIDGenerator.getUUID();
@@ -83,6 +81,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		pt.setCreateUser(pt.getRollOutAccount());
 		pt.setUpdateUser(pt.getRollOutAccount());
 		pt.setOperFlag(PointsTransactionEnum.INSERT.getSign());
+		pt.setDescribe("GRANT");
 		//交易总表
 		ptList.add(pt);
 		//交易积分
@@ -117,7 +116,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			//修改当前剩余
 			PointsTransationDetailExtends up = new PointsTransationDetailExtends();
 			up.setDetailId(pd.getDetailId());
-			up.setOperFlag(PointsTransactionEnum.INSERT.getSign());
+			up.setOperFlag(PointsTransactionEnum.UPDATE.getSign());
 			if(pd.getCurBalance()>=transAmount){
 				save.setTransAmount(transAmount);
 				save.setCurBalance(transAmount);
@@ -136,21 +135,23 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		if(salist.size()<=0) return "00002";//交易失败
 		
 		//组装区块连账户
-		List<Account> aList = new ArrayList<Account>();
-		aList.add(out);
-		aList.add(in);
+		Map<Object, Object> aOut = BeanToMap.Bean2Map(out);
+		aOut.put("operFlag", PointsTransactionEnum.UPDATE.getSign());
+		Map<Object, Object> iOut = BeanToMap.Bean2Map(in);
+		iOut.put("operFlag", PointsTransactionEnum.UPDATE.getSign());
+		
+		List<Map<Object, Object>> aList = new ArrayList<Map<Object, Object>>();
+		aList.add(aOut);
+		aList.add(iOut);
+		
 		List<PointsTransationDetailExtends> pList = new ArrayList<PointsTransationDetailExtends>(); 
 		pList.addAll(salist);
 		pList.addAll(upList);
 		
-		List<Map<Object, Object>> lm = BeanToMap.Bean2MapList(aList);
-		List<Map<Object, Object>> it = BeanToMap.Bean2MapList(ptList);
-		List<Map<Object, Object>> itd = BeanToMap.Bean2MapList(pList);
-		
 		Map<String, Object> map = new HashMap<>();
-		map.put("accountList", lm);
-		map.put("pointsTransaction", it);
-		map.put("pointsTransactionDetailList", itd);
+		map.put("accountList", aList);
+		map.put("pointsTransaction", BeanToMap.Bean2Map(pt));
+		map.put("pointsTransactionDetailList", BeanToMap.Bean2MapList(pList));
 		
 		String json = JSONObject.fromObject(map).toString();
 		Boolean result = false;
@@ -203,6 +204,8 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 				pt.setTransferType(PointsTransactionEnum.ACCEPT.getSign());
 				pt.setCreateUser(ptd.getRollInAccount());
 				pt.setUpdateUser(ptd.getRollInAccount());
+				pt.setDescribe("ACCEPT");
+				pt.setOperFlag(PointsTransactionEnum.INSERT.getSign());
 				map.put(accept, pt);
 			}
 			//新增流水
@@ -215,10 +218,12 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			save.setRollInAccount(accept);
 			save.setTransAmount(detail.getTransAmount());
 			save.setCurBalance(detail.getTransAmount());
+			save.setOperFlag(PointsTransactionEnum.INSERT.getSign());
 			//修改当前剩余
 			PointsTransationDetailExtends up = new PointsTransationDetailExtends();
 			up.setDetailId(detail.getDetailId());
 			up.setCurBalance(0);
+			up.setOperFlag(PointsTransactionEnum.UPDATE.getSign());
 			
 			salist.add(save);
 			upList.add(up);
