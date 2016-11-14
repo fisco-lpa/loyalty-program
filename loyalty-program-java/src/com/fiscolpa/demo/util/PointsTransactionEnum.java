@@ -16,7 +16,20 @@ public enum PointsTransactionEnum {
 	/**
 	 * 承兑 ("4","GM_","发放UUID开头")
 	 */
-	ACCEPT("4","GM_","发放UUID开头");
+	ACCEPT("4","GM_","发放UUID开头"),
+	/**
+	 * 新增 ("0","0","新增")区块连标示
+	 */
+	INSERT("0","0","新增"),
+	/**
+	 * 修改 ("1","1","修改")区块连标示
+	 */
+	UPDATE("1","1","修改"),
+	/**
+	 * 删除("2","2","删除")区块连标示
+	 */
+	DELETE("2","2","删除")
+	;
 
 	private String sign;//标示
 	private String beginning;//开头

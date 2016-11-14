@@ -1,6 +1,6 @@
 package com.fiscolpa.demo.model;
 
-public class PointsTransationExtends {
+public class PointsTransationExtends extends PointsModel{
 	
 	private String transId;
 

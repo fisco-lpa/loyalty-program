@@ -10,8 +10,6 @@ import com.fiscolpa.demo.model.PointsTransationDetailExtends;
 @Service
 public interface MerchantTransactionService{
 	
-	String ISSUING_PREFIX = "FF_";
-	
 	/**
 	 * 更具类型查询积分 待发积分、已发送、已承兑
 	 * @param roll_in_account, transfer_type

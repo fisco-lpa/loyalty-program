@@ -1,5 +1,6 @@
 package com.fiscolpa.demo.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,10 +17,14 @@ import com.fiscolpa.demo.model.Account;
 import com.fiscolpa.demo.model.PointsTransationDetailExtends;
 import com.fiscolpa.demo.service.MerchantTransactionService;
 import com.fiscolpa.demo.service.UserAccountService;
+import com.fiscolpa.demo.util.BeanToMap;
 import com.fiscolpa.demo.util.DateUtil;
+import com.fiscolpa.demo.util.HttpTool;
 import com.fiscolpa.demo.util.PointsTransactionEnum;
 import com.fiscolpa.demo.util.UUIDGenerator;
 import com.mysql.jdbc.StringUtils;
+
+import net.sf.json.JSONObject;
 
 @Service("merchantTransactionService")
 public class MerchantTransactionServiceImpl implements MerchantTransactionService {
@@ -48,7 +53,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 	
 	@Transactional
 	@Override
-	public String sevePoints(PointsTransationExtends pt) {
+	public String sevePoints(PointsTransationExtends pt){
 		//根据用户手机号查询查询账户ID
 		String accountId = ua.getUserByAccountId(pt.getRollInAccount());
 		if(StringUtils.isNullOrEmpty(accountId)) return "00003";//没有配置账户
@@ -60,12 +65,14 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		Account out = new Account();
 		out.setAccountId(pt.getRollOutAccount());
 		out.setAccountBalance(balance-pt.getTransAmount());
+		out.setOperFlag(PointsTransactionEnum.UPDATE.getSign());
 		
 		//修改会员的
 		int  userBalance = ua.sumByPrimaryKey(pt.getRollInAccount());
 		Account in = new Account();
 		in.setAccountId(pt.getRollInAccount());
 		in.setAccountBalance(userBalance+pt.getTransAmount());
+		in.setOperFlag(PointsTransactionEnum.UPDATE.getSign());
 		
 		List<PointsTransationExtends> ptList = new ArrayList<>();
 		String transId = PointsTransactionEnum.GRANT.getBeginning()+UUIDGenerator.getUUID();
@@ -75,6 +82,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		pt.setTransferType(PointsTransactionEnum.GRANT.getSign());
 		pt.setCreateUser(pt.getRollOutAccount());
 		pt.setUpdateUser(pt.getRollOutAccount());
+		pt.setOperFlag(PointsTransactionEnum.INSERT.getSign());
 		//交易总表
 		ptList.add(pt);
 		//交易积分
@@ -101,6 +109,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			save.setSourceDetailId(pd.getDetailId());
 			save.setRollOutAccount(pt.getRollOutAccount());
 			save.setRollInAccount(pt.getRollInAccount());
+			save.setOperFlag(PointsTransactionEnum.INSERT.getSign());
 			if(StringUtils.isNullOrEmpty(pt.getExpireTime())){
 				//save.setExpireTime(pt.getExpireTime());
 				save.setExpireTime(DateUtil.addYear(1));
@@ -108,7 +117,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			//修改当前剩余
 			PointsTransationDetailExtends up = new PointsTransationDetailExtends();
 			up.setDetailId(pd.getDetailId());
-			
+			up.setOperFlag(PointsTransactionEnum.INSERT.getSign());
 			if(pd.getCurBalance()>=transAmount){
 				save.setTransAmount(transAmount);
 				save.setCurBalance(transAmount);
@@ -125,6 +134,34 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		}
 		
 		if(salist.size()<=0) return "00002";//交易失败
+		
+		//组装区块连账户
+		List<Account> aList = new ArrayList<Account>();
+		aList.add(out);
+		aList.add(in);
+		List<PointsTransationDetailExtends> pList = new ArrayList<PointsTransationDetailExtends>(); 
+		pList.addAll(salist);
+		pList.addAll(upList);
+		
+		List<Map<Object, Object>> lm = BeanToMap.Bean2MapList(aList);
+		List<Map<Object, Object>> it = BeanToMap.Bean2MapList(ptList);
+		List<Map<Object, Object>> itd = BeanToMap.Bean2MapList(pList);
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("accountList", lm);
+		map.put("pointsTransaction", it);
+		map.put("pointsTransactionDetailList", itd);
+		
+		String json = JSONObject.fromObject(map).toString();
+		Boolean result = false;
+		try {
+			result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(!result) return "00003";//区块连交易失败
+		
 		mtm.insertTransation(ptList);
 		mtm.insertTransationDetail(salist);
 		mtm.updateCurBalance(upList);
@@ -133,9 +170,10 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		
 		return "00000";//交易正常
 	}
-
+	
+	@Transactional
 	@Override
-	public String seveAccept(PointsTransationDetailExtends ptd) {
+	public String seveAccept(PointsTransationDetailExtends ptd){
 		//获取所以未过期的积分
 		List<PointsTransationDetailExtends> ptdl = queryTransationDetailList(ptd);
 		if(ptdl.size()<=0) return "00001"; //没有可兑换的积分
@@ -191,6 +229,28 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			ptList.add(entry.getValue());
 		}
 		if(salist.size()<=0) return "00002";//交易失败
+		
+		List<PointsTransationDetailExtends> pList = new ArrayList<PointsTransationDetailExtends>(); 
+		pList.addAll(salist);
+		pList.addAll(upList);
+		
+		List<Map<Object, Object>> it = BeanToMap.Bean2MapList(ptList);
+		List<Map<Object, Object>> itd = BeanToMap.Bean2MapList(pList);
+		
+		Map<String, Object> map1 = new HashMap<>();
+		map1.put("pointsTransaction", it);
+		map1.put("pointsTransactionDetailList", itd);
+		
+		String json = JSONObject.fromObject(map1).toString();
+		Boolean result = false;
+		try {
+			result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(!result) return "00003";//区块连交易失败
+
 		mtm.insertTransation(ptList);
 		mtm.insertTransationDetail(salist);
 		mtm.updateCurBalance(upList);

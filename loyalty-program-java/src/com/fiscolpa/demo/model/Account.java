@@ -24,7 +24,7 @@ public class Account {
     private Date updateTime;
 
     private String updateUser;
-
+    
     public String getAccountId() {
         return accountId;
     }
@@ -88,4 +88,5 @@ public class Account {
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser == null ? null : updateUser.trim();
     }
+
 }

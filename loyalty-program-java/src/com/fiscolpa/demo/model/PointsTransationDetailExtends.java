@@ -1,6 +1,6 @@
 package com.fiscolpa.demo.model;
 
-public class PointsTransationDetailExtends {
+public class PointsTransationDetailExtends extends PointsModel {
 	private String detailId;
 
 	private String sourceDetailId;
@@ -13,13 +13,6 @@ public class PointsTransationDetailExtends {
 
 	private String status;
 
-	private String createTime;
-
-	private String createUser;
-
-	private String updateTime;
-
-	private String updateUser;
 
 	private String rollOutAccount;
 
@@ -38,17 +31,6 @@ public class PointsTransationDetailExtends {
 	private String transferType;
 
 	private String creditCreateTime;
-
-	// 查询判断列
-	private String queryColumn;
-
-	public String getQueryColumn() {
-		return queryColumn;
-	}
-
-	public void setQueryColumn(String queryColumn) {
-		this.queryColumn = queryColumn;
-	}
 
 	public String getDetailId() {
 		return detailId;
@@ -96,38 +78,6 @@ public class PointsTransationDetailExtends {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-
-	public String getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
-	}
-
-	public String getCreateUser() {
-		return createUser;
-	}
-
-	public void setCreateUser(String createUser) {
-		this.createUser = createUser;
-	}
-
-	public String getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(String updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getUpdateUser() {
-		return updateUser;
-	}
-
-	public void setUpdateUser(String updateUser) {
-		this.updateUser = updateUser;
 	}
 
 	public String getRollOutAccount() {
