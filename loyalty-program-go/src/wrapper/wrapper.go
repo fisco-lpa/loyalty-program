@@ -51,8 +51,8 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	defer func() {
 		e := recover()
 		if e != nil {
-			fmt.Println("抛出异常:", e)
-			log.Println("抛出异常:", e)
+			fmt.Println("授信积分抛出异常:", e)
+			log.Println("授信积分抛出异常:", e)
 		}
 	}()
 
@@ -65,7 +65,7 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	}
 
 	//账户信息表更新
-	if creditObject.account.OperFlag == "1" {
+	if creditObject.Account.OperFlag == "1" {
 		err := account.UpdateAccount(stub, creditObject.Account)
 		if err != nil {
 			log.Println("Error occurred when performing UpdateAccount")
@@ -107,6 +107,14 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 
 //消费积分
 func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	defer func() {
+		e := recover()
+		if e != nil {
+			fmt.Println("消费积分抛出异常:", e)
+			log.Println("消费积分抛出异常:", e)
+		}
+	}()
+
 	// 解析传入数据
 	data := new(ConsumePointsTransData)
 	err := util.ParseJsonAndDecode(data, args)
@@ -141,6 +149,14 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 
 //承兑积分
 func AccpetPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	defer func() {
+		e := recover()
+		if e != nil {
+			fmt.Println("承兑积分抛出异常:", e)
+			log.Println("承兑积分抛出异常:", e)
+		}
+	}()
+
 	// 解析传入数据
 	data := new(AccpetPointsTransData)
 	err := util.ParseJsonAndDecode(data, args)
@@ -174,6 +190,14 @@ func AccpetPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 
 //初始化数据
 func InitData(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	defer func() {
+		e := recover()
+		if e != nil {
+			fmt.Println("初始化数据抛出异常:", e)
+			log.Println("初始化数据抛出异常:", e)
+		}
+	}()
+
 	data := new(InitTableData)
 	err := util.ParseJsonAndDecode(data, args)
 	if err != nil {
