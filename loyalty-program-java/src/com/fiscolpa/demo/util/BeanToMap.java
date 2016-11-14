@@ -10,7 +10,6 @@ import java.util.Map;
 import com.fiscolpa.demo.model.Account;
 
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 public class BeanToMap<K, V> {
 	private BeanToMap() {  

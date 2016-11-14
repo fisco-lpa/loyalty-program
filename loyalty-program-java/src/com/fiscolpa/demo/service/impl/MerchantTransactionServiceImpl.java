@@ -53,7 +53,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 	
 	@Transactional
 	@Override
-	public String sevePoints(PointsTransationExtends pt) throws IOException {
+	public String sevePoints(PointsTransationExtends pt){
 		//根据用户手机号查询查询账户ID
 		String accountId = ua.getUserByAccountId(pt.getRollInAccount());
 		if(StringUtils.isNullOrEmpty(accountId)) return "00003";//没有配置账户
@@ -153,7 +153,12 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		map.put("pointsTransactionDetailList", itd);
 		
 		String json = JSONObject.fromObject(map).toString();
-		Boolean result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
+		Boolean result = false;
+		try {
+			result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		if(!result) return "00003";//区块连交易失败
 		
@@ -165,9 +170,10 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		
 		return "00000";//交易正常
 	}
-
+	
+	@Transactional
 	@Override
-	public String seveAccept(PointsTransationDetailExtends ptd) throws IOException {
+	public String seveAccept(PointsTransationDetailExtends ptd){
 		//获取所以未过期的积分
 		List<PointsTransationDetailExtends> ptdl = queryTransationDetailList(ptd);
 		if(ptdl.size()<=0) return "00001"; //没有可兑换的积分
@@ -236,7 +242,12 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		map1.put("pointsTransactionDetailList", itd);
 		
 		String json = JSONObject.fromObject(map1).toString();
-		Boolean result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
+		Boolean result = false;
+		try {
+			result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		if(!result) return "00003";//区块连交易失败
 
