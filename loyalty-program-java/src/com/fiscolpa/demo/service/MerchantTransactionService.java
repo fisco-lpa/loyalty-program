@@ -1,6 +1,5 @@
 package com.fiscolpa.demo.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -10,8 +9,6 @@ import com.fiscolpa.demo.model.PointsTransationDetailExtends;
 
 @Service
 public interface MerchantTransactionService{
-	
-	String ISSUING_PREFIX = "FF_";
 	
 	/**
 	 * 更具类型查询积分 待发积分、已发送、已承兑
@@ -41,12 +38,12 @@ public interface MerchantTransactionService{
 	 * （写入points_transation、points_transation_detail表，修改使用那条积分的余额）
 	 * @param pt
 	 */
-	public String sevePoints(PointsTransationExtends pt) throws IOException ;
+	public String sevePoints(PointsTransationExtends pt);
 	
 	/**
 	 * 商户发起承兑
 	 * @param pt
 	 */
-	public String seveAccept(PointsTransationDetailExtends ptd) throws IOException ;
+	public String seveAccept(PointsTransationDetailExtends ptd);
 	
 }
