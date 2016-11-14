@@ -1,10 +1,13 @@
 
 package com.fiscolpa.demo.controller;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -16,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBodyReturnValueHandler;
 
 import com.fiscolpa.demo.model.Account;
 import com.fiscolpa.demo.model.PointsTransation;
@@ -27,10 +29,13 @@ import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.service.MerchantTransactionService;
 import com.fiscolpa.demo.service.PointsExchangeTransationService;
 import com.fiscolpa.demo.service.UserAccountService;
+import com.fiscolpa.demo.util.BeanToMap;
+import com.fiscolpa.demo.util.HttpTool;
 import com.fiscolpa.demo.util.IDCreator;
 import com.fiscolpa.demo.util.PointsTransactionEnum;
 import com.fiscolpa.demo.util.UUIDGenerator;
-import com.mysql.jdbc.StringUtils;
+
+import net.sf.json.JSONObject;
 
 @Controller
 public class UserExchngeGoodsController {
@@ -59,11 +64,11 @@ public class UserExchngeGoodsController {
 		Integer NeedJiFen=Integer.valueOf(pointsNum);
 		//获取session的值
 		PointsUser currentUser=(PointsUser) session.getAttribute("user");
-
+		//要插入交易表的交易信息
 		PointsTransation pointsTransation=new PointsTransation();
 		//交易ID
 		String TransId = PointsTransactionEnum.BUY.getBeginning()+UUIDGenerator.getUUID();
-		//String TransId = IDCreator.getInstance().getID("JF_EXCHANGE", "");
+		
 		pointsTransation.setTransId(TransId);
 		pointsTransation.setCreateTime(date);
 		pointsTransation.setCreateUser(currentUser.getCreateUser());
@@ -86,38 +91,31 @@ public class UserExchngeGoodsController {
 		Account out = new Account();
 		out.setAccountId(currentUser.getAccountId());
 		out.setAccountBalance(account_balance-NeedJiFen);
+		out.setUpdateTime(date);
+		out.setUpdateUser(currentUser.getCreateUser());
 		account.updateAccountByBalance(out);
 		//修改商户的
-		int account_balance2	=pointsExchangeTransationService.selectAccountBalance("2");
+		int account_balance2	=pointsExchangeTransationService.selectAccountBalance(accountMallId);
 		Account in = new Account();
 		in.setAccountId(accountMallId);
 		in.setAccountBalance(account_balance2+NeedJiFen);
+		in.setUpdateTime(date);
+		in.setUpdateUser(currentUser.getCreateUser());
 		account.updateAccountByBalance(in);
 		
 		
 		PointsTransationDetail pointsTransationDetail=new PointsTransationDetail();
 		String detailId = IDCreator.getInstance().getID("EXCHANGE_DETIAL", "");
 		pointsTransationDetail.setDetailId(detailId);
-//		pointsTransationDetail.setCreateTime(date);
-//		pointsTransationDetail.setCreateUser(currentUser.getCreateUser());
-		//pointsTransationDetail.setCreditParty("2");
-//		pointsTransationDetail.setCurBalance(Integer.valueOf(pointsNum));
-//		pointsTransationDetail.setExpireTime(formatter.parse("2017-11-07 18:34:00"));
-//		pointsTransationDetail.setExtRef("111");
-//		pointsTransationDetail.setMerchant("2");
 		pointsTransationDetail.setRollInAccount(currentUser.getAccountId());
 		pointsTransationDetail.setRollOutAccount(accountMallId);
-//		pointsTransationDetail.setSourceDetailId("daiding");
-//		pointsTransationDetail.setStatus("1");
-//		pointsTransationDetail.setTransAmount(Integer.valueOf(pointsNum));
-//		pointsTransationDetail.setTransferTime(date);
-//		pointsTransationDetail.setTransId(TransId);
-//		pointsTransationDetail.setUpdateTime(date);
-//		pointsTransationDetail.setUpdateUser("user");
-//		pointsTransationDetail.setCreditCreateTime(date);
 
+		//获取所有未过期的积分
 		List<PointsTransationDetail> JFList = pointsExchangeTransationService.queryTransationDetailList(pointsTransationDetail);
-		
+		//新增
+		List<PointsTransationDetail> salist = new ArrayList<PointsTransationDetail>();
+		//修改主要是插入块中
+		List<PointsTransationDetail> upList = new ArrayList<PointsTransationDetail>();
 		for (int j = 0; j < JFList.size(); j++) {
 			PointsTransationDetail pd = JFList.get(j);
 			
@@ -125,7 +123,6 @@ public class UserExchngeGoodsController {
 			PointsTransationDetail save = new PointsTransationDetail();
 			BeanUtils.copyProperties(pd,save);
 			String detailIdIncrese = PointsTransactionEnum.BUY.getBeginning()+UUIDGenerator.getUUID();
-		//	String detailIdIncrese = IDCreator.getInstance().getID("EXCHANGE_DETIAL", "");
 			save.setDetailId(detailIdIncrese);
 			save.setSourceDetailId(pd.getDetailId());
 			save.setTransId(TransId);
@@ -136,7 +133,6 @@ public class UserExchngeGoodsController {
 			save.setTransferTime(date);
 			save.setCreateTime(date);
 			//修改当前剩余
-			
 			pd.setUpdateTime(date);
 			if(pd.getCurBalance()>=NeedJiFen){
 				save.setTransAmount(NeedJiFen);
@@ -147,7 +143,10 @@ public class UserExchngeGoodsController {
 				pointsExchangeTransationService.insertDetail(save);
 				//修改交易明细
 				pointsExchangeTransationService.updateByPrimaryKeySelective(pd);
+				salist.add(save);
+				upList.add(pd);
 				break;
+				
 			}else{
 				save.setTransAmount(pd.getCurBalance());
 				save.setCurBalance(pd.getCurBalance());
@@ -155,7 +154,10 @@ public class UserExchngeGoodsController {
 				pd.setCurBalance(0);
 				//新增交易明细
 				pointsExchangeTransationService.insertDetail(save);
+				//修改交易明细
 				pointsExchangeTransationService.updateByPrimaryKeySelective(pd);
+				salist.add(save);
+				upList.add(pd);
 			}
 			
 		
@@ -164,8 +166,44 @@ public class UserExchngeGoodsController {
 		//插入交易表
 		int i=pointsExchangeTransationService.insertExchange(pointsTransation);
 		
+		
+		
+		//组装区块连账户
+		//存储账户
+		List<Account> aList = new ArrayList<Account>();
+		aList.add(out);
+		aList.add(in);
+		//交易流水表插入新的
+	/*	List<PointsTransationDetail> pList = new ArrayList<PointsTransationDetail>(); 
+		pList.addAll(salist);
+		pList.addAll(upList);*/
+		//交易表
+		List<PointsTransation> ptList = new ArrayList<>(); 
+		ptList.add(pointsTransation);
+		
+		/*List<Map<Object, Object>> lm = BeanToMap.Bean2MapList(aList);
+		List<Map<Object, Object>> it = BeanToMap.Bean2MapList(ptList);
+		List<Map<Object, Object>> itd = BeanToMap.Bean2MapList(pList);*/
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("accountList",BeanToMap.ListToMapForInsert(aList,"1"));
+		map.put("pointsTransaction",BeanToMap.ListToMapForInsert(ptList,"0"));
+		map.put("pointsTransactionDetailList",BeanToMap.ListToMapForInsert(salist,"0"));
+		map.put("pointsTransactionUpdateDetailList",BeanToMap.ListToMapForInsert(upList,"1"));
+		String json = JSONObject.fromObject(map).toString();
+		
+		Boolean result = false;
+		try {
+			result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(!result) return "00003";//区块连交易失败
+		
+		
 		if (i== 1) {
-
+			//交易不正常
 			return "1111";
 		} 
 

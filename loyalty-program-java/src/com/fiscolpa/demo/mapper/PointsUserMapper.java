@@ -12,4 +12,5 @@ public interface PointsUserMapper extends Mapper<PointsUser> {
     
 	List<PointsUser> selectUserAndUserType(PointsUser pointsUser);
 	
+	List<PointsUser> getAllPointsUser();
 }

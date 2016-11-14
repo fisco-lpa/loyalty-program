@@ -10,4 +10,6 @@ import tk.mybatis.mapper.common.Mapper;
 public interface AccountMapper extends Mapper<Account> {
     
     List<AccountVo> getAllAccountByType(String accountType);
+    
+    List<Account> getAllAccount();
 }

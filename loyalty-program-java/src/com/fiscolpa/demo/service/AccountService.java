@@ -14,4 +14,6 @@ public interface AccountService extends IService<Account> {
 	List<AccountVo> getAllMerchant (String accountType);
 	
 	Account getAccount(String accountId);
+	
+	List<Account> getAllAccount();
 }

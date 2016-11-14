@@ -10,4 +10,6 @@ public interface PointsUserService extends IService<PointsUser> {
 	
 	List<PointsUser> selectUserAndUserType(PointsUser pointsUser);
 	
+	List<PointsUser> getAllPointsUser();
+	
 }

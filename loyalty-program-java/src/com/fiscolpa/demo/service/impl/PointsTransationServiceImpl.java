@@ -112,8 +112,8 @@ public class PointsTransationServiceImpl implements PointsTransationService {
 		Map<String, Object> pointsTransationDetailMap = BeanToMap.Bean2Map(pointsTransationDetail);
 		pointsTransationDetailMap.put("operFlag", "0");
 		map.put("account", accountMap);
-		map.put("pointsTransation", pointsTransationMap);
-		map.put("pointsTransationDetail", pointsTransationDetailMap);
+		map.put("pointsTransaction", pointsTransationMap);
+		map.put("pointsTransactionDetail", pointsTransationDetailMap);
 		String json = JSONObject.fromObject(map).toString();
 		Boolean result = false;
 		try {

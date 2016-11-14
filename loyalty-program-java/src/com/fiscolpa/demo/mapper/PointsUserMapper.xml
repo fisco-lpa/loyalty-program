@@ -23,4 +23,8 @@
   		select u.*, t.describe as userTypeStr from points_user u left join account_type t on u.user_type = t.account_type_id 
   		where u.user_password = #{userPassword} and (u.user_name = #{userName} or u.phone_number = #{userName})
   	</select>
+  	
+  	<select id="getAllPointsUser" resultMap="BaseResultMap">
+  		select * from points_user
+  	</select>
 </mapper>

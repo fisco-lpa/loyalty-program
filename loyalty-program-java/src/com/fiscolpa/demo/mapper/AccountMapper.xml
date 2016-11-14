@@ -40,5 +40,7 @@
 	WHERE
 		a.account_type_id = #{accountType}
   </select>
-  
+  <select id="getAllAccount" resultMap="BaseResultMap">
+  	select * from account
+  </select>
 </mapper>

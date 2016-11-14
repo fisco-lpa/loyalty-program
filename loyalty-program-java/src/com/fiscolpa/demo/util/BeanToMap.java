@@ -50,6 +50,43 @@ public class BeanToMap<K, V> {
 		return out;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static  <K, V>Map<K, V> BeanToMapForInsert(Object javaBean,String operFlag) {  
+		Map<K, V> ret = new HashMap<K, V>();  
+        try {  
+        	Method[] methods = javaBean.getClass().getMethods();  
+            for (Method method : methods) {  
+                if (method.getName().startsWith("get")) {  
+                    String field = method.getName();  
+                    field = field.substring(field.indexOf("get") + 3);  
+                    field = field.toLowerCase().charAt(0) + field.substring(1);  
+                    Object value = method.invoke(javaBean, (Object[]) null); 
+                    if(value instanceof Integer){
+                    	value = String.valueOf(value);
+                    }
+                    if(value instanceof Date){
+                    	value = DateUtil.getDate((Date)value);
+                    }
+                    ret.put((K) field, (V) (null == value ? "" : value));  
+                }  
+            }  
+            ret.put((K)"operFlag", (V)operFlag);
+        } catch (Exception e) {
+        	e.printStackTrace();
+        }  
+        return ret;
+    }
+	
+	@SuppressWarnings("unchecked")
+	public static  <K, V> List<Map<K, V>> ListToMapForInsert(Object beanList,String operFlag){
+		List<Object> in = (List<Object>) beanList;
+		List<Map<K, V>> out = new ArrayList<>();
+		for (int i = 0; i < in.size(); i++) {
+			Map<K, V> map = BeanToMapForInsert(in.get(i),operFlag);
+			out.add(map);
+		}
+		return out;
+	}
 	
 	public static void main(String[] args) {  
 		Account a = new Account();

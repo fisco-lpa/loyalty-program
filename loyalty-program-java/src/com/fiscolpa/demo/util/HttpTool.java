@@ -182,15 +182,15 @@ public class HttpTool {
 			InvokeResponseBean invokeBean = HttpTool.get(responseBean.getResult().getMessage(), InvokeResponseBean.class);
 			
 			long beginTime = System.currentTimeMillis();//开始系统时间
-			String txId = invokeBean.getTxid();
+			String txid = invokeBean.getTxid();
 			
 			logger.info("-----------------------------------------------------------------------------");
 			logger.info("----------Message："+responseBean.getResult().getMessage());
-			logger.info("----------TxId："+invokeBean.getTxid());
+			logger.info("----------Txid："+invokeBean.getTxid());
 			logger.info("-----------------------------------------------------------------------------");
 			
 			while(true){
-				if(txId == null || "".equals(txId)){
+				if(txid == null || "".equals(txid)){
 					try {
 						Thread.sleep(1000);
 					} catch (Exception e) {
@@ -210,7 +210,7 @@ public class HttpTool {
 			
 			logger.info("-----------------------------------------------------------------------------");
 			logger.info("----------Message："+responseBean.getResult().getMessage());
-			logger.info("----------TxId："+invokeBean.getTxid());
+			logger.info("----------Txid："+invokeBean.getTxid());
 			logger.info("-----------------------------------------------------------------------------");
 			
 			if (responseBean.getResult().getMessage().equals(invokeBean.getTxid())) {

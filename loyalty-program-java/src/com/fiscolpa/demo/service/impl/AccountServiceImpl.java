@@ -24,4 +24,8 @@ public class AccountServiceImpl extends BaseService<Account> implements AccountS
 	public Account getAccount(String accountId) {
 		return accountMapper.selectByPrimaryKey(accountId);
 	}
+	@Override
+	public List<Account> getAllAccount() {
+		return accountMapper.getAllAccount();
+	}
 }
