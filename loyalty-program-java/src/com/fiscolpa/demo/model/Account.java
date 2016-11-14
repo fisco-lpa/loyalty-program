@@ -25,8 +25,6 @@ public class Account {
 
     private String updateUser;
     
-    private String operFlag;
-
     public String getAccountId() {
         return accountId;
     }
@@ -91,12 +89,4 @@ public class Account {
         this.updateUser = updateUser == null ? null : updateUser.trim();
     }
 
-	public String getOperFlag() {
-		return operFlag;
-	}
-
-	public void setOperFlag(String operFlag) {
-		this.operFlag = operFlag;
-	}
-    
 }
