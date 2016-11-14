@@ -12,6 +12,10 @@ import (
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
+type TotalNum struct {
+	TableName string
+}
+
 type CreditPointsTransData struct {
 	Account                 *account.Account
 	PointsTransaction       *points.PointsTransaction
@@ -220,8 +224,9 @@ func InitData(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 //通过表名查条数
 func QueryTableLines(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
-	return nil, nil
+	data := new(TotalNum)
+	util.ParseJsonAndDecode(data, args)
+	return util.QueryTableLines(stub, data.TableName)
 }
 
 //通过主键查询次条记录
