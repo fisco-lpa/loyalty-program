@@ -5,12 +5,9 @@ public class PointsModel {
 	private String createUser;
 	private String updateTime;
 	private String updateUser;
-
+	private String operFlag;
 	private Integer page;
 	private Integer rows;
-	private String operFlag;
-	
-	
 	public String getCreateTime() {
 		return createTime;
 	}
@@ -35,6 +32,12 @@ public class PointsModel {
 	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
 	}
+	public String getOperFlag() {
+		return operFlag;
+	}
+	public void setOperFlag(String operFlag) {
+		this.operFlag = operFlag;
+	}
 	public Integer getPage() {
 		return page;
 	}
@@ -46,12 +49,6 @@ public class PointsModel {
 	}
 	public void setRows(Integer rows) {
 		this.rows = rows;
-	}
-	public String getOperFlag() {
-		return operFlag;
-	}
-	public void setOperFlag(String operFlag) {
-		this.operFlag = operFlag;
 	}
 	
 }
