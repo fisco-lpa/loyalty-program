@@ -249,7 +249,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		String json = JSONObject.fromObject(map1).toString();
 		Boolean result = false;
 		try {
-			result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
+			result = HttpTool.sendToFabric(json, "invoke", "AccpetPoints");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
