@@ -1,10 +1,6 @@
 package com.fiscolpa.demo.util;
 
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
+import java.io.IOException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -14,26 +10,13 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.pointsInterface.InvokeResponseBean;
-import com.fiscolpa.demo.pointsInterface.QueryMemBean;
 import com.fiscolpa.demo.pointsInterface.RegistBean;
 import com.fiscolpa.demo.pointsInterface.ResponseBean;
 
 
 public class HttpTool {
 	
-	public static String BLOCK_CHAIN_URL = null;
-	
-	@SuppressWarnings("unused")
-	private static String Chaincode_Id=null;
-	
-	public HttpTool(Properties props){
-		BLOCK_CHAIN_URL = props.getProperty("blockchain.url");
-		Chaincode_Id = props.getProperty("chaincode.id");
-	}
-
 	private static Logger logger = LoggerFactory.getLogger(HttpTool.class);
 	
 	/**	
@@ -80,8 +63,9 @@ public class HttpTool {
 	 * @param enrollId 
 	 * @param enrollSecret
 	 * @return
+	 * @throws IOException 
 	 */
-	public static boolean register(String enrollId,String enrollSecret){
+	public static boolean register(String enrollId,String enrollSecret) throws IOException{
 		//登陆用户
 		RegistBean rb = new RegistBean();
 		enrollId="jim";
@@ -89,7 +73,7 @@ public class HttpTool {
 		rb.setEnrollId(enrollId);
 		rb.setEnrollSecret(enrollSecret);
 		String requestJsonData = JsonUtil.beanToJson(rb);
-		String response = HttpTool.post(BLOCK_CHAIN_URL+"/registrar", requestJsonData);
+		String response = HttpTool.post(PropertiesUtil.readValue("BLOCK_CHAIN_URL")+"/registrar", requestJsonData);
 		if(response != null && !"".equals(response)){
 			System.out.println("true");
 			if(response.contains("OK") && response.contains("successful") || response.contains("already logged in")){
@@ -103,9 +87,15 @@ public class HttpTool {
 		System.out.println("false");
 		return false; 
 	}
-	
-	public static <T> T send(String jsonData,Class<T> beanCalss){
-		String response = HttpTool.post(BLOCK_CHAIN_URL+"/chaincode", jsonData);
+	/**
+	 * 交易
+	 * @param jsonData
+	 * @param beanCalss
+	 * @return
+	 * @throws IOException 
+	 */
+	public static <T> T send(String jsonData,Class<T> beanCalss) throws IOException{
+		String response = HttpTool.post(PropertiesUtil.readValue("BLOCK_CHAIN_URL")+"/chaincode", jsonData);
 		System.out.println("response:"+response);
 		logger.info("Fabric{send}返回数据："+response);
 		if(response != null && !"".equals(response)){
@@ -123,10 +113,11 @@ public class HttpTool {
 	 * @param transationId
 	 * @param beanCalss
 	 * @return
+	 * @throws IOException 
 	 */
-	public static <T> T get(String transationId,Class<T> beanCalss){
+	public static <T> T get(String transationId,Class<T> beanCalss) throws IOException{
 		System.out.println("to get");
-		String response = HttpTool.get(BLOCK_CHAIN_URL+"/transactions"+"/"+transationId);
+		String response = HttpTool.get(PropertiesUtil.readValue("BLOCK_CHAIN_URL")+"/transactions"+"/"+transationId);
 		System.out.println("get response"+response);
 		logger.info("Fabric{get}返回数据："+response);
 		if(response != null && !"".equals(response)){
@@ -139,9 +130,10 @@ public class HttpTool {
 	 * 获取当前区块高度
 	 * @param beanCalss
 	 * @return
+	 * @throws IOException 
 	 */
-	public static <T> T getHeight(Class<T> beanCalss){
-		String response = HttpTool.get(BLOCK_CHAIN_URL+"/chain");
+	public static <T> T getHeight(Class<T> beanCalss) throws IOException{
+		String response = HttpTool.get(PropertiesUtil.readValue("BLOCK_CHAIN_URL")+"/chain");
 		logger.info("Fabric{getHeight}返回数据："+response);
 		if(response != null && !"".equals(response)){
 			return JsonUtil.jsonToBean(response, beanCalss);
@@ -154,9 +146,10 @@ public class HttpTool {
 	 * @param beanCalss
 	 * @param height
 	 * @return
+	 * @throws IOException 
 	 */
-	public static <T> T getBlockInfo4Height(Class<T> beanCalss, int height){
-		String response = HttpTool.get(BLOCK_CHAIN_URL+"/chain/blocks/" + height);
+	public static <T> T getBlockInfo4Height(Class<T> beanCalss, int height) throws IOException{
+		String response = HttpTool.get(PropertiesUtil.readValue("BLOCK_CHAIN_URL")+"/chain/blocks/" + height);
 		logger.debug("Fabric{getHeight}返回数据："+response);
 		if(response != null && !"".equals(response) && !response.contains("Error")){
 			return JsonUtil.jsonToBean(response, beanCalss);
@@ -164,20 +157,21 @@ public class HttpTool {
 		return null; 
 	}
 	/**
-	 * 将交易发送到区块链
+	 * 接口
 	 * @param userBean  用户
 	 * @param obj  传递的参数
 	 * @param userDeployService
 	 * @param method  交易的类型（query or invoke）
 	 * @param function  方法名
 	 * @return
+	 * @throws IOException 
 	 */
-	public static boolean sendToFabric(String obj,String method,String function){
+	public static boolean sendToFabric(String obj,String method,String function) throws IOException{
 		//登陆注册区块链
 		boolean isSucc = HttpTool.register("jim", "6avZQLwcUe9b");
 		if(isSucc){
 			//获取chaincodeId 
-			String chaincodeId = Chaincode_Id;
+			String chaincodeId = PropertiesUtil.readValue("Chaincode_Id");
 			//获取区块链用户名称
 			String blockName = "jim";
 			String sendJson = CommonUtils.createJson(method, chaincodeId, function, obj, blockName);
@@ -229,48 +223,6 @@ public class HttpTool {
 		}else{
 			return false;
 		}
-	}
-	//查询会员信息
-	public static Map<String,Object> queryMemInfoFromFabric(PointsUser  userBean,Object obj){
-		boolean isSucc = HttpTool.register(userBean.getUserName(), userBean.getUserPassword());
-		Map<String,Object> map = new HashMap<String,Object>();
-		if(isSucc){
-			String chaincodeId = "";
-			//获取区块链用户名
-			String blockName = "";
-			String jsonData = JsonUtil.beanToJson(obj);
-
-			String sendJson = CommonUtils.createJson("query", chaincodeId, "queryMemberInfo", jsonData, blockName);
-			
-			logger.info("queryAssetInfo返回数据："+sendJson);
-			
-			ResponseBean responseBean = HttpTool.send(sendJson, ResponseBean.class);
-			
-			if(responseBean != null 
-					&& "OK".equalsIgnoreCase(responseBean.getResult().getStatus())){
-				String message = responseBean.getResult().getMessage(); //base64编码
-				String decodeMsg=null;
-				try {
-					decodeMsg = new String(Base64Util.decode(message), "utf-8");
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}//解码后的数据
-				
-				logger.info("queryAssetInfo(解码后数据)："+decodeMsg);
-				
-				QueryMemBean qrb = JsonUtil.jsonToBean(decodeMsg, QueryMemBean.class);
-				if("OK".equalsIgnoreCase(qrb.getStatus())){
-					map.put("dataBean", qrb.getAccount());
-				}else{
-					map.put("error", qrb.getErrMsg());
-				}
-				
-			}
-		}else{
-			return null;
-		}
-		return map;
 	}
 
 }
