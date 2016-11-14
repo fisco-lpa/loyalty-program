@@ -3,6 +3,7 @@ package wrapper
 import (
 	"account"
 	"errors"
+	"fmt"
 	"log"
 	"points"
 	"user"
@@ -47,6 +48,14 @@ func SignIn(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 //授信积分
 func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	defer func() {
+		e := recover()
+		if e != nil {
+			fmt.Println("抛出异常:", e)
+			log.Println("抛出异常:", e)
+		}
+	}()
+
 	// 解析传入数据
 	creditObject := new(CreditPointsTransData)
 	err := util.ParseJsonAndDecode(creditObject, args)
@@ -56,7 +65,7 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	}
 
 	//账户信息表更新
-	if creditObject.PointsTransaction.OperFlag == "1" {
+	if creditObject.account.OperFlag == "1" {
 		err := account.UpdateAccount(stub, creditObject.Account)
 		if err != nil {
 			log.Println("Error occurred when performing UpdateAccount")
@@ -68,7 +77,7 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	}
 
 	// 积分交易表增加记录
-	if creditObject.Account.OperFlag == "0" {
+	if creditObject.PointsTransaction.OperFlag == "0" {
 		err := points.InsertPointsTransation(stub, creditObject.PointsTransaction)
 		if err != nil {
 			log.Println("Error occurred when performing InsertPointsTransation")
@@ -80,7 +89,7 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	}
 
 	// 积分交易明细表增加记录
-	if creditObject.Account.OperFlag == "0" {
+	if creditObject.PointsTransactionDetail.OperFlag == "0" {
 		err := points.InsertPointsTransationDetail(stub, creditObject.PointsTransactionDetail)
 		if err != nil {
 			log.Println("Error occurred when performing InsertPointsTransationDetail")
