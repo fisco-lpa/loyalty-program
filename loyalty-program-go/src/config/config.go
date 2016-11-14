@@ -11,14 +11,22 @@ import (
 type ConfigType struct { //ConfigDetail
 	CategoryId   string //类别ID
 	CategoryName string //类别名称
-	AuditObj     util.AuditObject
+	CreateTime   string //创建时间
+	CreateUser   string //创建人
+	UpdateTime   string //修改时间
+	UpdateUser   string //修改人
+	//AuditObj     util.AuditObject
 }
 type ConfigDetail struct { //配置信息明细表信息
 	DetailId   string //类别明细ID
 	DetailName string //类别明细名称
 	CategoryId string //类别ID
 	Describe   string //描述
-	AuditObj   util.AuditObject
+	CreateTime string //创建时间
+	CreateUser string //创建人
+	UpdateTime string //修改时间
+	UpdateUser string //修改人
+	//AuditObj   util.AuditObject
 }
 
 //配置信息类别表信息录入
@@ -34,12 +42,12 @@ func InsertConfigureCategory(stub shim.ChaincodeStubInterface, args []string) ([
 	//插入配置信息类别表
 	ok, err := stub.InsertRow(util.Configure_Category, shim.Row{
 		Columns: []*shim.Column{
-			&shim.Column{Value: &shim.Column_String_{String_: data.CategoryId}},           //类别ID
-			&shim.Column{Value: &shim.Column_String_{String_: data.CategoryName}},         //类别名称
-			&shim.Column{Value: &shim.Column_String_{String_: data.AuditObj.CreateTime}},  //创建时间
-			&shim.Column{Value: &shim.Column_String_{String_: data.AuditObj.CreateUser}},  //创建人
-			&shim.Column{Value: &shim.Column_String_{String_: data.AuditObj.UpdateTime}},  //修改时间
-			&shim.Column{Value: &shim.Column_String_{String_: data.AuditObj.UpdateUser}}}, //修改人
+			&shim.Column{Value: &shim.Column_String_{String_: data.CategoryId}},   //类别ID
+			&shim.Column{Value: &shim.Column_String_{String_: data.CategoryName}}, //类别名称
+			&shim.Column{Value: &shim.Column_String_{String_: data.CreateTime}},   //创建时间
+			&shim.Column{Value: &shim.Column_String_{String_: data.CreateUser}},   //创建人
+			&shim.Column{Value: &shim.Column_String_{String_: data.UpdateTime}},   //修改时间
+			&shim.Column{Value: &shim.Column_String_{String_: data.UpdateUser}}},  //修改人
 	})
 	if !ok && err == nil {
 		return nil, errors.New("insert Configure_Category failure")
@@ -85,14 +93,14 @@ func InsertConfigureDetail(stub shim.ChaincodeStubInterface, args []string) ([]b
 	//插入配置信息明细表
 	ok, err := stub.InsertRow(util.Configure_Detail, shim.Row{
 		Columns: []*shim.Column{
-			&shim.Column{Value: &shim.Column_String_{String_: data.DetailId}},             //类别明细ID
-			&shim.Column{Value: &shim.Column_String_{String_: data.DetailName}},           //类别明细名称
-			&shim.Column{Value: &shim.Column_String_{String_: data.CategoryId}},           //类别ID
-			&shim.Column{Value: &shim.Column_String_{String_: data.Describe}},             //描述
-			&shim.Column{Value: &shim.Column_String_{String_: data.AuditObj.CreateTime}},  //创建时间
-			&shim.Column{Value: &shim.Column_String_{String_: data.AuditObj.CreateUser}},  //创建人
-			&shim.Column{Value: &shim.Column_String_{String_: data.AuditObj.UpdateTime}},  //修改时间
-			&shim.Column{Value: &shim.Column_String_{String_: data.AuditObj.UpdateUser}}}, //修改人
+			&shim.Column{Value: &shim.Column_String_{String_: data.DetailId}},    //类别明细ID
+			&shim.Column{Value: &shim.Column_String_{String_: data.DetailName}},  //类别明细名称
+			&shim.Column{Value: &shim.Column_String_{String_: data.CategoryId}},  //类别ID
+			&shim.Column{Value: &shim.Column_String_{String_: data.Describe}},    //描述
+			&shim.Column{Value: &shim.Column_String_{String_: data.CreateTime}},  //创建时间
+			&shim.Column{Value: &shim.Column_String_{String_: data.CreateUser}},  //创建人
+			&shim.Column{Value: &shim.Column_String_{String_: data.UpdateTime}},  //修改时间
+			&shim.Column{Value: &shim.Column_String_{String_: data.UpdateUser}}}, //修改人
 	})
 	if !ok && err == nil {
 		return nil, errors.New("insert Configure_Detail failure")

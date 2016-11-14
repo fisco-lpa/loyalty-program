@@ -57,7 +57,6 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "userId", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "accountbalance", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "accountTypeId", Type: shim.ColumnDefinition_STRING, Key: false},
-		&shim.ColumnDefinition{Name: "status", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "createTime", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "createUser", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "updateTime", Type: shim.ColumnDefinition_STRING, Key: false},
@@ -312,7 +311,10 @@ func UpdateTableCount(stub shim.ChaincodeStubInterface, tableName string) (int64
 	col := shim.Column{Value: &shim.Column_String_{String_: tableName}}
 	columns = append(columns, col)
 	row, _ := stub.GetRow(Table_Count, columns) //row是否为空
-	totalNumber := row.Columns[1].GetInt64()
+	i := 0
+	var totalNumber int64
+	totalNumber = int64(i)
+
 	if len(row.Columns) == 0 {
 		//若没有数据，则插入总数表一条记录
 		totalNumber = 1
@@ -325,6 +327,7 @@ func UpdateTableCount(stub shim.ChaincodeStubInterface, tableName string) (int64
 			return 0, err
 		}
 	} else {
+		totalNumber = row.Columns[1].GetInt64()
 		//若有数据，则更新总数
 		totalNumber = totalNumber + 1
 		ok, err := stub.ReplaceRow(Table_Count, shim.Row{
