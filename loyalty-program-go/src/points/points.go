@@ -1,6 +1,7 @@
 package points
 
 import (
+	"encoding/base64"
 	"errors"
 	"log"
 	"util"
@@ -204,4 +205,22 @@ func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 	log.Println("UpdatePointsTransationDetail success!")
 
 	return nil
+}
+
+//根据主键查询积分交易记录
+func QueryPointsByKey(stub shim.ChaincodeStubInterface, transId string) ([]byte, error) {
+	var columns []shim.Column
+	col := shim.Column{Value: &shim.Column_String_{String_: transId}}
+	columns = append(columns, col)
+	row, _ := stub.GetRow(util.Table_Count, columns) //row是否为空
+	jsonResp := `{"TransId":"` + row.Columns[0].GetString_() + `","RolloutAccount":"` + row.Columns[1].GetString_() +
+		`","RollinAccount":"` + row.Columns[2].GetString_() + `","TransAmount":"` + row.Columns[3].GetString_() +
+		`","Description":"` + row.Columns[4].GetString_() + `","TransferTime":"` + row.Columns[5].GetString_() +
+		`","TransferType":"` + row.Columns[6].GetString_() + `","CreateTime":"` + row.Columns[7].GetString_() +
+		`","CreateUser":"` + row.Columns[8].GetString_() + `","UpdateTime":"` + row.Columns[9].GetString_() +
+		`","UpdateUser":"` + row.Columns[10].GetString_() + `"}`
+
+	log.Println("jsonResp:" + jsonResp)
+	return []byte(base64.StdEncoding.EncodeToString([]byte(`{"status":"OK","errMsg":"查询成功","data":` + jsonResp + `}`))), nil
+
 }

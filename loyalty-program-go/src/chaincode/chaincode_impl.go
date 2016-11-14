@@ -49,7 +49,17 @@ func (t *PointsChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 
 //查询
 func (t *PointsChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	//function, args := stub.GetFunctionAndParameters()
+	//通过表名查条数
+	if function == "QueryTableLines" {
+		log.Println("QueryTableLines,args = " + args[0])
+		fmt.Println("QueryTableLines,args = " + args[0])
+		return wrapper.QueryTableLines(stub, args)
+	} else if function == "QueryPointsByKey" { //通过主键查询次条记录
+		log.Println("QueryPointsByKey,args = " + args[0])
+		fmt.Println("QueryPointsByKey,args = " + args[0])
+		return wrapper.QueryPointsByKey(stub, args)
+	}
+
 	return nil, errors.New("调用query失败")
 }
 

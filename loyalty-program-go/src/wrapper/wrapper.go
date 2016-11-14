@@ -34,6 +34,10 @@ type InitTableData struct {
 	Account    []*account.Account
 }
 
+type PointsInfo struct {
+	TransId string
+}
+
 //注册
 func SignUp(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
@@ -212,4 +216,21 @@ func InitData(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	}
 
 	return nil, nil
+}
+
+//通过表名查条数
+func QueryTableLines(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+
+	return nil, nil
+}
+
+//通过主键查询次条记录
+func QueryPoinitsByKey(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	data := new(PointsInfo)
+	err := util.ParseJsonAndDecode(data, args)
+	if err != nil {
+		log.Println("Error occurred when parsing json")
+		return nil, errors.New("Error occurred when parsing json.")
+	}
+	return points.QueryPointsByKey(stub, data.TransId)
 }
