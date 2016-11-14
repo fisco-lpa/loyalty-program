@@ -19,7 +19,7 @@ public class BeanToMap<K, V> {
 	public static <K, V> Map<K, V> Bean2Map(Object javaBean) {  
         Map<K, V> ret = new HashMap<K, V>();  
         try {  
-            Method[] methods = javaBean.getClass().getDeclaredMethods();  
+            Method[] methods = javaBean.getClass().getMethods();  
             for (Method method : methods) {  
                 if (method.getName().startsWith("get")) {  
                     String field = method.getName();  
@@ -36,7 +36,7 @@ public class BeanToMap<K, V> {
                 }  
             }  
         } catch (Exception e) {  
-        }  
+        } 
         return ret;  
     }
 	
