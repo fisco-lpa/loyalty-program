@@ -1,5 +1,6 @@
 package com.fiscolpa.demo.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -15,6 +16,7 @@ import com.fiscolpa.demo.model.PointsTransation;
 import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.service.AccountService;
 import com.fiscolpa.demo.service.PointsTransationService;
+import com.fiscolpa.demo.util.HttpTool;
 import com.fiscolpa.demo.vo.AccountVo;
 import com.fiscolpa.demo.vo.PointsTransationDetailVo;
 import com.fiscolpa.demo.vo.PointsTransationVo;
@@ -62,9 +64,10 @@ public class CreditPartyController {
     /**
      * 授信页面
      * @param pointsTransation
+     * @throws IOException 
      */
     @RequestMapping(value = "/creditParty/goCreditPage", method = RequestMethod.GET)
-    public ModelAndView goCreditPage(HttpSession session) {
+    public ModelAndView goCreditPage(HttpSession session) throws IOException{
     	ModelAndView result = new ModelAndView("credit_party_credit");
     	PointsUser user = (PointsUser)session.getAttribute("user");
     	result.addObject("user", user);

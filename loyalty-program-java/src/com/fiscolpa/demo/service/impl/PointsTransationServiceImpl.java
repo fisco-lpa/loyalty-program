@@ -25,7 +25,6 @@ import com.fiscolpa.demo.vo.PointsTransationDetailVo;
 import com.fiscolpa.demo.vo.PointsTransationVo;
 import com.github.pagehelper.PageHelper;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 @Service("pointsTransationService")

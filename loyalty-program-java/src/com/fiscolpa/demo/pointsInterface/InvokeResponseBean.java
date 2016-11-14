@@ -5,7 +5,7 @@ public class InvokeResponseBean {
 	private String chaincodeID;
 	private String payload;
 	private String uuid;
-	private String txId;
+	private String txid;
 	private Timestamp timestamp;
 	private String confidentialityLevel;
 	private String confidentialityProtocolVersion;
@@ -15,12 +15,12 @@ public class InvokeResponseBean {
 	private String signature;
 	
 
-	public String getTxId() {
-		return txId;
+	public String getTxid() {
+		return txid;
 	}
 
-	public void setTxId(String txId) {
-		this.txId = txId;
+	public void setTxid(String txid) {
+		this.txid = txid;
 	}
 
 	public String getType() {
