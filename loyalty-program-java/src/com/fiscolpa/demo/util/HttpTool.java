@@ -158,9 +158,7 @@ public class HttpTool {
 	}
 	/**
 	 * 接口
-	 * @param userBean  用户
 	 * @param obj  传递的参数
-	 * @param userDeployService
 	 * @param method  交易的类型（query or invoke）
 	 * @param function  方法名
 	 * @return
@@ -184,11 +182,11 @@ public class HttpTool {
 			InvokeResponseBean invokeBean = HttpTool.get(responseBean.getResult().getMessage(), InvokeResponseBean.class);
 			
 			long beginTime = System.currentTimeMillis();//开始系统时间
-			String txId = invokeBean.getTxId();
+			String txId = invokeBean.getTxid();
 			
 			logger.info("-----------------------------------------------------------------------------");
 			logger.info("----------Message："+responseBean.getResult().getMessage());
-			logger.info("----------TxId："+invokeBean.getTxId());
+			logger.info("----------TxId："+invokeBean.getTxid());
 			logger.info("-----------------------------------------------------------------------------");
 			
 			while(true){
@@ -201,7 +199,7 @@ public class HttpTool {
 					long checkTime = System.currentTimeMillis();
 					if((checkTime-beginTime) <= (300*1000)){
 						invokeBean = HttpTool.get(responseBean.getResult().getMessage(), InvokeResponseBean.class);
-						if(invokeBean.getUuid() != null && !"".equals(invokeBean.getUuid())){
+						if(invokeBean.getTxid() != null && !"".equals(invokeBean.getTxid())){
 							break;
 						}
 					}
@@ -212,10 +210,10 @@ public class HttpTool {
 			
 			logger.info("-----------------------------------------------------------------------------");
 			logger.info("----------Message："+responseBean.getResult().getMessage());
-			logger.info("----------TxId："+invokeBean.getTxId());
+			logger.info("----------TxId："+invokeBean.getTxid());
 			logger.info("-----------------------------------------------------------------------------");
 			
-			if (responseBean.getResult().getMessage().equals(invokeBean.getTxId())) {
+			if (responseBean.getResult().getMessage().equals(invokeBean.getTxid())) {
 				return true;
 			} else {
 				return false;
