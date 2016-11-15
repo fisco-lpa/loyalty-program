@@ -118,6 +118,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "transAmount", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "describe", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "transferTime", Type: shim.ColumnDefinition_STRING, Key: false},
+		&shim.ColumnDefinition{Name: "transferType", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "createTime", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "createUser", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "updateTime", Type: shim.ColumnDefinition_STRING, Key: false},
@@ -245,6 +246,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		&shim.ColumnDefinition{Name: "curBalance", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "creditParty", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "merchant", Type: shim.ColumnDefinition_STRING, Key: false},
+		&shim.ColumnDefinition{Name: "creditCreateTime", Type: shim.ColumnDefinition_STRING, Key: false},
 		&shim.ColumnDefinition{Name: "transferTime", Type: shim.ColumnDefinition_STRING, Key: false},
 	})
 	if err != nil {
