@@ -78,6 +78,7 @@ public class UserExchngeGoodsController {
 		pointsTransation.setUpdateTime(date);
 		pointsTransation.setUpdateUser(currentUser.getUserName());
 		pointsTransation.setTransferType(PointsTransactionEnum.BUY.getSign());
+		pointsTransation.setDescribe("BUY");
 		
 		int account_balance	=pointsExchangeTransationService.selectAccountBalance(currentUser.getAccountId());
 		if(account_balance <Integer.valueOf(pointsNum)){

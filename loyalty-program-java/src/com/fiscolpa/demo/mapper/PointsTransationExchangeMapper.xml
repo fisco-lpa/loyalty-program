@@ -22,11 +22,11 @@
 
   <insert id="insertExchange"  parameterType="com.fiscolpa.demo.model.PointsTransation" >
     insert into points_transation (trans_id, roll_out_account, roll_in_account, 
-      trans_amount,transfer_time,transfer_type,create_time,create_user,update_time,update_user)
+      trans_amount,transfer_time,transfer_type,create_time,create_user,update_time,update_user,`describe`)
     values (#{transId,jdbcType=VARCHAR}, #{rollOutAccount,jdbcType=VARCHAR}, #{rollInAccount,jdbcType=VARCHAR}, 
       #{transAmount,jdbcType=INTEGER}, #{transferTime,jdbcType=TIMESTAMP}, #{transferType,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{updateUser,jdbcType=VARCHAR})
+      #{updateUser,jdbcType=VARCHAR},#{describe,jdbcType=VARCHAR})
   </insert>
 	 <select id="selectAccountBalance" resultType="int" parameterType="java.lang.String" >
     select 
