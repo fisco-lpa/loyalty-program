@@ -229,7 +229,7 @@
         #{item.creditParty},
         #{item.merchant},
         #{item.creditCreateTime},
-        #{item.transferTime}
+        now();
 		)
 		</foreach>
 	</insert>
