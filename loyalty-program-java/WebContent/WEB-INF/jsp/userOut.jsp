@@ -163,7 +163,7 @@
                 <tr>
                     <c:if test="${pageInfo.hasPreviousPage}">
                         <td>
-                            <a href="${pageContext.request.contextPath}/userOut?page=${pageInfo.prePage}&rows=${pageInfo.pageSize}&rollInAccount=${queryParam.rollInAccount}">前一页</a>
+                            <a href="${pageContext.request.contextPath}/userOut?page=${pageInfo.prePage}&rows=${pageInfo.pageSize}&rollInAccount=">前一页</a>
                         </td>
                     </c:if>
                     <c:forEach items="${pageInfo.navigatepageNums}" var="nav">
@@ -172,13 +172,13 @@
                         </c:if>
                         <c:if test="${nav != pageInfo.pageNum}">
                             <td>
-                                <a href="${pageContext.request.contextPath}/userOut?page=${nav}&rows=${pageInfo.pageSize}&rollInAccount=${queryParam.rollInAccount}">${nav}</a>
+                                <a href="${pageContext.request.contextPath}/userOut?page=${nav}&rows=${pageInfo.pageSize}&rollInAccount=">${nav}</a>
                             </td>
                         </c:if>
                     </c:forEach>
                     <c:if test="${pageInfo.hasNextPage}">
                         <td>
-                            <a href="${pageContext.request.contextPath}/userOut?page=${pageInfo.nextPage}&rows=${pageInfo.pageSize}&rollInAccount=${queryParam.rollInAccount}">下一页</a>
+                            <a href="${pageContext.request.contextPath}/userOut?page=${pageInfo.nextPage}&rows=${pageInfo.pageSize}&rollInAccount=">下一页</a>
                         </td>
                     </c:if>
                 </tr>
