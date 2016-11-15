@@ -72,11 +72,13 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		in.setAccountId(pt.getRollInAccount());
 		in.setAccountBalance(userBalance+pt.getTransAmount());
 		
+		String  dateTime = DateUtil.getDateTime();
+		
 		List<PointsTransationExtends> ptList = new ArrayList<>();
 		String transId = PointsTransactionEnum.GRANT.getBeginning()+UUIDGenerator.getUUID();
 		//交易ID
 		pt.setTransId(transId);
-		pt.setTransferTime(DateUtil.getDateTime());
+		pt.setTransferTime(dateTime);
 		pt.setTransferType(PointsTransactionEnum.GRANT.getSign());
 		pt.setCreateUser(pt.getRollOutAccount());
 		pt.setUpdateUser(pt.getRollOutAccount());
@@ -105,6 +107,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			BeanUtils.copyProperties(pd,save);
 			save.setDetailId(PointsTransactionEnum.GRANT.getBeginning()+UUIDGenerator.getUUID());
 			save.setTransId(transId);
+			save.setTransferTime(dateTime);
 			save.setSourceDetailId(pd.getDetailId());
 			save.setRollOutAccount(pt.getRollOutAccount());
 			save.setRollInAccount(pt.getRollInAccount());
@@ -185,6 +188,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		List<PointsTransationDetailExtends> upList = new ArrayList<PointsTransationDetailExtends>();
 		//合并同一个承兑商的积分
     	Map<String, PointsTransationExtends> map = new HashMap<String, PointsTransationExtends>();
+    	String dateTime = DateUtil.getDateTime();
 		for (int i = 0; i < ptdl.size(); i++) {
 			PointsTransationDetailExtends detail = ptdl.get(i);
 			String accept = detail.getCreditParty();
@@ -200,7 +204,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 				//交易ID
 				pt.setTransAmount(detail.getTransAmount());
 				pt.setTransId(transId);
-				pt.setTransferTime(DateUtil.getDateTime());
+				pt.setTransferTime(dateTime);
 				pt.setTransferType(PointsTransactionEnum.ACCEPT.getSign());
 				pt.setCreateUser(ptd.getRollInAccount());
 				pt.setUpdateUser(ptd.getRollInAccount());
@@ -213,6 +217,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			BeanUtils.copyProperties(detail,save);
 			save.setDetailId(PointsTransactionEnum.ACCEPT.getBeginning()+UUIDGenerator.getUUID());
 			save.setTransId(transId);
+			save.setTransferTime(dateTime);
 			save.setSourceDetailId(detail.getDetailId());
 			save.setRollOutAccount(ptd.getRollInAccount());
 			save.setRollInAccount(accept);
