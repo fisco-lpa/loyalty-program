@@ -2,7 +2,7 @@ package user
 
 import (
 	"errors"
-
+	"log"
 	"util"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -19,12 +19,10 @@ type PointsUser struct {
 	CreateUser   string //创建人
 	UpdateTime   string //修改时间
 	UpdateUser   string //修改人
-	//AuditObj    util.AuditObject
 }
 
 //用户信息录入（ 0.授信，1.商户,2.会员）
 func InsertPointsUser(stub shim.ChaincodeStubInterface, data PointsUser) ([]byte, error) {
-
 	//插入用户表
 	ok, err := stub.InsertRow(util.Points_User, shim.Row{
 		Columns: []*shim.Column{
@@ -41,7 +39,6 @@ func InsertPointsUser(stub shim.ChaincodeStubInterface, data PointsUser) ([]byte
 	if !ok && err == nil {
 		return nil, errors.New("Points_User insert failed.")
 	}
-
 	//更新或者插入table_count表
 	totalNumber, err := util.UpdateTableCount(stub, util.Points_User)
 	if totalNumber == 0 || err != nil {
@@ -67,5 +64,6 @@ func InsertPointsUser(stub shim.ChaincodeStubInterface, data PointsUser) ([]byte
 		}
 		return nil, errors.New("InsertPointsUser insert Points_User_Rownum failed")
 	}
+	log.Println("InsertPointsUser success.")
 	return nil, nil
 }

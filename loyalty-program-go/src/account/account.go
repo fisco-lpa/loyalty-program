@@ -2,7 +2,7 @@ package account
 
 import (
 	"errors"
-	//"log"
+	"log"
 	"util"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -19,7 +19,6 @@ type Account struct {
 	CreateUser     string //创建人
 	UpdateTime     string //修改时间
 	UpdateUser     string //修改人
-	//AuditObj       util.AuditObject //audit object
 }
 
 type AccountType struct {
@@ -29,12 +28,10 @@ type AccountType struct {
 	CreateUser    string //创建人
 	UpdateTime    string //修改时间
 	UpdateUser    string //修改人
-	//AuditObj      util.AuditObject //audit object
 }
 
 //账户信息录入
 func InsertAccount(stub shim.ChaincodeStubInterface, data Account) ([]byte, error) {
-
 	//往账户表插入数据
 	ok, err := stub.InsertRow(util.Account, shim.Row{
 		Columns: []*shim.Column{
@@ -50,7 +47,6 @@ func InsertAccount(stub shim.ChaincodeStubInterface, data Account) ([]byte, erro
 	if !ok && err == nil {
 		return nil, errors.New("Table Account insert failed.")
 	}
-
 	//更新或者插入table_count表
 	totalNumber, err := util.UpdateTableCount(stub, util.Account)
 	if totalNumber == 0 || err != nil {
@@ -76,12 +72,12 @@ func InsertAccount(stub shim.ChaincodeStubInterface, data Account) ([]byte, erro
 		}
 		return nil, errors.New("InsertAccount insert Account_Rownum failed")
 	}
+	log.Println("InsertAccount success.")
 	return nil, nil
 }
 
 //账户信息类型录入
 func InsertAccountType(stub shim.ChaincodeStubInterface, data AccountType) ([]byte, error) {
-
 	//往账户表插入数据
 	ok, err := stub.InsertRow(util.Account_Type, shim.Row{
 		Columns: []*shim.Column{
@@ -95,7 +91,6 @@ func InsertAccountType(stub shim.ChaincodeStubInterface, data AccountType) ([]by
 	if !ok && err == nil {
 		return nil, errors.New("Table Account_Type insert failed.")
 	}
-
 	//更新或者插入table_count表
 	totalNumber, err := util.UpdateTableCount(stub, util.Account_Type)
 	if totalNumber == 0 || err != nil {
@@ -121,6 +116,7 @@ func InsertAccountType(stub shim.ChaincodeStubInterface, data AccountType) ([]by
 		}
 		return nil, errors.New("InsertAccountType insert Account_Type_Rownum failed")
 	}
+	log.Println("InsertAccountType success.")
 	return nil, nil
 }
 
@@ -147,5 +143,6 @@ func UpdateAccount(stub shim.ChaincodeStubInterface, data *Account) error {
 			return errors.New("method updateAccount Account ReplaceRow failed.")
 		}
 	}
+	log.Println("UpdateAccount success.")
 	return nil
 }

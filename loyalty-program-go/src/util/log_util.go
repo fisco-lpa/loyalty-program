@@ -8,10 +8,6 @@ import (
 	"runtime"
 )
 
-//var (
-//	logFileName = flag.String("log", "blockchain.log", "Log file name")
-//)
-
 func init() {
 	path, _ := GetHomePathForUnix()
 	fileName := path + "/" + "blockchain.log"

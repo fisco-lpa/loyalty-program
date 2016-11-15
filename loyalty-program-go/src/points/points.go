@@ -22,8 +22,7 @@ type PointsTransaction struct {
 	CreateUser     string //创建人
 	UpdateTime     string //修改时间
 	UpdateUser     string //修改人
-	//AuditObj       util.AuditObject //audit object
-	OperFlag string // 操作标积 0-新增，1-修改，2-删除
+	OperFlag       string // 操作标积 0-新增，1-修改，2-删除
 }
 
 //积分交易明细对象
@@ -46,13 +45,11 @@ type PointsTransactionDetail struct {
 	CreateUser       string //创建人
 	UpdateTime       string //修改时间
 	UpdateUser       string //修改人
-	//AuditObj         util.AuditObject //audit object
-	OperFlag string // 操作标积 0-新增，1-修改，2-删除
+	OperFlag         string // 操作标积 0-新增，1-修改，2-删除
 }
 
 func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *PointsTransaction) error {
 	defer util.End(util.Begin("InsertPointsTransation"))
-
 	//插入记录到积分交易表
 	ok, err := stub.InsertRow(util.Points_Transation, shim.Row{
 		Columns: []*shim.Column{
@@ -71,7 +68,6 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *Point
 		log.Println("InsertRow transObject error..")
 		return errors.New("Points_Transaction insertion failed.")
 	}
-
 	//更新table_count表
 	totalNo, err := util.UpdateTableCount(stub, util.Points_Transation)
 	if totalNo == 0 || err != nil {
@@ -81,13 +77,11 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *Point
 		log.Println("update table_count error..")
 		return errors.New("Total_Count update failed")
 	}
-
 	//更新行号表
 	err = util.UpdateRowNoTable(stub, util.Points_Transation_Rownum, transObject.TransId, totalNo)
 	if err != nil {
 		// 回滚积分交易表
 		stub.DeleteRow(util.Points_Transation, []shim.Column{shim.Column{Value: &shim.Column_String_{String_: transObject.TransId}}})
-
 		// 回滚table_count表
 		var columns []shim.Column
 		col := shim.Column{Value: &shim.Column_String_{String_: util.Points_Transation}}
@@ -106,7 +100,6 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *Point
 		log.Println("update Points_Transaction_Rownum error..")
 		return errors.New("Points_Transaction_Rownum insert failed")
 	}
-
 	log.Println("InsertPointsTransation sucess!")
 
 	return nil
@@ -114,7 +107,6 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *Point
 
 func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail *PointsTransactionDetail) error {
 	defer util.End(util.Begin("InsertPointsTransationDetail"))
-
 	//插入记录到积分交易逐笔流水表
 	ok, err := stub.InsertRow(util.Points_Transation_Detail, shim.Row{
 		Columns: []*shim.Column{
@@ -140,7 +132,6 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 		log.Println("InsertRow pointsDetail error..")
 		return errors.New("Points_Transaction_Detail insertion failed.")
 	}
-
 	//更新table_count表
 	totalNo, err := util.UpdateTableCount(stub, util.Points_Transation_Detail)
 	if totalNo == 0 || err != nil {
@@ -150,13 +141,11 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 		log.Println("update table_count error..")
 		return errors.New("Total_Count update failed")
 	}
-
 	//更新行号表
 	err = util.UpdateRowNoTable(stub, util.Points_Transation_Rownum, pointsDetail.DetailId, totalNo)
 	if err != nil {
 		// 回滚积分交易表
 		stub.DeleteRow(util.Points_Transation_Detail, []shim.Column{shim.Column{Value: &shim.Column_String_{String_: pointsDetail.DetailId}}})
-
 		// 回滚table_count表
 		var columns []shim.Column
 		col := shim.Column{Value: &shim.Column_String_{String_: util.Points_Transation_Detail}}
@@ -175,7 +164,6 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 		log.Println("update Points_Transaction_Rownum error..")
 		return errors.New("Points_Transaction_Rownum insert failed")
 	}
-
 	log.Println("InsertPointsTransationDetail success!")
 
 	return nil
@@ -204,7 +192,6 @@ func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.UpdateTime}},
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.UpdateUser}}},
 	})
-
 	log.Println("UpdatePointsTransationDetail success!")
 
 	return nil
@@ -217,15 +204,18 @@ func QueryPointsByKey(stub shim.ChaincodeStubInterface, transId string) ([]byte,
 	var columns []shim.Column
 	col := shim.Column{Value: &shim.Column_String_{String_: transId}}
 	columns = append(columns, col)
-	row, _ := stub.GetRow(util.Table_Count, columns) //row是否为空
-	jsonResp := `{"TransId":"` + row.Columns[0].GetString_() + `","RolloutAccount":"` + row.Columns[1].GetString_() +
-		`","RollinAccount":"` + row.Columns[2].GetString_() + `","TransAmount":"` + row.Columns[3].GetString_() +
-		`","Description":"` + row.Columns[4].GetString_() + `","TransferTime":"` + row.Columns[5].GetString_() +
-		`","TransferType":"` + row.Columns[6].GetString_() + `","CreateTime":"` + row.Columns[7].GetString_() +
-		`","CreateUser":"` + row.Columns[8].GetString_() + `","UpdateTime":"` + row.Columns[9].GetString_() +
-		`","UpdateUser":"` + row.Columns[10].GetString_() + `"}`
+	row, _ := stub.GetRow(util.Points_Transation, columns)
+	if len(row.Columns) == 0 { //row是否为空
+		return nil, errors.New("Table Points_Transation TransId is not exist.")
+	} else {
+		jsonResp := `{"TransId":"` + row.Columns[0].GetString_() + `","RolloutAccount":"` + row.Columns[1].GetString_() +
+			`","RollinAccount":"` + row.Columns[2].GetString_() + `","TransAmount":"` + row.Columns[3].GetString_() +
+			`","Description":"` + row.Columns[4].GetString_() + `","TransferTime":"` + row.Columns[5].GetString_() +
+			`","TransferType":"` + row.Columns[6].GetString_() + `","CreateTime":"` + row.Columns[7].GetString_() +
+			`","CreateUser":"` + row.Columns[8].GetString_() + `","UpdateTime":"` + row.Columns[9].GetString_() +
+			`","UpdateUser":"` + row.Columns[10].GetString_() + `"}`
 
-	log.Println("jsonResp:" + jsonResp)
-	return []byte(base64.StdEncoding.EncodeToString([]byte(`{"status":"OK","errMsg":"查询成功","data":` + jsonResp + `}`))), nil
-
+		log.Println("jsonResp:" + jsonResp)
+		return []byte(base64.StdEncoding.EncodeToString([]byte(`{"status":"OK","errMsg":"查询成功","data":` + jsonResp + `}`))), nil
+	}
 }

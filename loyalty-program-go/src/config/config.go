@@ -15,7 +15,6 @@ type ConfigType struct { //ConfigDetail
 	CreateUser   string //创建人
 	UpdateTime   string //修改时间
 	UpdateUser   string //修改人
-	//AuditObj     util.AuditObject
 }
 type ConfigDetail struct { //配置信息明细表信息
 	DetailId   string //类别明细ID
@@ -26,19 +25,16 @@ type ConfigDetail struct { //配置信息明细表信息
 	CreateUser string //创建人
 	UpdateTime string //修改时间
 	UpdateUser string //修改人
-	//AuditObj   util.AuditObject
 }
 
 //配置信息类别表信息录入
 func InsertConfigureCategory(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
 	data := new(ConfigType)
 	err := util.ParseJsonAndDecode(data, args)
 	if err != nil {
 		log.Println("Error occurred when parsing json")
 		return nil, errors.New("Error occurred when parsing json.")
 	}
-
 	//插入配置信息类别表
 	ok, err := stub.InsertRow(util.Configure_Category, shim.Row{
 		Columns: []*shim.Column{
@@ -77,19 +73,18 @@ func InsertConfigureCategory(stub shim.ChaincodeStubInterface, args []string) ([
 		}
 		return nil, errors.New("insert Configure_Category_Rownum failed")
 	}
+	log.Println("InsertConfigureCategory success.")
 	return nil, nil
 }
 
 //配置信息明细表信息录入
 func InsertConfigureDetail(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
 	data := new(ConfigDetail)
 	err := util.ParseJsonAndDecode(data, args)
 	if err != nil {
 		log.Println("Error occurred when parsing json")
 		return nil, errors.New("Error occurred when parsing json.")
 	}
-
 	//插入配置信息明细表
 	ok, err := stub.InsertRow(util.Configure_Detail, shim.Row{
 		Columns: []*shim.Column{
@@ -111,7 +106,6 @@ func InsertConfigureDetail(stub shim.ChaincodeStubInterface, args []string) ([]b
 		stub.DeleteRow(util.Configure_Detail, []shim.Column{shim.Column{Value: &shim.Column_String_{String_: data.DetailId}}})
 		return nil, errors.New("Table_Count insert failed")
 	}
-
 	//把获取的总数插入行号表中当主键
 	err = util.UpdateRowNoTable(stub, util.Configure_Detail_Rownum, data.DetailId, totalNumber)
 	if err != nil {
@@ -132,5 +126,6 @@ func InsertConfigureDetail(stub shim.ChaincodeStubInterface, args []string) ([]b
 		}
 		return nil, errors.New("insert Configure_Detail_Rownum failed")
 	}
+	log.Println("InsertConfigureDetail success.")
 	return nil, nil
 }

@@ -3,6 +3,7 @@ package util
 import (
 	"encoding/base64"
 	"errors"
+	"log"
 	"strconv"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -304,6 +305,7 @@ func CreateTable(stub shim.ChaincodeStubInterface) error {
 		stub.DeleteTable(Points_Transation_Detail_Rownum)
 		return errors.New("create table table_count is fail")
 	}
+	log.Println("Create Table success.")
 	return nil
 }
 
@@ -316,7 +318,6 @@ func UpdateTableCount(stub shim.ChaincodeStubInterface, tableName string) (int64
 	i := 0
 	var totalNumber int64
 	totalNumber = int64(i)
-
 	if len(row.Columns) == 0 {
 		//若没有数据，则插入总数表一条记录
 		totalNumber = 1
@@ -341,11 +342,13 @@ func UpdateTableCount(stub shim.ChaincodeStubInterface, tableName string) (int64
 			return 0, err
 		}
 	}
+	log.Println("UpdateTableCount success.")
 	return totalNumber, nil
 }
 
 // 更新行号表
 func UpdateRowNoTable(stub shim.ChaincodeStubInterface, rowNumTable, key string, rowNum int64) error {
+	log.Println("---------------------UpdateRowNoTable 1--------------------------------")
 	ok, err := stub.InsertRow(rowNumTable, shim.Row{
 		Columns: []*shim.Column{
 			&shim.Column{Value: &shim.Column_Int64{Int64: rowNum}},   //行号
@@ -354,6 +357,7 @@ func UpdateRowNoTable(stub shim.ChaincodeStubInterface, rowNumTable, key string,
 	if !ok {
 		return err
 	}
+	log.Println("UpdateRowNoTable success.")
 	return nil
 }
 
@@ -363,7 +367,11 @@ func QueryTableLines(stub shim.ChaincodeStubInterface, tableName string) ([]byte
 	col := shim.Column{Value: &shim.Column_String_{String_: tableName}}
 	columns = append(columns, col)
 	row, _ := stub.GetRow(Table_Count, columns) //row是否为空
-	totalNumber := row.Columns[1].GetInt64()
-	jsonResp := `{"totalAccount":"` + strconv.FormatInt(totalNumber, 10) + `"}`
-	return []byte(base64.StdEncoding.EncodeToString([]byte(`{"status":"OK","errMsg":"查询成功","data":` + jsonResp + `}`))), nil
+	if len(row.Columns) == 0 {
+		return nil, errors.New("Table Table_Count tableName : " + tableName + " not found.")
+	} else {
+		totalNumber := row.Columns[1].GetInt64()
+		jsonResp := `{"totalCount":"` + strconv.FormatInt(totalNumber, 10) + `"}`
+		return []byte(base64.StdEncoding.EncodeToString([]byte(`{"status":"OK","errMsg":"查询成功","data":` + jsonResp + `}`))), nil
+	}
 }
