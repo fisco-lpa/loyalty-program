@@ -66,6 +66,7 @@
 		var flag=false;
 		$.ajax({
              type: "GET",
+             //同步
              async: false,
              url: "${pageContext.request.contextPath}/checkPwd",
              data: {userName:userName,userPassword:oldpassword},

@@ -76,12 +76,12 @@ img {
 									class="img-responsive" alt="">
 									<div>
 										<h4>商品名称：购物卡</h4>
-										<small>所需积分：200</small>
+										<small>所需积分：20</small>
 									</div>
 								</a>
 								<p>
 									<a class="btn btn-danger" style="width: 150px"
-										onclick='gotobuy("购物卡","200");' role="button">购买</a>
+										onclick='gotobuy("购物卡","20");' role="button">购买</a>
 
 								</p>
 							</div>

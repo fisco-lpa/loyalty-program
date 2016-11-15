@@ -114,6 +114,7 @@ public class UserExchngeGoodsController {
 		List<PointsTransationDetail> JFList = pointsExchangeTransationService.queryTransationDetailList(pointsTransationDetail);
 		//新增
 		List<PointsTransationDetail> salist = new ArrayList<PointsTransationDetail>();
+//		Map<String,String> pointsTransationDetailMap = new HashMap<String,String>();
 		//修改主要是插入块中
 		List<PointsTransationDetail> upList = new ArrayList<PointsTransationDetail>();
 		for (int j = 0; j < JFList.size(); j++) {
@@ -173,23 +174,15 @@ public class UserExchngeGoodsController {
 		List<Account> aList = new ArrayList<Account>();
 		aList.add(out);
 		aList.add(in);
-		//交易流水表插入新的
-	/*	List<PointsTransationDetail> pList = new ArrayList<PointsTransationDetail>(); 
-		pList.addAll(salist);
-		pList.addAll(upList);*/
-		//交易表
-		List<PointsTransation> ptList = new ArrayList<>(); 
-		ptList.add(pointsTransation);
-		
-		/*List<Map<Object, Object>> lm = BeanToMap.Bean2MapList(aList);
-		List<Map<Object, Object>> it = BeanToMap.Bean2MapList(ptList);
-		List<Map<Object, Object>> itd = BeanToMap.Bean2MapList(pList);*/
+	
 		
 		Map<String, Object> map = new HashMap<>();
 		map.put("accountList",BeanToMap.ListToMapForInsert(aList,"1"));
-		map.put("pointsTransaction",BeanToMap.ListToMapForInsert(ptList,"0"));
-		map.put("pointsTransactionDetailList",BeanToMap.ListToMapForInsert(salist,"0"));
-		map.put("pointsTransactionUpdateDetailList",BeanToMap.ListToMapForInsert(upList,"1"));
+		
+		map.put("pointsTransaction", BeanToMap.BeanToMapForInsert(pointsTransation,"0"));
+		List list = BeanToMap.ListToMapForInsert(salist,"0");
+		list.addAll(BeanToMap.ListToMapForInsert(upList,"1"));
+		map.put("pointsTransactionDetailList",list);
 		String json = JSONObject.fromObject(map).toString();
 		
 		Boolean result = false;
