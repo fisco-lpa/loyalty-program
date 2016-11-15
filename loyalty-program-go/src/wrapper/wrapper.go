@@ -236,7 +236,7 @@ func QueryTableLines(stub shim.ChaincodeStubInterface, args []string) ([]byte, e
 }
 
 //通过主键查询次条记录
-func QueryPoinitsByKey(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+func QueryPointsByKey(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	defer util.End(util.Begin("QueryPoinitsByKey"))
 	data := new(PointsInfo)
 	err := util.ParseJsonAndDecode(data, args)
