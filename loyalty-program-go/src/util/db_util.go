@@ -348,7 +348,6 @@ func UpdateTableCount(stub shim.ChaincodeStubInterface, tableName string) (int64
 
 // 更新行号表
 func UpdateRowNoTable(stub shim.ChaincodeStubInterface, rowNumTable, key string, rowNum int64) error {
-	log.Println("---------------------UpdateRowNoTable 1--------------------------------")
 	ok, err := stub.InsertRow(rowNumTable, shim.Row{
 		Columns: []*shim.Column{
 			&shim.Column{Value: &shim.Column_Int64{Int64: rowNum}},   //行号
