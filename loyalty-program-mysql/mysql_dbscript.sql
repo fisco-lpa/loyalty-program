@@ -75,16 +75,6 @@ CREATE TABLE `configure_detail` (
   PRIMARY KEY (`detail_id`,`category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='配置信息明细表';
 
--- ----------------------------
--- Table structure for country
--- ----------------------------
-DROP TABLE IF EXISTS `country`;
-CREATE TABLE `country` (
-  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `countryname` varchar(255) DEFAULT NULL COMMENT '名称',
-  `countrycode` varchar(255) DEFAULT NULL COMMENT '代码',
-  PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8 COMMENT='国家信息';
 
 -- ----------------------------
 -- Table structure for points_transation
