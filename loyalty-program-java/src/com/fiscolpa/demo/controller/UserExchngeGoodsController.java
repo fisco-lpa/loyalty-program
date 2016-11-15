@@ -23,8 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fiscolpa.demo.model.Account;
 import com.fiscolpa.demo.model.PointsTransation;
 import com.fiscolpa.demo.model.PointsTransationDetail;
-import com.fiscolpa.demo.model.PointsTransationDetailExtends;
-import com.fiscolpa.demo.model.PointsTransationExtends;
 import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.service.MerchantTransactionService;
 import com.fiscolpa.demo.service.PointsExchangeTransationService;
@@ -114,7 +112,6 @@ public class UserExchngeGoodsController {
 		List<PointsTransationDetail> JFList = pointsExchangeTransationService.queryTransationDetailList(pointsTransationDetail);
 		//新增
 		List<PointsTransationDetail> salist = new ArrayList<PointsTransationDetail>();
-//		Map<String,String> pointsTransationDetailMap = new HashMap<String,String>();
 		//修改主要是插入块中
 		List<PointsTransationDetail> upList = new ArrayList<PointsTransationDetail>();
 		for (int j = 0; j < JFList.size(); j++) {
@@ -129,7 +126,7 @@ public class UserExchngeGoodsController {
 			save.setTransId(TransId);
 			save.setRollOutAccount(currentUser.getAccountId());
 			save.setRollInAccount(accountMallId);
-			save.setCreditCreateTime(date);
+			//save.setCreditCreateTime(date);
 			save.setUpdateTime(date);
 			save.setTransferTime(date);
 			save.setCreateTime(date);
