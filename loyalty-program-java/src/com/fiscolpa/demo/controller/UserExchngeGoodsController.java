@@ -71,15 +71,15 @@ public class UserExchngeGoodsController {
 		
 		pointsTransation.setTransId(TransId);
 		pointsTransation.setCreateTime(date);
-		pointsTransation.setCreateUser(currentUser.getCreateUser());
+		pointsTransation.setCreateUser(currentUser.getUserId());
 		pointsTransation.setDescribe("兑换"+pointsNum);
 		pointsTransation.setRollInAccount(accountMallId);
 		pointsTransation.setRollOutAccount(currentUser.getAccountId());
 		pointsTransation.setTransAmount(Integer.valueOf(pointsNum));
 		pointsTransation.setTransferTime(date);
 		pointsTransation.setUpdateTime(date);
-		pointsTransation.setUpdateUser(currentUser.getCreateUser());
-		pointsTransation.setTransferType("2");
+		pointsTransation.setUpdateUser(currentUser.getUserName());
+		pointsTransation.setTransferType(PointsTransactionEnum.BUY.getSign());
 		
 		int account_balance	=pointsExchangeTransationService.selectAccountBalance(currentUser.getAccountId());
 		if(account_balance <Integer.valueOf(pointsNum)){
