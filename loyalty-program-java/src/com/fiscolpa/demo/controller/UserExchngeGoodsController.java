@@ -129,7 +129,7 @@ public class UserExchngeGoodsController {
 			save.setTransId(TransId);
 			save.setRollOutAccount(currentUser.getAccountId());
 			save.setRollInAccount(accountMallId);
-			save.setCreditCreateTime(date);
+			//save.setCreditCreateTime(date);
 			save.setUpdateTime(date);
 			save.setTransferTime(date);
 			save.setCreateTime(date);
