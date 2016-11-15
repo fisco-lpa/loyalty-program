@@ -51,6 +51,7 @@ type PointsTransactionDetail struct {
 }
 
 func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *PointsTransaction) error {
+	defer util.End(util.Begin("InsertPointsTransation"))
 
 	//插入记录到积分交易表
 	ok, err := stub.InsertRow(util.Points_Transation, shim.Row{
@@ -112,6 +113,7 @@ func InsertPointsTransation(stub shim.ChaincodeStubInterface, transObject *Point
 }
 
 func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail *PointsTransactionDetail) error {
+	defer util.End(util.Begin("InsertPointsTransationDetail"))
 
 	//插入记录到积分交易逐笔流水表
 	ok, err := stub.InsertRow(util.Points_Transation_Detail, shim.Row{
@@ -181,6 +183,7 @@ func InsertPointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 
 // 更新积分明细表
 func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail *PointsTransactionDetail) error {
+	defer util.End(util.Begin("UpdatePointsTransationDetail"))
 	stub.ReplaceRow(util.Points_Transation_Detail, shim.Row{
 		Columns: []*shim.Column{
 			&shim.Column{Value: &shim.Column_String_{String_: pointsDetail.DetailId}},
@@ -209,6 +212,8 @@ func UpdatePointsTransationDetail(stub shim.ChaincodeStubInterface, pointsDetail
 
 //根据主键查询积分交易记录
 func QueryPointsByKey(stub shim.ChaincodeStubInterface, transId string) ([]byte, error) {
+	defer util.End(util.Begin("QueryPointsByKey"))
+
 	var columns []shim.Column
 	col := shim.Column{Value: &shim.Column_String_{String_: transId}}
 	columns = append(columns, col)

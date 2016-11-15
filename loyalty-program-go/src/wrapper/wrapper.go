@@ -56,6 +56,7 @@ func SignIn(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 //授信积分
 func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	defer util.End(util.Begin("CreditPoints"))
 	defer func() {
 		e := recover()
 		if e != nil {
@@ -115,6 +116,8 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 
 //消费积分
 func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	defer util.End(util.Begin("CreditPoints"))
+
 	defer func() {
 		e := recover()
 		if e != nil {
@@ -157,6 +160,7 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 
 //承兑积分
 func AccpetPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	defer util.End(util.Begin("AccpetPoints"))
 	defer func() {
 		e := recover()
 		if e != nil {
@@ -198,6 +202,7 @@ func AccpetPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 
 //初始化数据
 func InitData(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	defer util.End(util.Begin("InitData"))
 	defer func() {
 		e := recover()
 		if e != nil {
@@ -224,6 +229,7 @@ func InitData(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 
 //通过表名查条数
 func QueryTableLines(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	defer util.End(util.Begin("QueryTableLines"))
 	data := new(TotalNum)
 	util.ParseJsonAndDecode(data, args)
 	return util.QueryTableLines(stub, data.TableName)
@@ -231,6 +237,7 @@ func QueryTableLines(stub shim.ChaincodeStubInterface, args []string) ([]byte, e
 
 //通过主键查询次条记录
 func QueryPoinitsByKey(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	defer util.End(util.Begin("QueryPoinitsByKey"))
 	data := new(PointsInfo)
 	err := util.ParseJsonAndDecode(data, args)
 	if err != nil {

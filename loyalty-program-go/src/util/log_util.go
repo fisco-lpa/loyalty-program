@@ -36,7 +36,16 @@ func init() {
 	// 可以通过log.SetFlags()自定议你想要表达的格式
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	log.Println("This is the first log info............................")
+	log.Println("Log file has been created.")
+}
 
-	fmt.Println("Log file has been created.")
+func Begin(funcName string) string {
+	fmt.Println("Function " + funcName + " begin....")
+	log.Println("Function " + funcName + " begin....")
+	return funcName
+}
+
+func End(funcName string) {
+	log.Println("Function " + funcName + " end....")
+	fmt.Println("Function " + funcName + " end....")
 }
