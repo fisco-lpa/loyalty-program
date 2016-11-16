@@ -54,7 +54,7 @@ public class MerchantController {
         return result;
 	}
 	
-	@RequestMapping(value="/queryPoints",method = RequestMethod.POST)
+	@RequestMapping(value="/queryPoints")
 	public ModelAndView queryPoints(HttpServletRequest request,HttpSession session){
 		return queryMerchantInfo(session, "accept");
 	}
@@ -78,7 +78,7 @@ public class MerchantController {
 	}
 	
 	
-	@RequestMapping(value="/reqSevePoints",method = RequestMethod.POST)
+	@RequestMapping(value="/reqSevePoints")
     public String reqSevePoints() {
     	return "sentOut";
     }
@@ -92,7 +92,7 @@ public class MerchantController {
 		return "sentOut";
 	}
 	
-	@RequestMapping(value="/querySentOutQuery",method = RequestMethod.POST)
+	@RequestMapping(value="/querySentOutQuery")
 	public ModelAndView querySentOutQuery(HttpServletRequest request,HttpSession session){
 		return queryMerchantInfo(session, "sentOutQuery");
 	}
@@ -105,7 +105,7 @@ public class MerchantController {
 		return mts.queryTransationList(pt);
 	}
 	
-	@RequestMapping(value="/queryCredit",method = RequestMethod.POST)
+	@RequestMapping(value="/queryCredit")
 	public ModelAndView queryCredit(HttpServletRequest request,HttpSession session){
 		return queryMerchantInfo(session, "credit");
 	}

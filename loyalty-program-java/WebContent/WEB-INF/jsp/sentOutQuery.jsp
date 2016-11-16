@@ -41,6 +41,7 @@
 </script>
 
 <body>
+<%@ include file="include/top.jsp" %>
 <h2>我的账户</h2>
 <div style="float:left;width: 180px;">
 	<h3>我的账户</h3>

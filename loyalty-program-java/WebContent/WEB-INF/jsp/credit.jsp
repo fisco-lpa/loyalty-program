@@ -48,6 +48,7 @@ function jump(url) {
 </script>
 
 <body>
+<%@ include file="include/top.jsp" %>
 <div style="float: left; width: 180px;">
 	<h3>我的账户</h3>
 		<table>

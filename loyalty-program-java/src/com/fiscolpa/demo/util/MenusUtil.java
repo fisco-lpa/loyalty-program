@@ -23,7 +23,7 @@ public class MenusUtil {
 		
 		//商户菜单
 		List<ItemVo> storeMenus = new ArrayList<ItemVo>();
-		storeMenus.add(new ItemVo("授信查询", "merchant/merchantTransaction"));
+		storeMenus.add(new ItemVo("授信查询", "merchant/queryPoints"));
 		storeMenus.add(new ItemVo("积分发放", "merchant/reqSevePoints"));
 		storeMenus.add(new ItemVo("积分发放查询", "merchant/querySentOutQuery"));
 		storeMenus.add(new ItemVo("积分承兑查询", "merchant/queryCredit"));
