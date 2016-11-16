@@ -15,11 +15,16 @@ type PointsChaincode struct {
 
 //初始化创建表
 func (t *PointsChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	defer util.End(util.Begin("Init"))
+
+	log.Println("Init method.........")
 	return nil, util.CreateTable(stub)
 }
 
 //调用方法
 func (t *PointsChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	defer util.End(util.Begin("Invoke"))
+
 	if function == "SignUp" { //用户注册
 		log.Println("SignUp,args = " + args[0])
 		return wrapper.SignUp(stub, args)
@@ -45,6 +50,7 @@ func (t *PointsChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 
 //查询
 func (t *PointsChaincode) Query(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
+	defer util.End(util.Begin("Query"))
 	//通过表名查条数
 	if function == "QueryTableLines" {
 		log.Println("QueryTableLines,args = " + args[0])
