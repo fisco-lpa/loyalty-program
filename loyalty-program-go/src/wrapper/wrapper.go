@@ -119,7 +119,8 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 			log.Println("消费积分抛出异常:", e)
 		}
 	}()
-	// 解析传入数据
+
+	// parse data
 	data := new(ConsumePointsTransData)
 	err := util.ParseJsonAndDecode(data, args)
 	if err != nil {
@@ -177,8 +178,6 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 			if balanceInt < amount {
 				errMsg := "Balance is not enough,account id =" + acc.AccountId
 				panic(errMsg)
-			} else {
-				account.UpdateAccount(stub, acc)
 			}
 		} else if transIn == acc.AccountId {
 
@@ -187,25 +186,67 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 				errMsg := "Incorrect account type, it must be a c-end user account,account id =" + acc.AccountId
 				panic(errMsg)
 			}
-
-			// update account table
-			account.UpdateAccount(stub, acc)
 		}
+	}
 
-	}
-	//如果标识符为0就对积分交易表新增否则报错返回
-	if data.PointsTransaction.OperFlag == "0" {
-		points.InsertPointsTransation(stub, data.PointsTransaction)
-	} else {
-		return nil, errors.New("输入标识符有误")
-	}
+	// update points transaction table.
+	pointsObj := data.PointsTransaction
+	trans, _ := strconv.ParseInt(pointsObj.TransAmount, 10, 64) // transaction points amount
+
+	// define a variable to store exchange amounts from all update amount.
+	var totalUpdate int64
+
+	// upate points transaction detail table
 	for i := 0; i < len(data.PointsTransactionDetailList); i++ {
-		if data.PointsTransactionDetailList[i].OperFlag == "0" {
-			points.InsertPointsTransationDetail(stub, data.PointsTransactionDetailList[i])
+		detail := data.PointsTransactionDetailList[i]
+
+		// check if last transaction detail exists
+		result := points.CheckPointsDetailExist(stub, detail.SourceDetailId)
+		if !result {
+			var errorMsg = "Table Points_Transation_Detail: specified record doesn't exist,detailId = " + detail.SourceDetailId
+			panic(errorMsg)
+		}
+
+		// current balance of last transaction detail
+		curBalance, _ := strconv.ParseInt(points.QueryPointsDetailCurBalanceByKey(stub, detail.SourceDetailId), 10, 64)
+		if detail.OperFlag == "0" {
+			// check if remaining points of last transaction detail is enough.
+			transPoints, _ := strconv.ParseInt(detail.TransAmount, 10, 64)
+			if transPoints > curBalance {
+				log.Println("transPoints ->" + strconv.FormatInt(transPoints, 10))
+				log.Println("curBalance ->" + strconv.FormatInt(curBalance, 10))
+				var errorMsg = "Current balance of last transaction detail is not enough to pay,detailId = " + detail.SourceDetailId
+				panic(errorMsg)
+			}
 		} else {
-			points.UpdatePointsTransationDetail(stub, data.PointsTransactionDetailList[i])
+			// compute exchange amount
+			temp, _ := strconv.ParseInt(detail.CurBalance, 10, 64)
+			changeAmount := curBalance - temp
+			totalUpdate += changeAmount
 		}
 	}
+
+	if trans != totalUpdate {
+		errMsg := "Invalid data, pls. check if this request has been tampered"
+		panic(errMsg)
+	}
+
+	// performing insert or update
+	log.Println("Performing insert/update start............")
+	for i := 0; i < len(data.AccountList); i++ {
+		account.UpdateAccount(stub, data.AccountList[i])
+	}
+	points.InsertPointsTransation(stub, pointsObj)
+	for i := 0; i < len(data.PointsTransactionDetailList); i++ {
+		detailObject := data.PointsTransactionDetailList[i]
+		if detailObject.OperFlag == "0" {
+			points.InsertPointsTransationDetail(stub, detailObject)
+		} else {
+			points.UpdatePointsTransationDetail(stub, detailObject)
+		}
+	}
+	log.Println("Performing insert/update end............")
+
 	log.Println("ConsumePoints success.")
 	return nil, nil
 }
