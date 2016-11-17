@@ -125,13 +125,10 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 		log.Println("Error occurred when parsing json")
 		return nil, errors.New("Error occurred when parsing json.")
 	}
+
+	// update account
 	for i := 0; i < len(data.AccountList); i++ {
-		//如果标识符为0就对账户表新增否则修改
-		if data.AccountList[i].OperFlag == "0" {
-			account.InsertAccount(stub, *data.AccountList[i])
-		} else {
-			account.UpdateAccount(stub, data.AccountList[i])
-		}
+		account.UpdateAccount(stub, data.AccountList[i])
 	}
 	//如果标识符为0就对积分交易表新增否则报错返回
 	if data.PointsTransaction.OperFlag == "0" {
