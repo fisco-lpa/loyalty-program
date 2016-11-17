@@ -31,6 +31,12 @@ type AccountType struct {
 	UpdateUser    string //修改人
 }
 
+const (
+	AccountType_CreditParty = "1" //授信方
+	AccountType_Merchant    = "2" //商户
+	AccountType_Usser       = "3" //用户
+)
+
 //账户信息录入
 func InsertAccount(stub shim.ChaincodeStubInterface, data Account) ([]byte, error) {
 	//往账户表插入数据
