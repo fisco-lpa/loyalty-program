@@ -16,7 +16,7 @@ public enum PointsTransactionEnum {
 	/**
 	 * 承兑 ("4","GM_","发放UUID开头")
 	 */
-	ACCEPT("4","GM_","发放UUID开头"),
+	ACCEPT("4","CD_","发放UUID开头"),
 	/**
 	 * 新增 ("0","0","新增")区块连标示
 	 */

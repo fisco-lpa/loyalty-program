@@ -68,11 +68,18 @@
 			</if>
 			<if test="transferType != null">
 				and pt.transfer_type = #{transferType}
-				<if test='queryColumn !="0"'>
+				<if test='transferType=="3"'>
 				    and EXISTS(  
 				    SELECT 1 FROM points_transation_detail ptd 
 				    WHERE ptd.trans_id = pt.trans_id
-				    and ptd.cur_balance>0)
+				    and 
+				    <if test='queryColumn !="0"'>
+				    ptd.cur_balance>0
+				    </if>
+				    <if test='queryColumn =="0"'>
+				    ptd.cur_balance=0
+				    </if>
+				    )
 				</if>
 			</if>
 			<if test="creditParty != null">
