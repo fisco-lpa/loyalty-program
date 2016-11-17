@@ -223,3 +223,39 @@ func QueryPointsByKey(stub shim.ChaincodeStubInterface, transId string) ([]byte,
 		return []byte(base64.StdEncoding.EncodeToString([]byte(`{"status":"OK","errMsg":"查询成功","data":` + jsonResp + `}`))), nil
 	}
 }
+
+//检查积分交易明细记录是否存在
+func CheckPointsDetailExist(stub shim.ChaincodeStubInterface, detailId string) bool {
+	defer util.End(util.Begin("CheckPointsDetailExist"))
+
+	var columns []shim.Column
+	col := shim.Column{Value: &shim.Column_String_{String_: detailId}}
+	columns = append(columns, col)
+	row, _ := stub.GetRow(util.Points_Transation_Detail, columns)
+	if len(row.Columns) == 0 { //row是否为空
+		var errorMsg = "Table Points_Transation_Detail: specified record doesn't exist,detailId = " + detailId
+		log.Println(errorMsg)
+		return false
+	}
+	return true
+}
+
+//根据主键查询账户余额
+func QueryPointsDetailCurBalanceByKey(stub shim.ChaincodeStubInterface, detailId string) string {
+	defer util.End(util.Begin("QueryCurBalanceByKey"))
+
+	var columns []shim.Column
+	col := shim.Column{Value: &shim.Column_String_{String_: detailId}}
+	columns = append(columns, col)
+	row, _ := stub.GetRow(util.Points_Transation_Detail, columns)
+	if len(row.Columns) == 0 { //row是否为空
+		var errorMsg = "Table Points_Transation_Detail: specified record doesn't exist,detailId = " + detailId
+		log.Println(errorMsg)
+		panic(errorMsg)
+	} else {
+		balance := row.Columns[13].GetString_()
+		log.Println("detailId is = " + detailId)
+		log.Println("points detail current balance is = " + balance)
+		return balance
+	}
+}
