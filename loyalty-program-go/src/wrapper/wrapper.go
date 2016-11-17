@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"points"
+	"strconv"
 	"user"
 	"util"
 
@@ -108,7 +109,7 @@ func CreditPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	return nil, nil
 }
 
-//消费积分
+//消费积分:用户购买了商品，商户赠送积分给消费用户，所以这里的关系必须是转出账号是商户，转入账号是用户
 func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
 	defer util.End(util.Begin("ConsumePoints"))
 	defer func() {
@@ -125,13 +126,72 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 		log.Println("Error occurred when parsing json")
 		return nil, errors.New("Error occurred when parsing json.")
 	}
+
+	transAmount := data.PointsTransaction.TransAmount // transfer amount
+	amount, err := strconv.ParseInt(transAmount, 10, 64)
+	if err != nil {
+		log.Println("Error occurred when converting amount string to int")
+		panic(err)
+	}
+	if amount == 0 {
+		errorMsg := "transfer amount is zero,so no need to do any transaction."
+		return nil, errors.New(errorMsg)
+	}
+
+	// check the number of accounts
+	if len(data.AccountList) != 2 {
+		errorMsg := "Transfer points must and only need two accounts"
+		log.Println(errorMsg)
+		panic(errorMsg)
+	}
+
+	transOut := data.PointsTransaction.RolloutAccount // transfer out account
+	transIn := data.PointsTransaction.RollinAccount   // transfeer in account
+
+	// update account
 	for i := 0; i < len(data.AccountList); i++ {
-		//如果标识符为0就对账户表新增否则修改
-		if data.AccountList[i].OperFlag == "0" {
-			account.InsertAccount(stub, *data.AccountList[i])
-		} else {
-			account.UpdateAccount(stub, data.AccountList[i])
+		acc := data.AccountList[i]
+
+		// check if specified account exists or not.
+		data, err := account.QueryAccountRecordByKey(stub, acc.AccountId)
+		if data == nil {
+			panic(err) // throw exception when account doesn't exist.
 		}
+
+		if transOut == acc.AccountId { // If it is transfer out account
+
+			// check if balance of specified account is enough to pay.
+			balance := account.QueryAccountBalanceByKey(stub, acc.AccountId) // get balance.
+			balanceInt, err := strconv.ParseInt(balance, 10, 64)
+			if err != nil {
+				log.Println("Error occurred when converting balance string to int")
+				panic(err)
+			}
+
+			// check if the type of transfer out account is correct,it must be a merchant account.
+			if acc.AccountTypeId != account.AccountType_Merchant {
+				errMsg := "Incorrect account type, it must be a merchant account,account id =" + acc.AccountId
+				panic(errMsg)
+			}
+
+			if balanceInt < amount {
+				errMsg := "Balance is not enough,account id =" + acc.AccountId
+				panic(errMsg)
+			} else {
+				account.UpdateAccount(stub, acc)
+			}
+		} else if transIn == acc.AccountId {
+
+			// check if the type of transfer in account is correct,it must be a c-end user account.
+			if acc.AccountTypeId != account.AccountType_Merchant {
+				errMsg := "Incorrect account type, it must be a c-end user account,account id =" + acc.AccountId
+				panic(errMsg)
+			}
+
+			// update account table
+			account.UpdateAccount(stub, acc)
+		}
+
 	}
 	//如果标识符为0就对积分交易表新增否则报错返回
 	if data.PointsTransaction.OperFlag == "0" {

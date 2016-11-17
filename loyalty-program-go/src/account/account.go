@@ -1,6 +1,7 @@
 package account
 
 import (
+	"encoding/base64"
 	"errors"
 	"log"
 	"util"
@@ -29,6 +30,12 @@ type AccountType struct {
 	UpdateTime    string //修改时间
 	UpdateUser    string //修改人
 }
+
+const (
+	AccountType_CreditParty = "1" //授信方
+	AccountType_Merchant    = "2" //商户
+	AccountType_Usser       = "3" //用户
+)
 
 //账户信息录入
 func InsertAccount(stub shim.ChaincodeStubInterface, data Account) ([]byte, error) {
@@ -145,4 +152,47 @@ func UpdateAccount(stub shim.ChaincodeStubInterface, data *Account) error {
 	}
 	log.Println("UpdateAccount success.")
 	return nil
+}
+
+//根据主键查询账户表记录
+func QueryAccountRecordByKey(stub shim.ChaincodeStubInterface, accountId string) ([]byte, error) {
+	defer util.End(util.Begin("QueryAccountRecordByKey"))
+
+	var columns []shim.Column
+	col := shim.Column{Value: &shim.Column_String_{String_: accountId}}
+	columns = append(columns, col)
+	row, _ := stub.GetRow(util.Account, columns)
+	if len(row.Columns) == 0 { //row是否为空
+		var errorMsg = "Table Account: specified record doesn't exist,account id = " + accountId
+		log.Println(errorMsg)
+		return nil, errors.New(errorMsg)
+	} else {
+		jsonResp := `{"accountId":"` + row.Columns[0].GetString_() + `","userId":"` + row.Columns[1].GetString_() +
+			`","accountbalance":"` + row.Columns[2].GetString_() + `","accountTypeId":"` + row.Columns[3].GetString_() +
+			`","createTime":"` + row.Columns[7].GetString_() + `","createUser":"` + row.Columns[8].GetString_() +
+			`","updateTime":"` + row.Columns[9].GetString_() + `","updateUser":"` + row.Columns[10].GetString_() + `"}`
+
+		log.Println("jsonResp:" + jsonResp)
+		return []byte(base64.StdEncoding.EncodeToString([]byte(`{"status":"OK","errMsg":"查询成功","data":` + jsonResp + `}`))), nil
+	}
+}
+
+//根据主键查询账户余额
+func QueryAccountBalanceByKey(stub shim.ChaincodeStubInterface, accountId string) string {
+	defer util.End(util.Begin("QueryAccountBalanceByKey"))
+
+	var columns []shim.Column
+	col := shim.Column{Value: &shim.Column_String_{String_: accountId}}
+	columns = append(columns, col)
+	row, _ := stub.GetRow(util.Account, columns)
+	if len(row.Columns) == 0 { //row是否为空
+		var errorMsg = "Table Account: specified record doesn't exist,account id = " + accountId
+		log.Println(errorMsg)
+		panic(errorMsg)
+	} else {
+		balance := row.Columns[2].GetString_()
+		log.Println("accountId is = " + accountId)
+		log.Println("account balance is = " + balance)
+		return balance
+	}
 }

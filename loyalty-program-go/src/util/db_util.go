@@ -373,6 +373,7 @@ func QueryTableLines(stub shim.ChaincodeStubInterface, tableName string) ([]byte
 	} else {
 		totalNumber := row.Columns[1].GetInt64()
 		jsonResp := `{"totalCount":"` + strconv.FormatInt(totalNumber, 10) + `"}`
+		log.Println("jsonResp:" + jsonResp)
 		return []byte(base64.StdEncoding.EncodeToString([]byte(`{"status":"OK","errMsg":"查询成功","data":` + jsonResp + `}`))), nil
 	}
 }
