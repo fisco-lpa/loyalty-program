@@ -16,13 +16,14 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/static/js/sui.min.js"></script>
 </head>
 <script type="text/javascript">
-function jump(url) {
+function jump(url,queryColumn) {
 	$.ajax({
 		type : 'POST',
 		url : url + '.action',
 		dataType : 'json',
 		data:{
-			creditParty:$("#creditParty").val()
+			creditParty:$("#creditParty").val(),
+			queryColumn:queryColumn
 		},
 		success : function(data) {
 			$("#cx tr:not(:first)").remove();
@@ -96,7 +97,8 @@ function jump(url) {
 		<td>
 		</td>
 		<td>
-		<input type="button" value="查询" onclick="jump('queryCreditList')"/>
+		<input type="button" value="待对付" onclick="jump('queryCreditList','1')"/>
+		<input type="button" value="已兑付" onclick="jump('queryCreditList','0')"/>
 		</td>
 	</tr>
 </table>
@@ -112,7 +114,7 @@ function jump(url) {
 		<td style="width: 50px; text-align: center;">授信方</td>
 	</tr>
 	</table>
-	<input type="submit" value="承兑"/>
+	<input type="submit" value="兑付"/>
 </form>
 </div>
 

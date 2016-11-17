@@ -68,7 +68,7 @@
 			</if>
 			<if test="transferType != null">
 				and pt.transfer_type = #{transferType}
-				<if test='transferType=="3"'>
+				<if test='queryColumn !="0"'>
 				    and EXISTS(  
 				    SELECT 1 FROM points_transation_detail ptd 
 				    WHERE ptd.trans_id = pt.trans_id
