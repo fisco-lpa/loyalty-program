@@ -242,7 +242,7 @@ func CheckPointsDetailExist(stub shim.ChaincodeStubInterface, detailId string) b
 
 //根据主键查询账户余额
 func QueryPointsDetailCurBalanceByKey(stub shim.ChaincodeStubInterface, detailId string) string {
-	defer util.End(util.Begin("QueryCurBalanceByKey"))
+	defer util.End(util.Begin("QueryPointsDetailCurBalanceByKey"))
 
 	var columns []shim.Column
 	col := shim.Column{Value: &shim.Column_String_{String_: detailId}}

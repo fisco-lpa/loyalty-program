@@ -200,9 +200,10 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 	for i := 0; i < len(data.PointsTransactionDetailList); i++ {
 		detail := data.PointsTransactionDetailList[i]
 
-		// current balance of last transaction detail
-		curBalance, _ := strconv.ParseInt(points.QueryPointsDetailCurBalanceByKey(stub, detail.SourceDetailId), 10, 64)
 		if detail.OperFlag == "0" {
+
+			// current balance of last transaction detail
+			curBalance1, _ := strconv.ParseInt(points.QueryPointsDetailCurBalanceByKey(stub, detail.SourceDetailId), 10, 64)
 
 			// check if last transaction detail exists
 			result := points.CheckPointsDetailExist(stub, detail.SourceDetailId)
@@ -213,16 +214,20 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 
 			// check if remaining points of last transaction detail is enough.
 			transPoints, _ := strconv.ParseInt(detail.TransAmount, 10, 64)
-			if transPoints > curBalance {
+			if transPoints > curBalance1 {
 				log.Println("transPoints ->" + strconv.FormatInt(transPoints, 10))
-				log.Println("curBalance ->" + strconv.FormatInt(curBalance, 10))
+				log.Println("curBalance1 ->" + strconv.FormatInt(curBalance1, 10))
 				var errorMsg = "Current balance of last transaction detail is not enough to pay,detail.SourceDetailId = " + detail.SourceDetailId
 				panic(errorMsg)
 			}
 		} else {
-			// compute exchange amount
+
+			// current balance of last transaction detail
+			curBalance2, _ := strconv.ParseInt(points.QueryPointsDetailCurBalanceByKey(stub, detail.DetailId), 10, 64)
 			temp, _ := strconv.ParseInt(detail.CurBalance, 10, 64)
-			changeAmount := curBalance - temp
+
+			// compute exchange amount
+			changeAmount := curBalance2 - temp
 			totalUpdate += changeAmount
 		}
 	}
