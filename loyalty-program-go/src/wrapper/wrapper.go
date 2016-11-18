@@ -224,13 +224,19 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 
 			// current balance of last transaction detail
 			curBalance2, _ := strconv.ParseInt(points.QueryPointsDetailCurBalanceByKey(stub, detail.DetailId), 10, 64)
+			log.Println("curBalance2=" + curBalance2)
 			temp, _ := strconv.ParseInt(detail.CurBalance, 10, 64)
+			log.Println("temp=" + temp)
 
 			// compute exchange amount
 			changeAmount := curBalance2 - temp
+			log.Println("changeAmount=" + changeAmount)
 			totalUpdate += changeAmount
+			log.Println("totalUpdate=" + totalUpdate)
 		}
 	}
+
+	log.Println("trans=" + trans)
 
 	if trans != totalUpdate {
 		errMsg := "Invalid data, pls. check if this request has been tampered"
