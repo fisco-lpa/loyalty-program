@@ -1,5 +1,6 @@
 package com.fiscolpa.demo.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -44,6 +45,6 @@ public interface MerchantTransactionService{
 	 * 商户发起承兑
 	 * @param pt
 	 */
-	public String seveAccept(PointsTransationDetailExtends ptd);
+	public String seveAccept(PointsTransationDetailExtends ptd) throws IOException;
 	
 }

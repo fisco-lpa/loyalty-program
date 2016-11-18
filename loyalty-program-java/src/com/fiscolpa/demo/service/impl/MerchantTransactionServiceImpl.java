@@ -177,7 +177,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 	
 	@Transactional
 	@Override
-	public String seveAccept(PointsTransationDetailExtends ptd){
+	public String seveAccept(PointsTransationDetailExtends ptd) throws IOException{
 		//获取所以未过期的积分
 		List<PointsTransationDetailExtends> ptdl = queryTransationDetailList(ptd);
 		if(ptdl.size()<=0) return "00001"; //没有可兑换的积分
@@ -229,6 +229,8 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 			up.setDetailId(detail.getDetailId());
 			up.setCurBalance(0);
 			up.setOperFlag(PointsTransactionEnum.UPDATE.getSign());
+			up.setRollInAccount(detail.getRollInAccount());
+			up.setCreditParty(detail.getCreditParty());
 			
 			salist.add(save);
 			upList.add(up);
@@ -252,12 +254,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		map1.put("pointsTransactionDetailList", itd);
 		
 		String json = JSONObject.fromObject(map1).toString();
-		Boolean result = false;
-		try {
-			result = HttpTool.sendToFabric(json, "invoke", "AccpetPoints");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Boolean result = HttpTool.sendToFabric(json, "invoke", "AccpetPoints");
 		
 		if(!result) return "00003";//区块连交易失败
 

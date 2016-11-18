@@ -1,6 +1,7 @@
 package com.fiscolpa.demo.controller;
 
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -128,7 +129,12 @@ public class MerchantController {
 		ptd.setRollInAccount(currentUser.getAccountId());
 		ptd.setTransferType(PointsTransactionEnum.BUY.getSign());
 		ptd.setCurBalance(0);
-		mts.seveAccept(ptd);
+		try {
+			mts.seveAccept(ptd);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "credit";
 	}
 	
