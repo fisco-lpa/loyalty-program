@@ -100,7 +100,7 @@ public class UserExchngeGoodsController {
 		in.setAccountBalance(account_balance2+NeedJiFen);
 		in.setUpdateTime(date);
 		in.setUpdateUser(currentUser.getCreateUser());
-		account.updateAccountByBalance(in);
+		//account.updateAccountByBalance(in);
 		
 		
 		PointsTransationDetail pointsTransationDetail=new PointsTransationDetail();
