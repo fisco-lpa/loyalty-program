@@ -200,22 +200,23 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 	for i := 0; i < len(data.PointsTransactionDetailList); i++ {
 		detail := data.PointsTransactionDetailList[i]
 
-		// check if last transaction detail exists
-		result := points.CheckPointsDetailExist(stub, detail.SourceDetailId)
-		if !result {
-			var errorMsg = "Table Points_Transation_Detail: specified record doesn't exist,detailId = " + detail.SourceDetailId
-			panic(errorMsg)
-		}
-
 		// current balance of last transaction detail
 		curBalance, _ := strconv.ParseInt(points.QueryPointsDetailCurBalanceByKey(stub, detail.SourceDetailId), 10, 64)
 		if detail.OperFlag == "0" {
+
+			// check if last transaction detail exists
+			result := points.CheckPointsDetailExist(stub, detail.SourceDetailId)
+			if !result {
+				var errorMsg = "Table Points_Transation_Detail: specified record doesn't exist,detail.SourceDetailId = " + detail.SourceDetailId
+				panic(errorMsg)
+			}
+
 			// check if remaining points of last transaction detail is enough.
 			transPoints, _ := strconv.ParseInt(detail.TransAmount, 10, 64)
 			if transPoints > curBalance {
 				log.Println("transPoints ->" + strconv.FormatInt(transPoints, 10))
 				log.Println("curBalance ->" + strconv.FormatInt(curBalance, 10))
-				var errorMsg = "Current balance of last transaction detail is not enough to pay,detailId = " + detail.SourceDetailId
+				var errorMsg = "Current balance of last transaction detail is not enough to pay,detail.SourceDetailId = " + detail.SourceDetailId
 				panic(errorMsg)
 			}
 		} else {
