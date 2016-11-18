@@ -169,8 +169,8 @@ func QueryAccountRecordByKey(stub shim.ChaincodeStubInterface, accountId string)
 	} else {
 		jsonResp := `{"accountId":"` + row.Columns[0].GetString_() + `","userId":"` + row.Columns[1].GetString_() +
 			`","accountbalance":"` + row.Columns[2].GetString_() + `","accountTypeId":"` + row.Columns[3].GetString_() +
-			`","createTime":"` + row.Columns[7].GetString_() + `","createUser":"` + row.Columns[8].GetString_() +
-			`","updateTime":"` + row.Columns[9].GetString_() + `","updateUser":"` + row.Columns[10].GetString_() + `"}`
+			`","createTime":"` + row.Columns[4].GetString_() + `","createUser":"` + row.Columns[5].GetString_() +
+			`","updateTime":"` + row.Columns[6].GetString_() + `","updateUser":"` + row.Columns[7].GetString_() + `"}`
 
 		log.Println("jsonResp:" + jsonResp)
 		return []byte(base64.StdEncoding.EncodeToString([]byte(`{"status":"OK","errMsg":"查询成功","data":` + jsonResp + `}`))), nil
