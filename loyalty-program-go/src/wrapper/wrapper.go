@@ -182,7 +182,7 @@ func ConsumePoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, err
 		} else if transIn == acc.AccountId {
 
 			// check if the type of transfer in account is correct,it must be a c-end user account.
-			if acc.AccountTypeId != account.AccountType_Merchant {
+			if acc.AccountTypeId != account.AccountType_Usser {
 				errMsg := "Incorrect account type, it must be a c-end user account,account id =" + acc.AccountId
 				panic(errMsg)
 			}
