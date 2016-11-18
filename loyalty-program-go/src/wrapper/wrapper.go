@@ -268,6 +268,68 @@ func AccpetPoints(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 		log.Println("Error occurred when parsing json")
 		return nil, errors.New("Error occurred when parsing json.")
 	}
+	var rollInAccount string
+	mapMap := make(map[string]int) //创建map
+	for i := 0; i < len(data.PointsTransactionDetailList); i++ {
+		rollInAccount = data.PointsTransactionDetailList[i].RollinAccount
+		if data.PointsTransactionDetailList[i].OperFlag == "0" {
+			sourceDetailId := data.PointsTransactionDetailList[i].SourceDetailId //流水Id就是之前存在的流水号Id
+			var columns []shim.Column
+			col := shim.Column{Value: &shim.Column_String_{String_: sourceDetailId}}
+			columns = append(columns, col)
+			row, _ := stub.GetRow(util.Points_Transation_Detail, columns) //row是否为空
+			if len(row.Columns) == 0 {
+				return nil, errors.New("cannot find this data")
+			}
+			//判断通过流水号查询的上笔当笔剩余数量是否==新增的当笔剩余数量
+			curBalance := row.Columns[13].GetString_()
+			if curBalance != data.PointsTransactionDetailList[i].CurBalance {
+				return nil, errors.New("curBalance is not same")
+			}
+		} else {
+			//通过流水Id找到积分交易Id
+			detailId := data.PointsTransactionDetailList[i].DetailId
+			var columns []shim.Column
+			col := shim.Column{Value: &shim.Column_String_{String_: detailId}}
+			columns = append(columns, col)
+			row, _ := stub.GetRow(util.Points_Transation_Detail, columns) //row是否为空
+			if len(row.Columns) == 0 {
+				return nil, errors.New("this detailId not found")
+			}
+			//通过积分交易Id找到积分交易类型
+			transId := row.Columns[2].GetString_()                      //积分交易Id
+			curBalance, _ := strconv.Atoi(row.Columns[13].GetString_()) //当笔积分剩余数量
+			creditParty := row.Columns[14].GetString_()                 //授信方账户
+			if row.Columns[11].GetString_() != rollInAccount {
+				return nil, errors.New("the rollInAccount is not same ")
+			}
+
+			if mapMap[creditParty] == 0 {
+				mapMap[creditParty] = curBalance
+			} else {
+				mapMap[creditParty] += curBalance
+			}
+			var columns1 []shim.Column
+			col1 := shim.Column{Value: &shim.Column_String_{String_: transId}}
+			columns1 = append(columns1, col1)
+			row, _ = stub.GetRow(util.Points_Transation, columns1) //row是否为空
+			if len(row.Columns) == 0 {
+				return nil, errors.New("this transId not found")
+			} else if row.Columns[6].GetString_() != "3" {
+				return nil, errors.New("this data can not accept")
+			}
+		}
+	}
+	//判断积分交易表中的交易积分数量是否=上步map里转入账户的交易数量
+	for i := 0; i < len(data.PointsTransaction); i++ {
+		log.Println("1")
+		transAmount, _ := strconv.Atoi(data.PointsTransaction[i].TransAmount)
+		if transAmount != mapMap[data.PointsTransaction[i].RollinAccount] {
+			log.Println("1")
+			return nil, errors.New("TransAmount is not same")
+		}
+	}
+
 	for i := 0; i < len(data.PointsTransaction); i++ {
 		//如果标识符为0就对账户表新增否则修改
 		if data.PointsTransaction[i].OperFlag == "0" {
