@@ -11,6 +11,8 @@ import (
 	"util"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"github.com/hyperledger/fabric/membersrvc/ca"
+	pb "github.com/hyperledger/fabric/membersrvc/protos"
 )
 
 type TotalNum struct {
@@ -40,18 +42,6 @@ type InitTableData struct {
 
 type PointsInfo struct {
 	TransId string
-}
-
-//注册
-func SignUp(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
-	return nil, nil
-}
-
-//登录
-func SignIn(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
-
-	return nil, nil
 }
 
 //授信积分
