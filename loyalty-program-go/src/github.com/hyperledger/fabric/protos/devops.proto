@@ -23,6 +23,9 @@ import "fabric.proto";
 
 // Interface exported by the server.
 service Devops {
+	// This Interface will be called when signuping a new user.
+	rpc SignUp(UserObject) returns (Response) {} 
+	
     // Log in - passed Secret object and returns Response object, where
     // msg is the security context to be used in subsequent invocations
     rpc Login(Secret) returns (Response) {}
@@ -94,4 +97,11 @@ message BuildResult {
 
 message TransactionRequest {
     string transactionUuid = 1;
+}
+
+message UserObject{
+	string userId = 1;
+	string password = 2;
+	string role = 3;
+	string institution = 4;
 }

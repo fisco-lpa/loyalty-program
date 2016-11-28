@@ -21,6 +21,7 @@ import (
 	"crypto/x509"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"math/big"
 
 	"github.com/golang/protobuf/proto"
@@ -44,11 +45,14 @@ type ECAA struct {
 func (ecaa *ECAA) RegisterUser(ctx context.Context, in *pb.RegisterUserReq) (*pb.Token, error) {
 	ecaaLogger.Debug("gRPC ECAA:RegisterUser")
 
+	ecaaLogger.Info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Register User start..............")
+	ecaaLogger.Debug("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Register User start..............")
+
 	// Check the signature
-	err := ecaa.checkRegistrarSignature(in)
-	if err != nil {
-		return nil, err
-	}
+	//err := ecaa.checkRegistrarSignature(in)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	// Register the user
 	registrarID := in.Registrar.Id.Id

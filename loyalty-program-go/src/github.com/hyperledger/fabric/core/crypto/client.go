@@ -158,3 +158,26 @@ func closeClientInternal(client Client, force bool) error {
 
 	return nil
 }
+
+// SignUpClient create a new user
+func SignUpClient(userId, password, role, institution string) error {
+	clientMutex.Lock()
+	defer clientMutex.Unlock()
+	log.Debug("SignUpClient start.........")
+	client := newClient()
+	log.Debug(client)
+
+	if _, err := client.CallSignUp(userId, password, role, institution); err != nil {
+		log.Debug("Error occurred when CallSignUp is called....")
+		panic(err)
+	}
+	err := client.close()
+	if err != nil {
+		log.Debug("Error occurred when client is closed....")
+		panic(err)
+	}
+
+	log.Debug("SignUpClient end.........")
+
+	return nil
+}

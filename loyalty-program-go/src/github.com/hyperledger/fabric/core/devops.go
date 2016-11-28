@@ -477,3 +477,19 @@ func (d *Devops) EXP_ExecuteWithBinding(ctx context.Context, executeWithBinding 
 	devopsLogger.Warning("Security NOT enabled")
 	return &pb.Response{Status: pb.Response_FAILURE, Msg: []byte("Security NOT enabled")}, nil
 }
+
+// SignUp establishes the security context with the Devops service
+func (d *Devops) SignUp(ctx context.Context, userObj *pb.UserObject) (*pb.Response, error) {
+	fmt.Println("SignUp start...................")
+	fmt.Println("server side,userId= " + userObj.UserId)
+	fmt.Println("server side,password= " + userObj.Password)
+	fmt.Println("server side,role= " + userObj.Role)
+	fmt.Println("server side,institution= " + userObj.Institution)
+
+	if err := crypto.SignUpClient(userObj.UserId, userObj.Password, userObj.Role, userObj.Institution); nil != err {
+		return &pb.Response{Status: pb.Response_FAILURE, Msg: []byte(err.Error())}, nil
+	}
+
+	fmt.Println("SignUp end...................")
+	return &pb.Response{Status: pb.Response_SUCCESS}, nil
+}

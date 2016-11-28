@@ -20,6 +20,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/rand"
 	"crypto/x509"
+	"fmt"
 	"time"
 
 	membersrvc "github.com/hyperledger/fabric/membersrvc/protos"
@@ -482,4 +483,51 @@ func (node *nodeImpl) getECACertificate() ([]byte, error) {
 	}
 
 	return responce.Cert, nil
+}
+
+func (node *nodeImpl) CallSignUp(userId, password, role, institution string) (*membersrvc.Token, error) {
+	//node.Debug("callSignUp start...")
+	fmt.Println("CallSignUp starts---------")
+	fmt.Println(node)
+
+	// Get an ECA Client
+	sock, ecaa, err := node.getECAAClient(userId)
+	defer sock.Close()
+
+	// Hard code value first,it will be changed later
+	req := &membersrvc.RegisterUserReq{
+		Id:          &membersrvc.Identity{Id: userId},
+		Role:        membersrvc.Role(membersrvc.Role_CLIENT),
+		Affiliation: institution,
+		Registrar: &membersrvc.Registrar{
+			Id:            &membersrvc.Identity{Id: "admin"},
+			Roles:         nil,
+			DelegateRoles: nil,
+		},
+		Sig: nil}
+
+	//sign the req
+	hash := primitives.NewHash()
+	raw, _ := proto.Marshal(req)
+	hash.Write(raw)
+	signPriv, err := primitives.NewECDSAKey()
+	r, s, err := ecdsa.Sign(rand.Reader, signPriv, hash.Sum(nil))
+	if err != nil {
+		//node.Debug("ecdsa.sign():errors occurred.")
+		return nil, err
+	}
+	R, _ := r.MarshalText()
+	S, _ := s.MarshalText()
+	req.Sig = &membersrvc.Signature{Type: membersrvc.CryptoType_ECDSA, R: R, S: S}
+
+	cert, err := ecaa.RegisterUser(context.Background(), req)
+	if err != nil {
+		node.Errorf("Failed requesting signUp [%s].", err.Error())
+
+		return nil, err
+	}
+
+	//node.Debug("callSignUp end...")
+	fmt.Println("call sign up end.........")
+	return cert, nil
 }

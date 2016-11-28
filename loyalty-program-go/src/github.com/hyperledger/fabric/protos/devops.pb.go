@@ -60,6 +60,46 @@ type SigmaInput struct {
 	Data     []byte  `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
 }
 
+type UserObject struct {
+	UserId      string `protobuf:"bytes,1,opt,name=userId" json:"userId,omitempty"`
+	Password    string `protobuf:"bytes,2,opt,name=password" json:"password,omitempty"`
+	Role        string `protobuf:"bytes,3,opt,name=role" json:"role,omitempty"`
+	Institution string `protobuf:"bytes,4,opt,name=institution" json:"institution,omitempty"`
+}
+
+func (m *UserObject) Reset()                    { *m = UserObject{} }
+func (m *UserObject) String() string            { return proto.CompactTextString(m) }
+func (*UserObject) ProtoMessage()               {}
+func (*UserObject) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+
+func (m *UserObject) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+func (m *UserObject) GetPassword() string {
+	if m != nil {
+		return m.Password
+	}
+	return ""
+}
+
+func (m *UserObject) GetRole() string {
+	if m != nil {
+		return m.Role
+	}
+	return ""
+}
+
+func (m *UserObject) GetInstitution() string {
+	if m != nil {
+		return m.Institution
+	}
+	return ""
+}
+
 func (m *SigmaInput) Reset()                    { *m = SigmaInput{} }
 func (m *SigmaInput) String() string            { return proto.CompactTextString(m) }
 func (*SigmaInput) ProtoMessage()               {}
@@ -129,6 +169,7 @@ func (*TransactionRequest) Descriptor() ([]byte, []int) { return fileDescriptor3
 
 func init() {
 	proto.RegisterType((*Secret)(nil), "protos.Secret")
+	proto.RegisterType((*UserObject)(nil), "protos.UserObject")
 	proto.RegisterType((*SigmaInput)(nil), "protos.SigmaInput")
 	proto.RegisterType((*ExecuteWithBinding)(nil), "protos.ExecuteWithBinding")
 	proto.RegisterType((*SigmaOutput)(nil), "protos.SigmaOutput")
@@ -148,6 +189,9 @@ const _ = grpc.SupportPackageIsVersion3
 // Client API for Devops service
 
 type DevopsClient interface {
+	// A new user can be added by calling this method.
+	SignUp(ctx context.Context, in *UserObject, opts ...grpc.CallOption) (*Response, error)
+
 	// Log in - passed Secret object and returns Response object, where
 	// msg is the security context to be used in subsequent invocations
 	Login(ctx context.Context, in *Secret, opts ...grpc.CallOption) (*Response, error)
@@ -175,6 +219,15 @@ type devopsClient struct {
 
 func NewDevopsClient(cc *grpc.ClientConn) DevopsClient {
 	return &devopsClient{cc}
+}
+
+func (c *devopsClient) SignUp(ctx context.Context, in *UserObject, opts ...grpc.CallOption) (*Response, error) {
+	out := new(Response)
+	err := grpc.Invoke(ctx, "/protos.Devops/SignUp", in, out, c.cc, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *devopsClient) Login(ctx context.Context, in *Secret, opts ...grpc.CallOption) (*Response, error) {
@@ -261,6 +314,9 @@ func (c *devopsClient) EXP_ExecuteWithBinding(ctx context.Context, in *ExecuteWi
 // Server API for Devops service
 
 type DevopsServer interface {
+	// A new user can be added by calling this method.
+	SignUp(context.Context, *UserObject) (*Response, error)
+
 	// Log in - passed Secret object and returns Response object, where
 	// msg is the security context to be used in subsequent invocations
 	Login(context.Context, *Secret) (*Response, error)
@@ -284,6 +340,24 @@ type DevopsServer interface {
 
 func RegisterDevopsServer(s *grpc.Server, srv DevopsServer) {
 	s.RegisterService(&_Devops_serviceDesc, srv)
+}
+
+func _Devops_SignUp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserObject)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DevopsServer).SignUp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protos.Devops/SignUp",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DevopsServer).SignUp(ctx, req.(*UserObject))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Devops_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -452,6 +526,11 @@ var _Devops_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "protos.Devops",
 	HandlerType: (*DevopsServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SignUp",
+			Handler:    _Devops_SignUp_Handler,
+		},
+
 		{
 			MethodName: "Login",
 			Handler:    _Devops_Login_Handler,
