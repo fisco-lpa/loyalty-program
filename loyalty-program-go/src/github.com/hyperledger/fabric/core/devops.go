@@ -486,10 +486,11 @@ func (d *Devops) SignUp(ctx context.Context, userObj *pb.UserObject) (*pb.Respon
 	fmt.Println("server side,role= " + userObj.Role)
 	fmt.Println("server side,institution= " + userObj.Institution)
 
-	if err := crypto.SignUpClient(userObj.UserId, userObj.Password, userObj.Role, userObj.Institution); nil != err {
+	tok, err := crypto.SignUpClient(userObj.UserId, userObj.Password, userObj.Role, userObj.Institution)
+	if err != nil {
 		return &pb.Response{Status: pb.Response_FAILURE, Msg: []byte(err.Error())}, nil
 	}
 
 	fmt.Println("SignUp end...................")
-	return &pb.Response{Status: pb.Response_SUCCESS}, nil
+	return &pb.Response{Status: pb.Response_SUCCESS, Msg: tok}, nil
 }

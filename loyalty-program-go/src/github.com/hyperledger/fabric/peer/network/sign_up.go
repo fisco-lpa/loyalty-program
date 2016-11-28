@@ -70,6 +70,10 @@ func networkSignUp(args []string) error {
 	} else {
 		return fmt.Errorf("Error on client sign up: %s", string(signUpResult.Msg))
 	}
+
+	tok := string(signUpResult.Msg[:])
+	fmt.Println("Your tok(password) is: " + tok)
+
 	logger.Info("Command handling is done................")
 	return nil
 }

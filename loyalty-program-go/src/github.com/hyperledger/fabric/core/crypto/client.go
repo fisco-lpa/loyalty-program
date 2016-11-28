@@ -160,16 +160,17 @@ func closeClientInternal(client Client, force bool) error {
 }
 
 // SignUpClient create a new user
-func SignUpClient(userId, password, role, institution string) error {
+func SignUpClient(userId, password, role, institution string) (byte[], error) {
 	clientMutex.Lock()
 	defer clientMutex.Unlock()
 	log.Debug("SignUpClient start.........")
 	client := newClient()
 	log.Debug(client)
 
-	if _, err := client.CallSignUp(userId, password, role, institution); err != nil {
+	token, er := client.CallSignUp(userId, password, role, institution)
+	if er != nil {
 		log.Debug("Error occurred when CallSignUp is called....")
-		panic(err)
+		panic(er)
 	}
 	err := client.close()
 	if err != nil {
@@ -179,5 +180,5 @@ func SignUpClient(userId, password, role, institution string) error {
 
 	log.Debug("SignUpClient end.........")
 
-	return nil
+	return token.Tok, nil
 }
