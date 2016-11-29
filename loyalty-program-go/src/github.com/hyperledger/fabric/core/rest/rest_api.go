@@ -1762,7 +1762,7 @@ func buildOpenchainRESTRouter() *web.Router {
 	router.Get("/registrar/:id/ecert", (*ServerOpenchainREST).GetEnrollmentCert)
 	router.Get("/registrar/:id/tcert", (*ServerOpenchainREST).GetTransactionCert)
 
-	router.Post("/member", (*ServerOpenchainREST).SignUp)
+	router.Post("/signup", (*ServerOpenchainREST).SignUp)
 
 	router.Get("/chain", (*ServerOpenchainREST).GetBlockchainInfo)
 	router.Get("/chain/blocks/:id", (*ServerOpenchainREST).GetBlockByNumber)
