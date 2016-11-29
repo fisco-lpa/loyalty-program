@@ -318,32 +318,63 @@ func (s *ServerOpenchainREST) Register(rw web.ResponseWriter, req *web.Request) 
 	return
 }
 
-// GetEnrollmentID checks whether a given user has already registered with the
-// Devops server.
-func (s *ServerOpenchainREST) GetEnrollmentID(rw web.ResponseWriter, req *web.Request) {
-	// Parse out the user enrollment ID
-	enrollmentID := req.PathParams["id"]
+// SignUp can add a new member to fabric blockchain
+// Request should offer at least the following information of a user:
+// memberId,password,role and institution,these infomation are included in a UserObject.
+func (s *ServerOpenchainREST) SignUp(rw web.ResponseWriter, req *web.Request) {
+	restLogger.Info("REST sign up a new member...")
+	fmt.Println("rest_api.go SignUp start^^^^^^^^^^^^^^^^^^^^")
+	encoder := json.NewEncoder(rw)
 
-	if !validateEnrollmentIDParameter(rw, enrollmentID) {
+	// Decode the incoming JSON payload
+	var signUpSpec pb.UserObject
+	err := jsonpb.Unmarshal(req.Body, &signUpSpec)
+
+	// Check for proper JSON syntax
+	if err != nil {
+		// A new member must supply payload
+		if err == io.EOF {
+			rw.WriteHeader(http.StatusBadRequest)
+			encoder.Encode(restResult{Error: "Payload must contain object UserObject with userId,password,role and institution fields."})
+			restLogger.Error("Error: Payload must contain object UserObject with userId,password,role and institution fields.")
+		} else {
+			rw.WriteHeader(http.StatusBadRequest)
+			encoder.Encode(restResult{Error: err.Error()})
+			restLogger.Errorf("Error: %s", err)
+		}
+
 		return
 	}
 
-	// Retrieve the REST data storage path
-	// Returns /var/hyperledger/production/client/
-	localStore := getRESTFilePath()
+	// Check that userId,password,role and institution are not left blank.
+	if (signUpSpec.UserId == "") || (signUpSpec.Password == "") || (signUpSpec.Role == "") || (signUpSpec.Institution == "") {
+		rw.WriteHeader(http.StatusBadRequest)
+		encoder.Encode(restResult{Error: "UserId,password,role and institution may not be blank."})
+		restLogger.Error("Error: UserId,password,role and institution may not be blank.")
 
-	encoder := json.NewEncoder(rw)
+		return
+	}
 
-	// If the user is already logged in, return OK. Otherwise return error.
-	if _, err := os.Stat(localStore + "loginToken_" + enrollmentID); err == nil {
+	if !validateEnrollmentIDParameter(rw, signUpSpec.UserId) {
+		return
+	}
+
+	signUpResult, err := s.devops.SignUp(context.Background(), &signUpSpec)
+
+	// Check if sign up is successful
+	if signUpResult.Status == pb.Response_SUCCESS {
 		rw.WriteHeader(http.StatusOK)
-		encoder.Encode(restResult{OK: fmt.Sprintf("User %s is already logged in.", enrollmentID)})
-		restLogger.Infof("User '%s' is already logged in.\n", enrollmentID)
+		encoder.Encode(restResult{OK: fmt.Sprintf("Sign up successful for member '%s'.", signUpResult.UserId)})
+		restLogger.Infof("Sign up successful for member '%s'.\n", signUpResult.UserId)
 	} else {
 		rw.WriteHeader(http.StatusUnauthorized)
-		encoder.Encode(restResult{Error: fmt.Sprintf("User %s must log in.", enrollmentID)})
-		restLogger.Infof("User '%s' must log in.\n", enrollmentID)
+		encoder.Encode(restResult{Error: string(signUpResult.Msg)})
+		restLogger.Errorf("Error on member sign up: %s", string(signUpResult.Msg))
 	}
+
+	fmt.Println("rest_api.go SignUp end^^^^^^^^^^^^^^^")
+
+	return
 }
 
 // DeleteEnrollmentID removes the login token of the specified user from the
@@ -1730,6 +1761,8 @@ func buildOpenchainRESTRouter() *web.Router {
 	router.Delete("/registrar/:id", (*ServerOpenchainREST).DeleteEnrollmentID)
 	router.Get("/registrar/:id/ecert", (*ServerOpenchainREST).GetEnrollmentCert)
 	router.Get("/registrar/:id/tcert", (*ServerOpenchainREST).GetTransactionCert)
+
+	router.Post("/member", (*ServerOpenchainREST).SignUp)
 
 	router.Get("/chain", (*ServerOpenchainREST).GetBlockchainInfo)
 	router.Get("/chain/blocks/:id", (*ServerOpenchainREST).GetBlockByNumber)

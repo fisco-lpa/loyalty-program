@@ -294,6 +294,39 @@
                 }
             }
         },
+		"/signup": {
+           "post": {
+              "summary": "Sign up a new member",
+              "description": "The /signup endpoint receives requests to sign up a member. The request must supply userId,password,role and institution within the payload.",
+              "tags": [
+                  "SignUp"
+              ],
+              "operationId": "signUp",
+              "parameters": [{
+                 "name": "UserObject",
+                 "in": "body",
+                 "description": "Member SignUp Object",
+                 "required": true,
+                 "schema": {
+                    "$ref": "#/definitions/UserObject"
+                 }
+              }],
+              "responses": {
+                  "200": {
+                      "description": "Successfully sign up a new member",
+                      "schema": {
+                         "$ref": "#/definitions/OK"
+                      }
+                  },
+                  "default": {
+                      "description": "Unexpected error",
+                      "schema": {
+                          "$ref": "#/definitions/Error"
+                      }
+                  }
+              }
+           }
+        },
         "/network/peers": {
             "get": {
                 "summary": "List of network peers",
