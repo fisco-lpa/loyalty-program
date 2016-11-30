@@ -364,8 +364,8 @@ func (s *ServerOpenchainREST) SignUp(rw web.ResponseWriter, req *web.Request) {
 	// Check if sign up is successful
 	if signUpResult.Status == pb.Response_SUCCESS {
 		rw.WriteHeader(http.StatusOK)
-		encoder.Encode(restResult{OK: fmt.Sprintf("Sign up successful for member '%s'.", signUpResult.UserId)})
-		restLogger.Infof("Sign up successful for member '%s'.\n", signUpResult.UserId)
+		encoder.Encode(restResult{OK: fmt.Sprintf("Sign up successful for member '%s'.", signUpSpec.UserId)})
+		restLogger.Infof("Sign up successful for member '%s'.\n", signUpSpec.UserId)
 	} else {
 		rw.WriteHeader(http.StatusUnauthorized)
 		encoder.Encode(restResult{Error: string(signUpResult.Msg)})
