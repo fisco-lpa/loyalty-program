@@ -14,7 +14,7 @@ public interface PointsTransationService  {
 	 * @param accountId
 	 * @return
 	 */
-	List<PointsTransationDetailVo> getCreditPartyCreditDetailList (PointsTransationVo pointsTransationVo, int page, int rows);
+	List<PointsTransationDetailVo> getCreditPartyCreditDetailList (PointsTransationVo pointsTransationVo);
 	
 	/**
 	 * 
@@ -22,7 +22,7 @@ public interface PointsTransationService  {
 	 * @param accountId
 	 * @return
 	 */
-	List<PointsTransationDetailVo> queryPointsTransationDetail(PointsTransationVo pointsTransationVo, int page, int rows);
+	List<PointsTransationDetailVo> queryPointsTransationDetail(PointsTransationDetailVo pointsTransationDetailVo);
 	
 	/**
 	 * 授信

@@ -12,4 +12,5 @@ public interface PointsUserService extends IService<PointsUser> {
 	
 	List<PointsUser> getAllPointsUser();
 	
+	int insertPointsUser(PointsUser pointsUser);
 }

@@ -19,6 +19,11 @@ public class PointsTransationDetailVo extends PointsTransationDetail{
      */
     private int acceptedPointsNum;
     
+    /**
+     * 商户头像
+     */
+    private String imgBase;
+    
     
 
 	public String getRollOutAccountName() {
@@ -45,4 +50,12 @@ public class PointsTransationDetailVo extends PointsTransationDetail{
 		this.acceptedPointsNum = acceptedPointsNum;
 	}
 
+	public String getImgBase() {
+		return imgBase;
+	}
+
+	public void setImgBase(String imgBase) {
+		this.imgBase = imgBase;
+	}
+	
 }

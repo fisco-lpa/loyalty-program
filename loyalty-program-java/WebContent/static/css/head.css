@@ -1,0 +1,60 @@
+*{margin:0px;padding:0px;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-touch-callout:none;-webkit-user-select:none;-webkit-appearance:none;outline:none;word-break:break-all;box-sizing:border-box;-webkit-box-sizing:border-box;}
+html,body{width:100%;height:100%;font-family:"Microsoft YaHei", Arial; font-size: 28px; color: #333;}
+input{-webkit-user-select:initial;font-family:"Microsoft YaHei", Arial;border:none;}
+i{font-style: normal}
+a{text-decoration:none;}
+ul,ol,li{list-style:none;}
+h1,h2,h3,h4,h5,h6{font-weight: normal;}
+img{border:0;}
+.clearfix{zoom:1;}
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
+.dsn {display: none;}
+@media only screen and (min-width: 320px){
+	html {
+		font-size: 48.5px !important;
+	}
+}
+@media only screen and (min-width: 340px){
+	html {
+		font-size: 51.5px !important;
+	}
+}
+@media only screen and (min-width: 360px){
+	html {
+		font-size: 54.5px !important;
+	}
+}
+@media only screen and (min-width: 375px){
+	html {
+		font-size: 56.5px !important;
+	}
+}
+@media only screen and (min-width: 401px){
+	html {
+		font-size: 62.5px !important;
+	}
+}
+@media only screen and (min-width: 428px){
+	html {
+		font-size: 66.875px !important;
+	}
+}
+@media only screen and (min-width: 481px){
+	html {
+		font-size: 75px !important;
+	}
+}
+@media only screen and (min-width: 569px){
+	html {
+		font-size: 87.5px !important;
+	}
+}
+@media only screen and (min-width: 641px){
+	html {
+		font-size: 100px !important;
+	}
+}
+body {
+	background-color: #f5f5f5;
+	background-size: 100% auto;
+}

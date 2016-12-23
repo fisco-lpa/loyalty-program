@@ -1,33 +1,32 @@
 package com.fiscolpa.demo.controller;
 
-import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fiscolpa.demo.model.PointsTransation;
 import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.service.AccountService;
 import com.fiscolpa.demo.service.PointsTransationService;
-import com.fiscolpa.demo.util.HttpTool;
 import com.fiscolpa.demo.vo.AccountVo;
 import com.fiscolpa.demo.vo.PointsTransationDetailVo;
 import com.fiscolpa.demo.vo.PointsTransationVo;
-import com.github.pagehelper.PageInfo;
 
 /**
  * 授信方
  * @author Administrator
  *
  */
-@Controller
+@RestController
 public class CreditPartyController {
 	
 	@Autowired
@@ -40,146 +39,74 @@ public class CreditPartyController {
 	 */
 	public static final String MERCHANT_ACCOUNT_TYPE = "2";
 	
-	private String redirect_list = "redirect:goCreditQueryPage";
-	
-    /**
-     * 授信
-     * @param pointsTransation
-     */
+	/**
+	 * 授信积分操作
+	 * @param pointsTransation
+	 * @param session
+	 * @return
+	 */
     @RequestMapping(value = "/creditParty/credit", method = RequestMethod.POST)
-    public ModelAndView credit(PointsTransation pointsTransation,HttpSession session) {
-    	//授信
+    public String credit(PointsTransation pointsTransation,HttpSession session) {
     	PointsUser user = (PointsUser)session.getAttribute("user");
-    	
     	pointsTransation.setCreateUser(user.getUserId());
-//    	pointsTransation.setCreateUser("3");
-//    	pointsTransation.setRollInAccount("2");
-//    	pointsTransation.setRollOutAccount("3");
+    	pointsTransation.setRollOutAccount(user.getAccountId());
     	pointsTransationService.addCredit(pointsTransation);
-    	//返回到授信查询页面
-        ModelAndView result = new ModelAndView(redirect_list);//TODO 
-//        result.addObject("user",user);//TODO userId
-        return result;
+    	return "ok";
     }
     /**
-     * 授信页面
-     * @param pointsTransation
-     * @throws IOException 
+     * 授信中心页面获取用户信息
      */
-    @RequestMapping(value = "/creditParty/goCreditPage", method = RequestMethod.GET)
-    public ModelAndView goCreditPage(HttpSession session) throws IOException{
-    	ModelAndView result = new ModelAndView("credit_party_credit");
+    @RequestMapping(value = "/creditParty/index/getData")
+    public Map<String,Object> getData(HttpSession session){
     	PointsUser user = (PointsUser)session.getAttribute("user");
-    	result.addObject("user", user);
+    	Map<String,Object> map = new HashMap<String,Object>();
+    	map.put("user", user);
+    	map.put("img",String.valueOf(session.getAttribute("userimg")));
+    	return map;
+    }
+    /**
+     * 获取商户列表
+     * @return
+     */
+    @RequestMapping(value = "/creditParty/getMerchants", method = RequestMethod.GET)
+    public List<AccountVo> getMerchants(){
     	List<AccountVo> merchants = accountService.getAllMerchant(MERCHANT_ACCOUNT_TYPE);
-    	result.addObject("merchants", merchants);
-    	return result;
+    	return merchants;
     }
     
     /**
-     * 授信方 授信查询页面
+     * 获取授信列表数据
+     * @param session
+     * @param pointsTransationVo
+     * @param page
+     * @param rows
      * @return
      */
-    @RequestMapping(value = "/creditParty/goCreditQueryPage", method = RequestMethod.GET)
-    public ModelAndView goCreditQueryPage(HttpSession session,PointsTransationVo pointsTransationVo, @RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "10") int rows) {
-    	//TODO  获取userId
+    @RequestMapping(value = "/creditParty/getCreditList", method = RequestMethod.GET)
+    public @ResponseBody List<PointsTransationDetailVo> getCreditList(HttpSession session){
     	PointsUser user = (PointsUser)session.getAttribute("user");
-//    	String userId = user.getUserId();
-    	//获取账户信息
-//    	Account account = accountService.getAccount("2");//TODO 
-    	ModelAndView result = new ModelAndView("credit_party_index2");
-//    	result.addObject("account",account);
-    	result.addObject("user",user);
+    	PointsTransationVo pointsTransationVo = new PointsTransationVo();
     	pointsTransationVo.setRollOutAccount(user.getAccountId());
-        List<PointsTransationDetailVo> list = pointsTransationService.getCreditPartyCreditDetailList(pointsTransationVo, page, rows);
-        result.addObject("pageInfo", new PageInfo<PointsTransationDetailVo>(list));
-        result.addObject("queryParam", pointsTransationVo);
-        result.addObject("page", page);
-        result.addObject("rows", rows);
-        return result;
+        List<PointsTransationDetailVo> list = pointsTransationService.getCreditPartyCreditDetailList(pointsTransationVo);
+        return list;
     }
     
     /**
      * 授信方 承兑查询页面
      * @return
      */
-    @RequestMapping(value = "/creditParty/goAcceptQueryPage", method = RequestMethod.GET)
-    public ModelAndView goAcceptQueryPage(HttpSession session,PointsTransationVo pointsTransationVo, @RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "10") int rows) {
-    	//TODO  获取userId
+    @RequestMapping(value = "/creditParty/getAcceptList", method = RequestMethod.GET)
+    public List<PointsTransationDetailVo> getAcceptList(HttpSession session,PointsTransationDetailVo pointsTransationDetailVo,Long time) {
+    	//  获取userId
     	PointsUser user = (PointsUser)session.getAttribute("user");
-//    	String userId = user.getUserId();
     	//获取账户信息
-//    	Account account = accountService.getAccount("2");
-    	ModelAndView result = new ModelAndView("credit_party_accept2");
-//    	result.addObject("account",account);
-    	result.addObject("user",user);
-    	
-    	pointsTransationVo.setRollInAccount(user.getAccountId());
-        List<PointsTransationDetailVo> list = pointsTransationService.queryPointsTransationDetail(pointsTransationVo, page, rows);
-        result.addObject("pageInfo", new PageInfo<PointsTransationDetailVo>(list));
-        result.addObject("queryParam", pointsTransationVo);
-        result.addObject("page", page);
-        result.addObject("rows", rows);
-        return result;
+    	pointsTransationDetailVo.setRollInAccount(user.getAccountId());
+    	pointsTransationDetailVo.setCreditParty(user.getAccountId());
+    	if(null != time){
+    		pointsTransationDetailVo.setCreditCreateTime(new Date(time));
+    	}
+        List<PointsTransationDetailVo> list = pointsTransationService.queryPointsTransationDetail(pointsTransationDetailVo);
+        return list;
     }
     
-//    /**
-//     * 授信方 授信查询数据列表
-//     * @return
-//     */
-//    @RequestMapping(value = "/creditParty/getCreditPartyCreditDetailList", method = RequestMethod.POST)
-//    @ResponseBody
-//    public List<PointsTransationDetailVo> getCreditPartyCreditDetailList(String accountId,PointsTransationVo pointsTransationVo) {
-//    	
-//    	List<PointsTransationDetailVo> list = pointsTransationService.getCreditPartyCreditDetailList(pointsTransationVo);
-//    	return list;
-//    }
-    
-//    /**
-//     * 授信方 		授信查询数据列表
-//     * @param pointsTransationVo
-//     * @param page
-//     * @param rows
-//     * @return
-//     */
-//    @RequestMapping(value = "/creditParty/getCreditPartyCreditDetailList", method = RequestMethod.POST)
-//    public ModelAndView getCreditPartyCreditDetailList(PointsTransationVo pointsTransationVo, @RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "10") int rows) {
-//        ModelAndView result = new ModelAndView("credit_party_accept2");
-//        List<PointsTransationDetailVo> list = pointsTransationService.getCreditPartyCreditDetailList(pointsTransationVo, page, rows);
-//        result.addObject("pageInfo", new PageInfo<PointsTransationDetailVo>(list));
-//        result.addObject("queryParam", pointsTransationVo);
-//        result.addObject("page", page);
-//        result.addObject("rows", rows);
-//        return result;
-//    }
-    
-//    /**
-//     * 授信方 承兑查询数据列表
-//     * @return
-//     */
-//    @RequestMapping(value = "/creditParty/getCreditPartyAcceptDetailList", method = RequestMethod.POST)
-//    @ResponseBody
-//    public ModelAndView getCreditPartyAcceptDetailList(PointsTransationVo pointsTransationVo, @RequestParam(required = false, defaultValue = "1") int page, @RequestParam(required = false, defaultValue = "10") int rows) {
-//    	ModelAndView result = new ModelAndView("credit_party_accept2");
-//    	List<PointsTransationDetailVo> list = pointsTransationService.queryPointsTransationDetail(pointsTransationVo, page, rows);
-//    	result.addObject("pageInfo", new PageInfo<PointsTransationDetailVo>(list));
-//        result.addObject("queryParam", pointsTransationVo);
-//        result.addObject("page", page);
-//        result.addObject("rows", rows);
-//        return result;
-//    }
-    
-//    /**
-//     * 获取商家列表
-//     * @param accountType
-//     * @return
-//     */
-//    @RequestMapping(value = "/creditParty/getMerchants", method = RequestMethod.POST)
-//    @ResponseBody
-//    public List<AccountVo> getMerchants(String accountType) {
-//    	List<AccountVo> list = accountService.getAllMerchant(accountType);
-//    	return list;
-//    }
-
-
 }

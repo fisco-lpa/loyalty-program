@@ -24,5 +24,7 @@ public interface IService<T> {
 
     T selectOne(T entity);
     
+    int selectCount(T paramT);
+    
     //TODO 其他...
 }

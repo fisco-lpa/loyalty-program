@@ -24,6 +24,8 @@ public class PointsTransation {
     private String updateUser;
     
     private String transferType;
+    
+    private String imgBase;
 
     public String getTransferType() {
 		return transferType;
@@ -112,4 +114,14 @@ public class PointsTransation {
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser == null ? null : updateUser.trim();
     }
+
+	public String getImgBase() {
+		return imgBase;
+	}
+
+	public void setImgBase(String imgBase) {
+		this.imgBase = imgBase;
+	}
+    
+    
 }

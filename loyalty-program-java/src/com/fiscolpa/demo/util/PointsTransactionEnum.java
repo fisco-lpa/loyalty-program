@@ -2,21 +2,21 @@ package com.fiscolpa.demo.util;
 
 public enum PointsTransactionEnum {
 	/**
-	 * 授信  ("1","SX_","发放UUID开头")
+	 * 授信  ("1","SX_","授信UUID开头")
 	 */
-	CREDIT("1","SX_","发放UUID开头"),
+	CREDIT("1","SX_","UUID开头"),
 	/**
 	 * 发放  ("2","FF_","发放UUID开头")
 	 */
 	GRANT("2","FF_","发放UUID开头"),
 	/**
-	 * 购买 ("3","GM_","发放UUID开头")
+	 * 购买 ("3","GM_","购买UUID开头")
 	 */
-	BUY("3","GM_","发放UUID开头"),
+	BUY("3","GM_","购买UUID开头"),
 	/**
-	 * 承兑 ("4","GM_","发放UUID开头")
+	 * 承兑 ("4","GM_","承兑UUID开头")
 	 */
-	ACCEPT("4","CD_","发放UUID开头"),
+	ACCEPT("4","CD_","承兑UUID开头"),
 	/**
 	 * 新增 ("0","0","新增")区块连标示
 	 */
@@ -28,7 +28,28 @@ public enum PointsTransactionEnum {
 	/**
 	 * 删除("2","2","删除")区块连标示
 	 */
-	DELETE("2","2","删除")
+	DELETE("2","2","删除"),
+	
+	
+	/**
+	 * 商品("0","SP_","商品")
+	 */
+	GOODS("0","SP_","商品UUID开头"),
+	
+	
+	
+	/**
+	 * 商品图片("0","SP_","商品")
+	 */
+	IMG_COMMODITY("0","SPIMG_","商品图片UUID开头"),
+	/**
+	 * 商品详情图片("1","SPXQIMG_","商品详情图片UUID开头")
+	 */
+	IMG_COMMODITY_DETAILS("1","SPXQIMG_","商品详情图片UUID开头"),
+	/**
+	 * 用户("2","YHIMG_","用户图片UUID开头")
+	 */
+	IMG_USER("2","YHIMG_","用户图片UUID开头")
 	;
 
 	private String sign;//标示

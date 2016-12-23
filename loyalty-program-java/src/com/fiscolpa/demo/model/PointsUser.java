@@ -27,6 +27,8 @@ public class PointsUser {
     private Date updateTime;
 
     private String updateUser;
+    
+    private String img;
 
     @Transient
     private String accountId;
@@ -130,5 +132,17 @@ public class PointsUser {
 	public void setUserTypeStr(String userTypeStr) {
 		this.userTypeStr = userTypeStr;
 	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
+
+	
+
+	
     
 }

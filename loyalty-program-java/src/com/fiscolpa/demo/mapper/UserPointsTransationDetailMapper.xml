@@ -45,7 +45,10 @@
 	  
 	  select trans_id,roll_out_account,create_time,expire_time,trans_amount,sum(cur_balance) cur_balance
 	  from (
-		    select a.trans_id,a.roll_out_account,a.create_time,a.expire_time,a.trans_amount trans_amount,bb.trans_amount_out cur_balance
+		    select a.trans_id,
+		    (select pu.user_name from points_user pu where pu.user_id = (SELECT ac.user_id  from account ac where ac.account_id = a.roll_out_account))					
+ 			roll_out_account,
+		    a.create_time,a.expire_time,a.trans_amount trans_amount,bb.trans_amount_out cur_balance
 			from points_transation_detail a left join 
 				(select b.roll_in_account,b.source_detail_id,sum(b.trans_amount) trans_amount_out
 				from points_transation_detail b

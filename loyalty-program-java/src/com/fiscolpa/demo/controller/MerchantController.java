@@ -2,7 +2,9 @@ package com.fiscolpa.demo.controller;
 
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -11,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -58,21 +59,40 @@ public class MerchantController {
 	@RequestMapping(value="/queryPoints")
 	public ModelAndView queryPoints(HttpServletRequest request,HttpSession session){
 		return queryMerchantInfo(session, "accept");
+	}                                         
+	
+	@RequestMapping(value="/queryPointsHtml")
+	public @ResponseBody Map<String, String> queryPointsHtml(HttpServletRequest request,HttpSession session){
+		Map<String,String> map = new HashMap<>();
+		PointsUser currentUser = (PointsUser) session.getAttribute("user");
+		map.put("userName", currentUser.getUserName());
+		map.put("userId", currentUser.getUserId());
+		PointsTransationExtends pt = new PointsTransationExtends();
+		pt.setRollInAccount(currentUser.getAccountId());
+		pt.setTransferType(PointsTransactionEnum.CREDIT.getSign());
+		map.put("dff", mts.queryPoints(pt));
+        PointsTransationExtends pt1 = new PointsTransationExtends();
+        pt1.setRollOutAccount(currentUser.getAccountId());
+		pt1.setTransferType(PointsTransactionEnum.GRANT.getSign());
+		map.put("yff", mts.queryPoints(pt1));
+        PointsTransationExtends pt2 = new PointsTransationExtends();
+        pt2.setRollOutAccount(currentUser.getAccountId());
+		pt2.setTransferType(PointsTransactionEnum.ACCEPT.getSign());
+		map.put("ycd", mts.queryPoints(pt2));
+		map.put("img",String.valueOf(session.getAttribute("userimg")));
+		return map;
 	}
 	
-	
-	@RequestMapping(value="/queryTransationList",method = RequestMethod.POST)
+	                 
+	@RequestMapping(value="/queryTransationList")
 	public @ResponseBody List<PointsTransationExtends> queryTransationList(HttpSession session,HttpServletRequest request,@ModelAttribute("pt") PointsTransationExtends pt){
 		PointsUser currentUser = (PointsUser) session.getAttribute("user");
-		if(StringUtils.isNullOrEmpty(pt.getRollOutAccount())){
-			pt.setRollOutAccount(null);
-		}
 		pt.setRollInAccount(currentUser.getAccountId());
 		pt.setTransferType(PointsTransactionEnum.CREDIT.getSign());
 		return mts.queryTransationList(pt);
 	}
 	
-	@RequestMapping(value="/queryTransationDetailList",method = RequestMethod.POST)
+	@RequestMapping(value="/queryTransationDetailList")
 	public @ResponseBody List<PointsTransationDetailExtends> queryTransationDetailList(HttpSession session,HttpServletRequest request,@ModelAttribute("ptd") PointsTransationDetailExtends ptd){
 		ptd.setTransferType(PointsTransactionEnum.GRANT.getSign());
 		return mts.queryTransationDetailList(ptd);
@@ -85,7 +105,7 @@ public class MerchantController {
     }
 	
 	
-	@RequestMapping(value="/sevePoints",method = RequestMethod.POST)
+	@RequestMapping(value="/sevePoints")
 	public String sevePoints(HttpSession session,HttpServletRequest request,@ModelAttribute("pt") PointsTransationExtends pt){
 		PointsUser currentUser = (PointsUser) session.getAttribute("user");
 		pt.setRollOutAccount(currentUser.getAccountId());
@@ -93,12 +113,21 @@ public class MerchantController {
 		return "sentOut";
 	}
 	
+	@RequestMapping(value="/sevePointsHtml")
+	public @ResponseBody Map<String,String> sevePointsHtml(HttpSession session,HttpServletRequest request,@ModelAttribute("pt") PointsTransationExtends pt){
+		Map<String,String> map = new HashMap<String, String>();
+		PointsUser currentUser = (PointsUser) session.getAttribute("user");
+		pt.setRollOutAccount(currentUser.getAccountId());
+		map.put("state", mts.sevePoints(pt));
+		return map;
+	}
+	
 	@RequestMapping(value="/querySentOutQuery")
 	public ModelAndView querySentOutQuery(HttpServletRequest request,HttpSession session){
 		return queryMerchantInfo(session, "sentOutQuery");
 	}
 	
-	@RequestMapping(value="/querySentOutQueryList",method = RequestMethod.POST)
+	@RequestMapping(value="/querySentOutQueryList")
 	public @ResponseBody List<PointsTransationExtends> querySentOutQueryList(HttpSession session,HttpServletRequest request,@ModelAttribute("pt") PointsTransationExtends pt){
 		PointsUser currentUser = (PointsUser) session.getAttribute("user");
 		pt.setRollOutAccount(currentUser.getAccountId());
@@ -112,7 +141,7 @@ public class MerchantController {
 	}
 	
 	
-	@RequestMapping(value="/queryCreditList",method = RequestMethod.POST)
+	@RequestMapping(value="/queryCreditList")
 	public @ResponseBody List<PointsTransationExtends> queryCreditList(HttpSession session,HttpServletRequest request,@ModelAttribute("pt") PointsTransationExtends pt){
 		if(StringUtils.isNullOrEmpty(pt.getCreditParty())){
 			pt.setCreditParty(null);
@@ -123,7 +152,7 @@ public class MerchantController {
 		return mts.queryTransationList(pt);
 	}
 	
-	@RequestMapping(value="/reqAccept",method = RequestMethod.POST)
+	@RequestMapping(value="/reqAccept")
 	public String reqAccept(HttpSession session,HttpServletRequest request,@ModelAttribute("ptd") PointsTransationDetailExtends ptd){
 		PointsUser currentUser = (PointsUser) session.getAttribute("user");
 		ptd.setRollInAccount(currentUser.getAccountId());
@@ -138,4 +167,20 @@ public class MerchantController {
 		return "credit";
 	}
 	
+	@RequestMapping(value="/reqAcceptHtml")
+	public @ResponseBody Map<String,String> reqAcceptHtml(HttpSession session,HttpServletRequest request,@ModelAttribute("ptd") PointsTransationDetailExtends ptd){
+		PointsUser currentUser = (PointsUser) session.getAttribute("user");
+		ptd.setRollInAccount(currentUser.getAccountId());
+		ptd.setTransferType(PointsTransactionEnum.BUY.getSign());
+		ptd.setCurBalance(0);
+		String state = null;
+		try {
+			state = mts.seveAccept(ptd);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Map<String,String> map = new HashMap<String, String>();
+		map.put("state", state);
+		return map;
+	}
 }

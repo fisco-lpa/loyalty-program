@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fiscolpa.demo.mapper.PurchaseHistoryMapper">
+
+	<resultMap id="BaseResultMap" type="com.fiscolpa.demo.model.PurchaseHistory">
+		<id column="purchase_id" jdbcType="VARCHAR" property="purchaseId" />
+		<result column="user_id" jdbcType="VARCHAR" property="userId" />
+		<result column="user_name" jdbcType="INTEGER" property="userName" />
+		<result column="commodity_id" jdbcType="VARCHAR" property="commodityId" />
+		<result column="commodity_name" jdbcType="VARCHAR" property="commodityName" />
+		<result column="commodity_price" jdbcType="LONGVARCHAR" property="commodityPrice" />
+		<result column="merchant_id" jdbcType="LONGVARCHAR" property="merchantId" />
+		<result column="merchant_name" jdbcType="LONGVARCHAR" property="merchantName" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+	</resultMap>
+
+</mapper>

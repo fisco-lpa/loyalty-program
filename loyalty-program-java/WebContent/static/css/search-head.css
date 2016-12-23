@@ -1,0 +1,76 @@
+header{
+	background-color: #5C5c5c;
+	height: 1rem;
+	line-height: 1rem;
+	width: 100%;
+	font-size: 0.3rem;
+	color: white;
+	text-align: center;
+}
+/*header i{
+	  background: url("../img/qietu.png") no-repeat;
+	  background-size: 6rem 4rem;
+	  width: 0.8rem;
+	  height: 0.8rem;
+	  background-position: -3.55rem -1.08rem;
+	  float: left;
+
+}*/
+header i{
+	  background-image: url("../img/back.png");
+	  background-size: 0.17rem 0.35rem;
+	  width: 0.8rem;
+	  height: 100%;
+	  float: left;
+	background-position: center;
+	background-repeat: no-repeat;
+
+}
+header span{
+	/*float: left;*/
+	margin-left: -0.8rem;
+}
+.div_search{
+	  position: relative;
+	  width: 100%;
+	  background-color: white;
+	  height: 1rem;
+	  line-height: 1rem;
+	  padding-top: 0.15rem;
+}
+.div_search .img_select{
+	  position: relative;
+	  float: right;
+	  margin-right: 0rem;
+	  height: 0.7rem;
+	  width: 0.8rem;
+}
+.div_search input{
+  background: url("../img/qietu.png") no-repeat;
+  background-position: -4.7rem -2.04rem;
+  background-size: 7.5rem 5rem;
+  color: #999;
+  background-color: #F0F0F0;
+  height: 0.7rem;
+  line-height: 0.7rem;
+  float: left;
+  font-size: 0.28rem;
+  position: relative;
+  padding-left: 0.5rem;
+  margin-left: 0.3rem;
+  border-radius: 0.15rem;
+  width: 80%;
+}
+.btn_sure{
+	background-color: rgb(186, 16, 16);
+	width: 96%;
+	text-align: center;
+	height: 0.8rem;
+	font-size: 22px;
+	color: white;
+	border-radius: 0.1rem;
+	font-family: "Microsoft YaHei", Arial;
+	border: 0;
+	margin-left: 2%;
+
+}

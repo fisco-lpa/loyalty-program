@@ -24,13 +24,17 @@
   		  parameterType="com.fiscolpa.demo.model.PointsTransationExtends" >
     select 
     pt.trans_id            transId, 
-    pt.roll_out_account    rollOutAccount, 
+    pt.roll_out_account    rollOutAccount,
+    (select pu.user_name from points_user pu where pu.user_id = (SELECT ac.user_id  from account ac where ac.account_id = pt.roll_out_account))					
+ 	rollOutAccountName,
     pt.roll_in_account     rollInAccount, 
+    (select pu.user_name from points_user pu where pu.user_id = (SELECT ac.user_id  from account ac where ac.account_id = pt.roll_in_account))					
+ 	rollInAccountName,
     pt.trans_amount        transAmount, 
     pt.`describe`            `describe`, 
     pt.transfer_time       transferTime,
     pt.transfer_type 		transferType,
-    pt.create_time			createTime, 
+    date_format(pt.create_time, '%Y-%c-%d %H:%i')			createTime, 
     pt.create_user			createUser, 
     pt.update_time			updateTime, 
     pt.update_user			updateUser
@@ -50,15 +54,21 @@
     ,(select ptd.expire_time from points_transation_detail ptd where pt.trans_id = ptd.trans_id limit 1) expireTime
     </if>
     <if test='transferType=="3"'>
-    ,(select ptd.credit_party from points_transation_detail ptd where pt.trans_id = ptd.trans_id) creditParty
+     ,(select pu.user_name from points_user pu where pu.user_id = (SELECT ac.user_id  from account ac where ac.account_id = (
+    select ptd.credit_party from points_transation_detail ptd where pt.trans_id = ptd.trans_id))) creditParty
+    <!-- 
+    ,(select ptd.credit_party from points_transation_detail ptd where pt.trans_id = ptd.trans_id) creditParty -->
     </if>
     from points_transation pt 
       <trim prefix="where" prefixOverrides="and |or"> 
 			<if test="transId !=null">
 				and pt.trans_id = #{transId}
 			</if>
-			<if test="rollOutAccount != null">
-				and pt.roll_out_account = #{rollOutAccount}
+			<if test="rollOutAccount != null and rollOutAccount != ''">
+				and pt.roll_out_account = #{rollOutAccount} 
+			</if>
+			<if test="rollOutAccountName != null and rollOutAccountName != ''">
+				and pt.roll_out_account = (SELECT ac.account_id  from account ac where ac.user_id = (SELECT pu.user_id FROM points_user pu WHERE pu.user_name =  #{rollOutAccountName})) 
 			</if>
 			<if test="rollInAccount != null">
 				and pt.roll_in_account = #{rollInAccount}
@@ -82,13 +92,14 @@
 				    )
 				</if>
 			</if>
-			<if test="creditParty != null">
+			<if test="creditParty != null and creditParty != ''">
 				and EXISTS(  
 			    SELECT 1 FROM points_transation_detail ptd 
 			    WHERE ptd.trans_id = pt.trans_id
-			    and ptd.credit_party= #{creditParty}) 
+			    and ptd.credit_party= (SELECT ac.account_id  from account ac where ac.user_id = (SELECT pu.user_id FROM points_user pu WHERE pu.user_name =  #{creditParty}))) 
 			</if>
 		</trim>
+		 order by create_time desc
   </select>
   
   
@@ -98,15 +109,17 @@
 	ptd.detail_id			detailId,
 	ptd.source_detail_id	sourceDetailId,
 	ptd.trans_id			transId,
-	ptd.expire_time			expireTime,
+	date_format(ptd.expire_time	, '%Y-%c-%d %H:%i')		expireTime,
 	ptd.ext_ref				extRef,
 	ptd.`status`,
-	ptd.create_time			createTime,
+	date_format(ptd.create_time	, '%Y-%c-%d %H:%i')		createTime,
 	ptd.create_user			createUser,
 	ptd.update_time			updateTime,
 	ptd.update_user			updateUser,
 	ptd.roll_out_account	rollOutAccount,
-	ptd.roll_in_account		rollInAccount,	
+	ptd.roll_in_account		rollInAccount,
+	(select pu.user_name from points_user pu where pu.user_id = (SELECT ac.user_id  from account ac where ac.account_id = ptd.roll_in_account))					
+ 	rollInAccountName,
 	ptd.trans_amount		transAmount,
 	ptd.cur_balance			curBalance,
 	ptd.credit_party		creditParty,
@@ -132,6 +145,9 @@
 			</if>
 			<if test="rollInAccount != null">
 				and ptd.roll_in_account = #{rollInAccount}
+			</if>
+			<if test="rollInAccountName != null and rollInAccountName != '' ">
+				and ptd.roll_in_account = (SELECT ac.account_id  from account ac where ac.user_id = (SELECT pu.user_id FROM points_user pu WHERE pu.user_name =  #{rollInAccountName})) 
 			</if>
 			<if test="creditParty != null">
 				and ptd.credit_party = #{creditParty}
@@ -159,6 +175,7 @@
 			    SELECT 1 FROM points_transation pt  
 			    WHERE pt.trans_id = ptd.trans_id
 			    and pt.transfer_type= #{transferType}) 
+			    order by create_time desc
 			</if>
 		</trim>
   </select>

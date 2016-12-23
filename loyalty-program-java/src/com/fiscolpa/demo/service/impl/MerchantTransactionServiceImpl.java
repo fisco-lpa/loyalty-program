@@ -91,7 +91,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		PointsTransationDetailExtends ptd = new PointsTransationDetailExtends();
 		ptd.setRollInAccount(pt.getRollOutAccount());
 		ptd.setExpireTime("1");
-		ptd.setCurBalance(0);
+		//ptd.setCurBalance(0);
 		//获取所以未过期的积分
 		List<PointsTransationDetailExtends> ptdl = queryTransationDetailList(ptd);
 		//新增
@@ -157,7 +157,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		map.put("pointsTransactionDetailList", BeanToMap.Bean2MapList(pList));
 		
 		String json = JSONObject.fromObject(map).toString();
-		Boolean result = false;
+	/*	Boolean result = false;
 		try {
 			result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
 		} catch (IOException e) {
@@ -165,7 +165,7 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		}
 		
 		if(!result) return "00003";//区块连交易失败
-		
+*/		
 		mtm.insertTransation(ptList);
 		mtm.insertTransationDetail(salist);
 		mtm.updateCurBalance(upList);
@@ -254,10 +254,10 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		map1.put("pointsTransactionDetailList", itd);
 		
 		String json = JSONObject.fromObject(map1).toString();
-		Boolean result = HttpTool.sendToFabric(json, "invoke", "AccpetPoints");
+		/*Boolean result = HttpTool.sendToFabric(json, "invoke", "AccpetPoints");
 		
 		if(!result) return "00003";//区块连交易失败
-
+*/
 		mtm.insertTransation(ptList);
 		mtm.insertTransationDetail(salist);
 		mtm.updateCurBalance(upList);

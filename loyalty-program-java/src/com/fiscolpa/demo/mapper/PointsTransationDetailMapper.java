@@ -21,5 +21,5 @@ public interface PointsTransationDetailMapper {
     
     List<PointsTransationDetailVo> getCreditPartyCreditDetailList(PointsTransationVo record);
     
-    List<PointsTransationDetailVo> getCreditPartyAcceptDetailList(PointsTransationVo record);
+    List<PointsTransationDetailVo> getCreditPartyAcceptDetailList(PointsTransationDetailVo record);
 }

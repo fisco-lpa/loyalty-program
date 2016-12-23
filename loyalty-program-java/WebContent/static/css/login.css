@@ -1,0 +1,94 @@
+header span{
+	margin-left: 0.45rem;
+}
+.list {
+	font-size: 0.28rem;
+	margin-top: 0.2rem;
+}
+
+.list input {
+	color: #999;
+	height: 0.7rem;
+	padding: 0 0.2rem;
+	/*float: right;
+	margin-right: 1.2rem;*/
+	margin-top: 0.15rem;
+	font-size: 0.28rem;
+	width: 70%;
+}
+
+.list li {
+	height: 1rem;
+	line-height: 1rem;
+	position: relative;
+	padding-left: 0.8rem;
+	border-bottom: 0.02rem solid #ddd;
+}
+.list li.ico1,
+.list li.ico2{
+	background-color: white;
+}
+.list li.ico1 input{
+	margin-left: 0.2rem;
+}
+.list li.ico2 input{
+	margin-left: 0.5rem;
+}
+.list li.ico1::after,
+.list li.ico2::after {
+	background: url(../img/qietu.png) no-repeat;
+	background-size: 7.5rem 5rem;
+	position: absolute;
+	content: "";
+	left: 0.2rem;
+	/*top: 50%;*/
+	/*margin-top: -0.25rem;*/
+	width: 0.6rem;
+	height: 1rem;
+}
+.list li.ico1::after {
+	background-position: -1.2rem -2.02rem;
+}
+.list li.ico2::after {
+	background-position: -3rem 0.2rem;
+}
+.list li.ico3{
+	margin-top: 0.25rem;
+}
+/*.list li.ico3 button{
+	  background-color: rgb(186, 16, 16);
+	  width: 100%;
+	  text-align: center;
+	  height: 0.8rem;
+	  font-size: 22px;
+	  color: white;
+	  border-radius: 0.1rem;
+	  font-family: "Microsoft YaHei", Arial;
+	  border: 0;
+}*/
+.list li.ico3,
+.list li.ico4{
+	border-bottom: none;
+	margin-left: 0rem;
+}
+.list li.ico3{
+	padding-left: 0rem;
+}
+.list li.ico4{
+	padding-left: 0.1rem;
+	padding-right: 0.1rem;
+	line-height: 0.3rem;
+}
+.list li.ico4 .a_sign{
+	position: relative;
+	float: left;
+	font-size: 0.25rem;
+    color: #808080;
+}
+.list li.ico4 .a_change{
+	position: relative;
+	float: right;
+	margin-right: 0.1rem;
+	font-size: 0.25rem;
+    color: #0066CC;
+}

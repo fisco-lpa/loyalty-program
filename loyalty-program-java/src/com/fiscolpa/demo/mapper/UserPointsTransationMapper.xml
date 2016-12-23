@@ -12,6 +12,7 @@
     <result column="create_user" property="createUser" jdbcType="VARCHAR" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
     <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+    <result column="imgBase" property="imgBase" jdbcType="LONGVARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     trans_id, roll_out_account, roll_in_account, trans_amount, describe, transfer_time, 
@@ -21,9 +22,13 @@
   <!-- 积分消费查询 -->
   <!-- rollOutAccount参数是登录用户的账户 -->
   <select id="selectByAccount" resultMap="BaseResultMap" parameterType="PointsTransation" >
-  	select (@rowNO := @rowNo+1) AS trans_id,roll_in_account,trans_amount,create_time,`describe` from (
+  	select (@rowNO := @rowNo+1) AS trans_id,roll_in_account,trans_amount,create_time,`describe`,imgBase from (
   
-	    select trans_id,roll_in_account,trans_amount,create_time,`describe`
+	    select trans_id,
+	    (select pu.user_name from points_user pu where pu.user_id = (SELECT ac.user_id  from account ac where ac.account_id = roll_in_account))					
+	    roll_in_account,
+	    trans_amount,create_time,`describe`,
+		(select ( select ci.img_base from common_img ci where ci.associate_id = ph.commodity_id) from  purchase_history ph  where ph.purchase_id = trans_id) imgBase
 		from points_transation
 		where roll_out_account = #{rollOutAccount,jdbcType=VARCHAR}
 		   <if test="rollInAccount != null and rollInAccount != ''" ><!-- 界面传进来的商户 -->

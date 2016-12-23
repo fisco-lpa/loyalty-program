@@ -17,6 +17,8 @@ public class PointsTransationDetailExtends extends PointsModel {
 	private String rollOutAccount;
 
 	private String rollInAccount;
+	
+	private String rollInAccountName;
 
 	private Integer transAmount;
 
@@ -150,6 +152,14 @@ public class PointsTransationDetailExtends extends PointsModel {
 
 	public void setCreditCreateTime(String creditCreateTime) {
 		this.creditCreateTime = creditCreateTime;
+	}
+
+	public String getRollInAccountName() {
+		return rollInAccountName;
+	}
+
+	public void setRollInAccountName(String rollInAccountName) {
+		this.rollInAccountName = rollInAccountName;
 	}
 
 }

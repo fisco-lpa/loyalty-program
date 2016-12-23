@@ -1,7 +1,6 @@
 
 package com.fiscolpa.demo.controller;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,14 +20,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fiscolpa.demo.model.Account;
+import com.fiscolpa.demo.model.Commodity;
 import com.fiscolpa.demo.model.PointsTransation;
 import com.fiscolpa.demo.model.PointsTransationDetail;
 import com.fiscolpa.demo.model.PointsUser;
+import com.fiscolpa.demo.model.PurchaseHistory;
+import com.fiscolpa.demo.service.CommodityService;
 import com.fiscolpa.demo.service.MerchantTransactionService;
 import com.fiscolpa.demo.service.PointsExchangeTransationService;
+import com.fiscolpa.demo.service.PurchaseHistoryService;
 import com.fiscolpa.demo.service.UserAccountService;
 import com.fiscolpa.demo.util.BeanToMap;
-import com.fiscolpa.demo.util.HttpTool;
 import com.fiscolpa.demo.util.IDCreator;
 import com.fiscolpa.demo.util.PointsTransactionEnum;
 import com.fiscolpa.demo.util.UUIDGenerator;
@@ -40,9 +42,13 @@ public class UserExchngeGoodsController {
 	@Autowired
 	private PointsExchangeTransationService pointsExchangeTransationService;
 	@Autowired
-	private MerchantTransactionService merchantTransactionService;
-	@Autowired
 	private UserAccountService account;
+	
+	@Autowired
+	private CommodityService cs;
+	
+	@Autowired
+	private PurchaseHistoryService phs;
 	
 	@RequestMapping(value = "/goods",  method = RequestMethod.GET)
 	public ModelAndView goods() {
@@ -53,7 +59,14 @@ public class UserExchngeGoodsController {
 
 	@RequestMapping("/buyGoods")
 	@ResponseBody
-	public String buyGoods(@RequestParam String goodsName, @RequestParam String pointsNum,@RequestParam String accountMallId, HttpSession session) throws Exception{
+	public String buyGoods(@RequestParam String commodityId, HttpSession session) throws Exception{
+		Commodity cy = new Commodity(commodityId);
+		cy = cs.selectOne(cy);
+		String goodsName = cy.getCommodityName(); 
+		String pointsNum = String.valueOf(cy.getPrice());
+		String accountMallId = cy.getAccountId();
+
+		
 		Date currentTime = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateString1 = formatter.format(currentTime);
@@ -65,12 +78,11 @@ public class UserExchngeGoodsController {
 		//要插入交易表的交易信息
 		PointsTransation pointsTransation=new PointsTransation();
 		//交易ID
-		String TransId = PointsTransactionEnum.BUY.getBeginning()+UUIDGenerator.getUUID();
+		String transId = PointsTransactionEnum.BUY.getBeginning()+UUIDGenerator.getUUID();
 		
-		pointsTransation.setTransId(TransId);
+		pointsTransation.setTransId(transId);
 		pointsTransation.setCreateTime(date);
 		pointsTransation.setCreateUser(currentUser.getUserId());
-		pointsTransation.setDescribe("兑换"+pointsNum);
 		pointsTransation.setRollInAccount(accountMallId);
 		pointsTransation.setRollOutAccount(currentUser.getAccountId());
 		pointsTransation.setTransAmount(Integer.valueOf(pointsNum));
@@ -78,7 +90,8 @@ public class UserExchngeGoodsController {
 		pointsTransation.setUpdateTime(date);
 		pointsTransation.setUpdateUser(currentUser.getUserName());
 		pointsTransation.setTransferType(PointsTransactionEnum.BUY.getSign());
-		pointsTransation.setDescribe("BUY");
+		pointsTransation.setDescribe(goodsName);
+		
 		
 		int account_balance	=pointsExchangeTransationService.selectAccountBalance(currentUser.getAccountId());
 		if(account_balance <Integer.valueOf(pointsNum)){
@@ -124,7 +137,7 @@ public class UserExchngeGoodsController {
 			String detailIdIncrese = PointsTransactionEnum.BUY.getBeginning()+UUIDGenerator.getUUID();
 			save.setDetailId(detailIdIncrese);
 			save.setSourceDetailId(pd.getDetailId());
-			save.setTransId(TransId);
+			save.setTransId(transId);
 			save.setRollOutAccount(currentUser.getAccountId());
 			save.setRollInAccount(accountMallId);
 			//save.setCreditCreateTime(date);
@@ -165,8 +178,19 @@ public class UserExchngeGoodsController {
 		//插入交易表
 		int i=pointsExchangeTransationService.insertExchange(pointsTransation);
 		
-		
-		
+		PurchaseHistory ph = new  PurchaseHistory();
+		ph.setPurchaseId(transId);
+		ph.setUserId(currentUser.getAccountId());
+		ph.setUserName(currentUser.getUserName());
+		ph.setCommodityId(cy.getCommodityId());
+		ph.setCommodityPrice(cy.getPrice());
+		ph.setCommodityName(cy.getCommodityName());
+		ph.setMerchantId(cy.getAccountId());
+		//ph.setMerchantName(merchantName);
+		ph.setCreateTime(new Date());
+		//保存购买记录
+		phs.save(ph);
+		cs.updateNotNull(new Commodity(commodityId, cy.getStockAmount()-1));
 		//组装区块连账户
 		//存储账户
 		List<Account> aList = new ArrayList<Account>();
@@ -183,7 +207,7 @@ public class UserExchngeGoodsController {
 		map.put("pointsTransactionDetailList",list);
 		String json = JSONObject.fromObject(map).toString();
 		
-		Boolean result = false;
+		/*Boolean result = false;
 		try {
 			result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
 		} catch (IOException e) {
@@ -191,7 +215,7 @@ public class UserExchngeGoodsController {
 		}
 		
 		if(!result) return "00003";//区块连交易失败
-		
+		*/
 		
 		if (i== 1) {
 			//交易不正常
@@ -200,5 +224,22 @@ public class UserExchngeGoodsController {
 
 		return "2222";
 		
+	}
+	
+	
+	@RequestMapping("/buyGoodsHtml")
+	@ResponseBody
+	public Map<String,String> buyGoodsHtml(@RequestParam String goodsName, @RequestParam String pointsNum,@RequestParam String accountMallId, HttpSession session) throws Exception{
+		Map<String,String> map = new HashMap<String, String>();
+		//map.put("state", this.buyGoods(goodsName, pointsNum, accountMallId, session));
+		return map;
+	}
+	
+	@RequestMapping("/buyGoodsHtmlNew")
+	@ResponseBody
+	public Map<String,String> buyGoodsHtmlNew(@RequestParam String commodityId, HttpSession session) throws Exception{
+		Map<String,String> map = new HashMap<String, String>();
+		map.put("state", this.buyGoods(commodityId, session));
+		return map;
 	}
 }

@@ -42,6 +42,8 @@
     <result column="rollOutAccountName" property="rollOutAccountName" jdbcType="VARCHAR" />
     <result column="rollInAccountName" property="rollInAccountName" jdbcType="VARCHAR" />
     <result column="acceptedPointsNum" property="acceptedPointsNum" jdbcType="INTEGER" />
+    <result column="imgBase" property="imgBase" jdbcType="LONGVARCHAR" />
+    
   </resultMap>
   <sql id="Base_Column_List" >
     detail_id, source_detail_id, trans_id, expire_time, ext_ref, status, create_time, 
@@ -256,7 +258,7 @@
     where detail_id = #{detailId,jdbcType=VARCHAR}
   </update>
   <select id="getCreditPartyCreditDetailList" resultMap="PointsTransationDetailVoMap" parameterType="com.fiscolpa.demo.vo.PointsTransationVo" >
-    select p.* FROM(
+<!--     select p.* FROM( -->
 		SELECT
 			ptd.*, (
 				SELECT
@@ -280,6 +282,16 @@
 			) rollInAccountName,
 			(
 				SELECT
+					pu.img
+				FROM
+					points_user pu,
+					account a
+				WHERE
+					pu.user_id = a.user_id
+				AND a.account_id = ptd.roll_in_account
+			) imgBase,
+			(
+				SELECT
 					sum(ptd2.trans_amount)
 				FROM
 					points_transation_detail ptd2
@@ -293,25 +305,26 @@
 			points_transation_detail ptd
 		WHERE
 			ptd.roll_out_account =  #{rollOutAccount}
-			  <if test="rollInAccount != null and rollInAccount != '' " >
-		        and ptd.roll_in_account = #{rollInAccount}
-		      </if>
-		      <if test="startTime != null and startTime != '' ">
-		        <![CDATA[ and ptd.transfer_time >= #{startTime} ]]>     
-		      </if>
-		      <if test="endTime != null and endTime != '' ">
-		        <![CDATA[ and ptd.transfer_time <= #{endTime} ]]> 
-		      </if>
-		)p
-		where 1=1
-		  <if test="rollInAccountName != null and rollInAccountName != '' ">
-	        and rollInAccountName like CONCAT('%', #{rollInAccountName},'%')
-	      </if>
+			order by ptd.create_time desc
+<!-- 			  <if test="rollInAccount != null and rollInAccount != '' " > -->
+<!-- 		        and ptd.roll_in_account = #{rollInAccount} -->
+<!-- 		      </if> -->
+<!-- 		      <if test="startTime != null and startTime != '' "> -->
+<!-- 		        <![CDATA[ and ptd.transfer_time >= #{startTime} ]]>      -->
+<!-- 		      </if> -->
+<!-- 		      <if test="endTime != null and endTime != '' "> -->
+<!-- 		        <![CDATA[ and ptd.transfer_time <= #{endTime} ]]>  -->
+<!-- 		      </if> -->
+<!-- 		)p -->
+<!-- 		where 1=1 -->
+<!-- 		  <if test="rollInAccountName != null and rollInAccountName != '' "> -->
+<!-- 	        and rollInAccountName like CONCAT('%', #{rollInAccountName},'%') -->
+<!-- 	      </if> -->
   </select>
   
-  <select id="getCreditPartyAcceptDetailList" resultMap="PointsTransationDetailVoMap" parameterType="com.fiscolpa.demo.vo.PointsTransationVo" >
+  <select id="getCreditPartyAcceptDetailList" resultMap="PointsTransationDetailVoMap" parameterType="com.fiscolpa.demo.vo.PointsTransationDetailVo" >
   		SELECT
-			ptd.*, pu.user_name rollOutAccountName
+			ptd.*, pu.user_name rollOutAccountName,pu.img imgBase
 		FROM
 			points_transation_detail ptd,
 			account a,
@@ -320,17 +333,28 @@
 			pu.user_id = a.user_id
 		AND a.account_id = ptd.roll_out_account
 		AND ptd.roll_in_account =  #{rollInAccount}
-		 <if test="rollOutAccount != null and rollOutAccount != '' " >
-	        and ptd.roll_out_account = #{rollOutAccount}
-	      </if>
-	      <if test="rollOutAccountName != null and rollOutAccountName != '' " >
-	        and rollOutAccountName like CONCAT('%', #{rollOutAccountName},'%')
-	      </if>
-		 <if test="startTime != null and startTime != '' ">
-	       <![CDATA[ and ptd.transfer_time >= #{startTime} ]]>     
+		 <if test="creditParty != null and creditParty != '' " >
+	        and ptd.credit_party = #{creditParty}
 	     </if>
-	     <if test="endTime != null and endTime != '' " >
-	       <![CDATA[ and ptd.transfer_time <= #{endTime} ]]>     
+		 <if test="merchant != null and merchant != '' " >
+	        and ptd.merchant = #{merchant}
 	     </if>
+		 <if test="creditCreateTime != null" >
+	        and ptd.credit_create_time = #{creditCreateTime}
+	     </if>
+	     order by ptd.create_time desc
+<!-- 		 <if test="rollOutAccount != null and rollOutAccount != '' " > -->
+<!-- 	        and ptd.roll_out_account = #{rollOutAccount} -->
+<!-- 	      </if> -->
+<!-- 	      <if test="rollOutAccountName != null and rollOutAccountName != '' " > -->
+<!-- 	        and rollOutAccountName like CONCAT('%', #{rollOutAccountName},'%') -->
+<!-- 	      </if> -->
+<!-- 		 <if test="startTime != null and startTime != '' "> -->
+<!-- 	       <![CDATA[ and ptd.transfer_time >= #{startTime} ]]>      -->
+<!-- 	     </if> -->
+<!-- 	     <if test="endTime != null and endTime != '' " > -->
+<!-- 	       <![CDATA[ and ptd.transfer_time <= #{endTime} ]]>      -->
+<!-- 	     </if> -->
+
   </select>
 </mapper>

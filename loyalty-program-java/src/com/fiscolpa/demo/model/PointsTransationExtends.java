@@ -5,8 +5,12 @@ public class PointsTransationExtends extends PointsModel{
 	private String transId;
 
     private String rollOutAccount;
+    
+    private String rollOutAccountName;
 
     private String rollInAccount;
+    
+    private String rollInAccountName;
 
     private Integer transAmount;
 
@@ -129,6 +133,18 @@ public class PointsTransationExtends extends PointsModel{
 	}
 	public void setUpdateUser(String updateUser) {
 		this.updateUser = updateUser;
+	}
+	public String getRollInAccountName() {
+		return rollInAccountName;
+	}
+	public void setRollInAccountName(String rollInAccountName) {
+		this.rollInAccountName = rollInAccountName;
+	}
+	public String getRollOutAccountName() {
+		return rollOutAccountName;
+	}
+	public void setRollOutAccountName(String rollOutAccountName) {
+		this.rollOutAccountName = rollOutAccountName;
 	}
     
 }
