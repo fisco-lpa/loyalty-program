@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="utf-8">
+	<meta name="baidu-site-verification" content="UwYwsyDtXR">
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="MobileOptimized" content="320">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>积分发放</title>
+	<link rel="stylesheet" type="text/css" href="../../static/css/head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/ff.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/search-head.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
+	
+	<script type="text/javascript">
+		function submit(){
+			$.post("../../merchant/sevePointsHtml",$('#sentOutForm').serialize(),function(data){
+				if(data.state=='00000'){
+					 window.location.href= 'sentOutQuery.html';
+				}else{
+					alert("发送失败！");
+				}
+			});
+		}
+	</script>
+</head>
+<body>
+<header>
+	<i  onClick="javascript:history.back(-1);"></i><span>积分发放</span>
+</header>
+
+<article >
+	<div class="tupDiv"> 
+		<div class="leftDiv" >   
+		    <p style="color: rgb(186, 16, 16);">单独</p>
+		    <i id="dd" ></i>
+	    </div>
+		<div class="leftDiv">
+    		<p >批量</p>
+		    <i id="pl" style="display: none;"></i>
+    	</div>
+	</div>
+	<div class="list">
+	<form id="sentOutForm">
+			<ul>
+				<li class="ico1"> 
+				<span style="margin-right: 0.16rem;">手机号</span>
+				<input type="number" id="rollInAccount" name="rollInAccount" class="input_text"  min="1" max="99999999999"	 placeholder="手机号"></li>
+				<li class="ico2">
+				<span style="position: absolute;">发放数量</span>
+				<input style="position: absolute;
+	    margin-left: 1.1rem;" type="number" id="transAmount" name="transAmount" class="input_text" min="1" max="99999999999" placeholder="积分数量">
+				<i style="display: none;"></i>
+				</li>
+			</ul>
+		</form>
+	</div>
+
+
+</article>
+
+<footer>
+	<button class="btn_sure" id="login" onclick="submit()">确认</button>
+</footer>
+</body>
+</html>

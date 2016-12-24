@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="UwYwsyDtXR">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="MobileOptimized" content="320">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>积分兑付</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../static/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/ffcx.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript">
+		$(function(){  
+			load(1);
+		});
+		
+		function load(queryColumn){
+			$("#dataSet li").remove();
+			
+			if(queryColumn==0){
+				$("#it_search").val("");
+				$("#jfdf").html("兑付记录");
+				$("#dfjl").hide();
+				$("#login").hide();
+			}else{
+				$("#jfdf").html("积分兑付");
+				$("#dfjl").show();
+				$("#login").show();
+			}
+			
+			$.get("../../merchant/queryCreditList",{
+				queryColumn:queryColumn,
+				creditParty:$("#it_search").val()
+			},function(data){
+				for (var i = 0; i < data.length; i++) {
+	      			  var details = "<li><div class='voucherLeft'><p class='p1'>";
+	      			  details+=data[i].transAmount+"</p><p class='p2'>";
+	      			  details+=data[i].describe+"</p></div><div class='voucherRightDf'><p>会员：";
+	      			  details+=data[i].rollInAccountName+"</p> <p class='p4'>消费日期：";
+	      			  details+=data[i].createTime+"</p><p class='p4'>授信方：";
+	      			  details+=data[i].creditParty+"</p></div></li>";
+	      			  $("#dataSet").append(details);
+					}
+			});
+		}
+		
+		function sbBearer(){
+			$.post("../../merchant/reqAcceptHtml",function(data){
+				if(data.state=='00000'){
+					load(0);
+				}else{
+					alert("兑付失败！");
+				}
+			});
+		}
+		
+		function pageJump(page){
+			  window.location.href= page+'.html';
+		}
+	</script>
+</head>
+<body>
+                          
+<header>
+	<i onClick="javascript:history.back(-1);"></i>
+	<span id="jfdf">积分兑付</span>
+	<span id="dfjl"style="float: right; font-size: 0.28rem;margin-right: 0.2rem;"  onclick="load(0)">兑付记录</span>
+</header>
+
+	<div class="div_search">
+	<input id="it_search" type="text" placeholder="积分授信方" onchange="load()"/><img id="img_select" class="img_select" src="../../static/img/ico5.png">
+	</div>
+<!-- <header>
+	<i></i>
+	<span>积分兑换</span>
+	
+	<span style="margin-left: 6rem;">兑换记录</span>
+</header>   -->                                           
+
+<article>
+
+<ul id="dataSet" style="padding-top: 0.2rem;">
+	<!-- <li>
+		<div class="voucherLeft">
+    		<p class="p1">5000</p>
+			<p class="p2">购物卡</p>
+    	</div>
+    	<div class="voucherRightDf">
+    		<p>会员：<span>18018797594</span></p>
+    		<p class="p4">消费时间：<span>2016/01/01 18:18</span></p>
+    		<p class="p4">授信方：<span>招商银行</span></p>
+    	</div>
+	</li>	 -->
+</ul>
+
+<!-- <p class="ffConfirm">申请兑现</p> -->
+</article>
+<footer>
+	<!-- <p class="ffConfirm">确认</p> -->
+	<button class="btn_sure" id="login" onclick="sbBearer()">申请兑付</button>
+</footer>
+
+</body>
+</html>

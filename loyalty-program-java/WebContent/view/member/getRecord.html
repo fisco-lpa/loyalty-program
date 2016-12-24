@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="UwYwsyDtXR">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="MobileOptimized" content="320">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>积分进账记录</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../static/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/ffcx.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/ff.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../../static/js/dateFormat.js"></script>
+	<script type="text/javascript">
+		$(function(){  
+			load();
+		});
+		
+		function load(){
+			var sel = $("#sel").val();
+			$.get("../../userInHtml",{page:1,rows:10,sel:sel} ,function(data){
+				$("#dataSet li").remove();
+				var list = data.list;
+				for (var i = 0; i < list.length; i++) {
+	      			  var details = "<li><div class='voucherLeft'><p class='p1'>";
+	      			  details+=list[i].transAmount+"</p><p class='p2'>已消费：";
+	      			  var curBalance = list[i].curBalance != null? list[i].curBalance:0;
+	      			  details+=curBalance+"</p></div><div class='voucherRight'><p class='p3'>发行方：";
+	      			  details+=list[i].rollOutAccount+"</p> <p class='p4'>有效时间：";
+	      			  var createTime = new Date(parseInt(list[i].createTime)).format("yyyy-MM-dd");
+	      			  var expireTime = new Date(parseInt(list[i].expireTime)).format("yyyy-MM-dd");
+	      			  details+=createTime+"~"+expireTime+"</p></div></li>";
+	      			  $("#dataSet").append(details);
+					}
+			  });
+		}
+		function chooseExpired(sel){
+			if(sel=="wgq"){
+				$("#gq").hide();
+				$("#wgq").show();
+				
+				$("#pwgq").css("color","#0B63BB");
+				$("#pgq").css("color","#333");
+			}else{
+				$("#wgq").hide();
+				$("#gq").show();
+				
+				$("#pgq").css("color","#0B63BB");
+				$("#pwgq").css("color","#333");
+			}
+			$("#sel").val(sel);
+			load();
+		}
+	</script>
+</head>
+<body>
+
+<header>
+    <i onClick="javascript:history.back(-1);"></i><span>积分进账记录</span>
+</header>
+
+<article>
+<div class="tupDiv"> 
+		<input type="hidden" id="sel" value="wgq"/>
+		<div class="leftDiv" onclick="chooseExpired('wgq')">   
+		    <p id="pwgq"style="color: #0B63BB">未过期</p>
+		    <i id="wgq" ></i>
+	    </div>
+		<div class="leftDiv" onclick="chooseExpired('gq')">
+    		<p id="pgq">已过期</p>
+		    <i id="gq" style="display: none;"></i>
+    	</div>
+	</div>
+<ul id="dataSet"  >
+	<!-- <li>
+		<div class="voucherLeft">
+    		<p class="p1">5000</p>
+			<p class="p2">已消费：1000</p>
+    	</div>
+    	<div class="voucherRight">
+    		<p class="p3">发行方：富德</p>
+    		<p class="p4">有效时间：2016/01/01~2017/01/01</p>
+    	</div>
+	</li> -->
+</ul>
+</article>
+</body>
+</html>

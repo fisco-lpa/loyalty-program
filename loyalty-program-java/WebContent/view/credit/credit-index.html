@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head lang="en">
+	<meta charset="utf-8">
+	<meta name="baidu-site-verification" content="UwYwsyDtXR">
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="MobileOptimized" content="320">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>授信方中心页面</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../static/css/comment/head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/comment/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/credit/credit-index.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function (){
+			$.post("../../creditParty/index/getData",function(data){
+				$("#name").html(data.user.userName);
+				var img = data.img;
+				if(img!=""&&img!=null&&img!="null"){
+			  		$("#imgId").attr('src',img); 
+				}
+			});
+			$("#credit").click(function(){
+				location.href = 'credit-query.html';
+			});
+			$("#accept").click(function(){
+				location.href = 'credit-accept.html';
+			});
+			$("#cc").click(function(){
+				location.href = 'credit.html';
+			});
+		})
+	</script>
+</head>
+<body>
+<div class="logo">
+	<img id="imgId" src="../../static/img/default_sx.jpg">
+	<p><span id="name"></span><br><small>官方授信单位</small>
+	</p>
+</div>
+<article class="list">
+	<ul>
+		<li id="credit" class="ico1">授信管理</li>
+		<li id="accept" class="ico2">承兑管理</li>
+		<li id="cc" class="ico2">授信积分</li>
+	</ul>
+</article>
+
+
+</body>
+</html>

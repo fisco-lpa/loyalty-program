@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="UwYwsyDtXR">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="MobileOptimized" content="320">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>商品管理</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../static/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/spgl.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
+	
+	<script type="text/javascript">
+	$(function(){  
+		load();
+	});
+	
+	function load(){
+		$.get("../../getCommodityList",function(data){
+			$("#dataSet li").remove(); 
+			var list = data.pageInfo.list;
+			for (var i = 0; i < list.length; i++) {
+      			  var details = '<li onclick="updateCommodity(\''+list[i].commodityId+'\')"><img src="';
+      			  details+=list[i].imgBase+'"><div class="xsDiv"><p>';
+      			  details+=list[i].commodityName+'</p> <p class="xsDescribe">库存：';
+      			  details+=list[i].stockAmount+'</p><p class="xsDescribe">销量：';
+      			  details+=list[i].salesCount+'</p></div><div class="xsPrice"><p>';
+      			  details+=list[i].price+'</p></div>';
+      			  $("#dataSet").append(details);
+				}
+		  });
+	}
+	function updateCommodity(commodityId){
+		var expiresDate= new Date();
+		expiresDate.setTime(expiresDate.getTime() + 2*1000);
+		$.cookie("commodityId", commodityId,{expires : expiresDate});
+		/* $.cookie("commodityId", commodityId); */
+		window.location.href= 'addProduct.html';
+	}
+	
+	function pageJump(page){
+		  window.location.href= page+'.html';
+	}
+	</script>
+</head>
+<body>
+<header>
+	<i onClick="javascript:history.back(-1);"></i>
+	<span>商品管理</span> 
+	<span style="float: right; font-size: 0.28rem;margin-right: 0.2rem;" onclick="pageJump('addProduct')">添加</span>
+</header>
+
+<article>
+
+<ul id="dataSet">
+	<!-- <li onclick="updateCommodity()">
+		<img src="../../static/img/sp1.jpg">
+		<div class="xsDiv">
+			<p>JD500元购物卡</p>
+    		<p class="xsDescribe">库存：500</p>
+    		<p class="xsDescribe">销量：300</p>
+		</div>
+		<div class="xsPrice">
+			<p>5000</p>	
+		</div>
+	</li>	 -->
+</ul>
+</article>
+</body>
+</html>

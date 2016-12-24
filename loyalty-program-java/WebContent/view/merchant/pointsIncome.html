@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="UwYwsyDtXR">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="MobileOptimized" content="320">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>授信记录</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../static/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/ffcx.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
+	
+	<script type="text/javascript">
+		$(function(){  
+			load();
+		});
+		
+		function load(){
+			$("#dataSet li").remove(); 
+			$.get("../../merchant/queryTransationList",{rollOutAccountName:$("#it_search").val()}, function(data){
+				for (var i = 0; i < data.length; i++) {
+	      			  var details = "<li onclick=sentOutQuery('";
+	      			  details+=data[i].detailId+"')><div class='voucherLeft'><p class='p1'>";
+	      			  details+=data[i].transAmount+"</p><p class='p2'>已分配：";
+	      			  details+=data[i].usePoints+"</p></div><div class='voucherRight'><p class='p3'>授信方：";
+	      			  details+=data[i].rollOutAccountName+"</p> <p class='p4'>授信日期：";
+	      			  details+=data[i].createTime+"</p></div></li>";
+	      			  $("#dataSet").append(details);
+	      			  
+					}
+			  });
+		}
+		
+		function sentOutQuery(sourceDetail){
+			var expiresDate= new Date();
+			expiresDate.setTime(expiresDate.getTime() + 2*1000);
+			$.cookie("sourceDetailId", sourceDetail,{expires : expiresDate}); 
+			window.location.href='sentOutQuery.html';
+		}
+		
+	</script>	
+</head>
+<body>
+
+<header>
+    <i onClick="javascript:history.back(-1);"></i><span>授信记录</span>
+</header>
+
+<div class="div_search">
+    <input id="it_search" type="text" placeholder="授信方" onchange="load()" /><img id="img_select" class="img_select" src="../../static/img/ico5.png">
+</div>
+
+<article>
+
+<ul id="dataSet" style="padding-top: 0.2rem;">
+	<!-- <li onclick="sentOutQuery('345353')">
+		<div class="voucherLeft">
+    		<p class="p1">5000</p>
+			<p class="p2">已分配：<span>5000</span></p>
+    	</div>
+    	<div class="voucherRightSx">
+    		<p class="p3">授信方：<span>招商银行</span></p>
+    		<p class="p4">授信日期：<span>2016/01/01 11:26</span></p>
+    	</div>
+	</li>  -->
+</ul>
+</article>
+</body>
+</html>

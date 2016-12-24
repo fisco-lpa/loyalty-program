@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="UwYwsyDtXR">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="MobileOptimized" content="320">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>商户注册</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../css/head.css">
+    <link rel="stylesheet" type="text/css" href="../css/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../css/merchant/shzc.css">
+	<script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.cookie.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		load();
+		
+	})
+	function load(){
+		var userRole = $.cookie('userRole');
+		$("#userRole").val(userRole);
+		if(userRole == 1){
+			$("#pageDescription").html("授信方注册");
+			$("#userName").html("授信名称");
+		}
+	}
+	function submit(){
+		var userPassword = $("#userPassword").val();
+		var userPassword1 = $("#userPassword1").val();
+		if(userPassword!=userPassword1){
+			 alert("两次密码不一致");
+			 return;
+		}
+		$.post("../../registerUser", $("#register").serialize(),
+				function(data) {
+			if(data.state != 1 ) return ;
+			var userRole = Number($("#userRole").val());
+			switch(userRole)
+			{
+			case 1:
+				window.location.href='../credit/credit-index.html';
+			  break;
+			case 2:
+				window.location.href='../merchant/merchant.html';
+			  break;
+			case 3:
+				window.location.href='../member/memberCente.html';
+			  break;
+			default:
+			  alert("请重新输入");
+			}
+		});
+	}
+	</script>
+</head>
+<body>
+<header>
+	<i></i>
+	<span id="pageDescription">商户注册</span>
+</header>
+
+<article class="list">
+<form id="register">
+<ul>
+	<li class="ico1">
+	   <span id="userName">商户名称</span>
+       <input type="text" name="userName" class="input_text" placeholder="请输入名称">
+       <input type="hidden" id="userRole" name="userType" value="2">
+	</li>
+
+    <li class="ico2">
+       <span>联系号码</span>
+       <input type="text" name="phoneNumber" class="input_text" placeholder="请输入联系方式">
+    </li>
+
+    <li class="ico3">
+       <span  style="margin-right: 0.56rem;">密码</span>
+       <input type="password" id="userPassword"  name="userPassword" class="input_text" placeholder="请输入密码">
+    </li>
+    <li  class="ico3">
+       <span >确认密码</span>
+       <input type="password" id="userPassword1"  name="" class="input_text" placeholder="请再次输入密码">
+    </li>
+</ul>
+</form>
+</article>
+
+<footer>
+    <button class="btn_sure" id="login" onclick="submit()">确认</button>
+</footer>
+
+</body>
+</html>     

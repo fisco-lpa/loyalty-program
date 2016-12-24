@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="UwYwsyDtXR">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="MobileOptimized" content="320">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>个人中心</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../static/css/head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/style.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript">
+		$(function(){  
+			load();
+		});
+		
+		function load(){
+			$.get("../../userHtml", function(data){
+			  	$("#userName").html(data.userName);
+			  	$("#phoneNumber").html(data.phoneNumber);
+			  	$("#rollInAcount").html(data.rollInAcount);
+			  	$("#accountBalance").html(data.accountBalance);
+			  	$("#rollOutAccount").html(data.rollOutAccount);
+			  	var img = data.img;
+			  	if(img!=""&&img!=null&&img!="null"){
+			  		$("#imgId").attr('src',img); 
+			  	}
+			  });
+		}
+		
+		function pageJump(page){
+			  window.location.href= page+'.html';
+		}
+	</script>
+</head>
+<body>
+<header>
+	<div class="logo">
+		<img id="imgId" src="../../static/img/default_yh.jpg">
+		<span id="userName">万子龙</span>
+		<small style="margin-top: 0.1rem;" id="phoneNumber">18018797595</small>
+	</div>	
+	<ul class="jf clearfix">
+		<li><span id="rollInAcount">100000</span><br>获得积分</li>
+		<li><span id="accountBalance">100000</span><br>积分余额</li>
+		<li><span id="rollOutAccount">100000</span><br>使用积分</li>
+	</ul>
+</header>
+<article class="list">
+	<ul>
+		<li class="ico7" onclick="pageJump('getRecord')">积分进账记录</li>
+		<li class="ico8" onclick="pageJump('useRecord')">积分消费记录</li>
+		<li class="ico9" onclick="pageJump('malls')">商品列表</li>
+	</ul>
+</article>
+
+
+</body>
+</html>

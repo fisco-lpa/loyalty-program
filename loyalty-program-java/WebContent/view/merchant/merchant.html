@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+	<meta charset="utf-8">
+	<meta name="baidu-site-verification" content="UwYwsyDtXR">
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="MobileOptimized" content="320">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>商户中心</title>
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/style.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript">
+		$(function(){  
+			load();
+		});
+		
+		function load(){
+			$.get("../../merchant/queryPointsHtml", function(data){
+			  	$("#userName").html(data.userName);
+			  	$("#userId").html(data.userId);
+			  	$("#dff").html(data.dff-data.yff);
+			  	$("#yff").html(data.yff);
+			  	$("#ycd").html(data.ycd);
+			  	var img = data.img;
+			  	if(img!=""&&img!=null&&img!="null"){
+			  		$("#imgId").attr('src',img); 
+			  	}
+			  });
+		}
+		
+		function pageJump(page){
+			  window.location.href= page+'.html';
+		}
+	</script>
+</head>
+<body>
+<header>
+	<div class="logo">
+		<img id="imgId" src="../../static/img/default_sj.jpg">
+		<span id="userName">生命人寿</span>
+		<small style="margin-top: 0.1rem;">ID:<span id="userId">SJ001</span></small>
+	</div>	
+	<ul class="jf clearfix">
+		<li><span id="dff">100000</span><br>待分配积分</li>
+		<li><span id="yff">100000</span><br>已分配积分</li>
+		<li><span id="ycd">100000</span><br>积分兑换</li>
+	</ul>
+</header>
+<article class="list">
+	<ul>
+		<li class="ico1" onclick="pageJump('pointsIncome')">授信记录</li>
+		<li class="ico2" onclick="pageJump('sentOut')">积分发放</li>
+		<li class="ico3" onclick="pageJump('sentOutQuery')">积分发放查询</li>
+		<li class="ico4" onclick="pageJump('bearer')">积分兑付</li>
+		<li class="ico5" onclick="pageJump('accountSales')">销售清单</li>
+		<li class="ico6" onclick="pageJump('productMaintain')">商品管理</li>
+	</ul>
+</article>
+
+
+</body>
+</html>

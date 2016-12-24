@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head lang="en">
+	<meta charset="utf-8">
+	<meta name="baidu-site-verification" content="UwYwsyDtXR">
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="MobileOptimized" content="320">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>授信查询</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../static/css/comment/head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/comment/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/credit/credit-query.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../../static/js/common/common.js"></script>
+	<script type="text/javascript" src="../../static/js/common/cookies.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function (){
+			getList();
+			$('i').bind('click',function(){
+				history.back(-1);
+			});
+			$('#it_search').bind('input propertychange', function() {  
+				search();
+		    }); 
+		});
+		
+		function search(){
+			var name = $("#it_search").val();  
+	        if (name == "") {  
+	            $("ul li").show();  
+	        } else {  
+	            $("ul li").each(function() {  
+	                        var m_name = $(this).attr("m_name");  
+	                        if (m_name.indexOf(name) != -1) {  
+	                            $(this).show();  
+	                        } else {  
+	                            $(this).hide();  
+	                        }  
+	                    });  
+	        }  
+		}
+		
+		function getList(){
+			$.ajax({
+				type:"get",
+				url:'../../creditParty/getCreditList',
+				success: function(data){
+					var list = data;
+					$("ul li").remove();
+					for(var i=0;i<list.length;i++){
+						var vo = list[i];
+						var time = dateFormatUtil(vo.createTime);
+						if(null != vo){
+							var img = vo.imgBase;
+							if(img==""&&img==null){
+								img = "../../static/img/default_sj.jpg";
+							}
+							$("#list").append('<li m_name="'+vo.rollInAccountName+'"><img src="'+
+									img+'"><div class="div_credit"><p>'+vo.rollInAccountName
+									+'</p><p><small>积分数目</small></p><p class="p_num">'+vo.transAmount+'</p></div><div class="div_accept">'+
+									'<p><input class="input_list_time" type="text" value="'+time+'" disabled="true"/></p>'+
+									'<p><small>已承兑积分</small></p><p class="p_num" merchant="'+vo.rollInAccount+'" time="'+vo.createTime+'">'+vo.acceptedPointsNum+'</p>');
+						}
+					}
+					
+					$(".div_accept").children('.p_num').bind('click',function(){
+						var num = $(this).text();
+						if(num != 0){
+							var merchant = $(this).attr('merchant');
+							var time = $(this).attr('time');
+							setCookie("merchant",merchant);
+							setCookie("time",time);
+							location.href = 'credit-accept.html';
+						}
+						
+					}); 
+				}
+			});
+		}
+
+	</script>
+</head>
+
+<body>
+<header>
+	<i></i><span>授信管理</span>	
+</header>
+<div class="div_search">
+	<input id="it_search" type="text" placeholder="商户名称" /><img id="img_select" class="img_select" src="../../static/img/ico5.png">
+</div>
+<article class="list">
+	<ul id="list">
+	</ul>
+</article>
+
+
+</body>
+</html>

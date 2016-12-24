@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head lang="en">
+	<meta charset="utf-8">
+	<meta name="baidu-site-verification" content="UwYwsyDtXR">
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="MobileOptimized" content="320">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>设置</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../css/head.css">	
+	<link rel="stylesheet" type="text/css" href="../css/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../css/setting.css">
+	
+	<script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function (){
+			// $("#name").attr("value",'test');
+			$("#head").css("background-image","url(img/logo.jpg)");
+
+			$("#head").click(function(){
+				showMask();
+				$("#change_head").show();
+			});
+			$("#cancel").click(function(){
+				 $("#mask").css("display","none"); 
+				$("#change_head").hide();
+			});
+			$("#btn_quit").click(function(){
+				alert("退出登陆");
+			})
+		})
+		function showMask(){  
+	        // $("#mask").css("height",$(document).height());  
+	        // $("#mask").css("width",$(document).width());  
+	        $("#mask").css("display","block");  
+	    }
+	</script>
+</head>
+<body>
+<header>
+	<span>设置</span>	
+</header>
+<article class="list">
+	<ul>
+		<li><span>头像</span><i class="i_go"></i><i id="head" class="i_head"></i></li>
+		<li class="ico2"><span>昵称</span><i class="i_go"></i><i id="name" class="i_name">生命人寿</i></li>
+		<li class="ico3"><input type="button" id="btn_quit" value="退出登陆" /></li>
+	</ul>
+</article>
+<div id="mask" class="mask"></div>
+<div class="div_change" id="change_head">
+	<p>从相册选择</p>
+	<p>拍照</p>
+	<p id="cancel">取消</p>
+</div>
+
+</body>
+</html>

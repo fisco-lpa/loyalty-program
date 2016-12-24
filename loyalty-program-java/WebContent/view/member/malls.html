@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="UwYwsyDtXR">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="MobileOptimized" content="320">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>商品列表</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../static/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/search-head.css">
+	<!-- <link rel="stylesheet" type="text/css" href="css/xsqd.css"> -->
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/useRecord.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../../static/js/dateFormat.js"></script>
+	<script type="text/javascript">
+		$(function(){  
+			load();
+		});
+		
+		function load(){
+			$.get("../../getCommodityAll",{page:1,rows:100} ,function(data){
+				$("#dataSet li").remove();
+				var list = data.pageInfo.list;
+				for (var i = 0; i < list.length; i++) {
+	      			  var details = "<li><img src='";
+	      			  details+=list[i].imgBase+"'><div class='xsDivXsqd'><p>";
+	      			  details+=list[i].commodityName+"</p><p class='p2'>积分：";
+	      			  details+=list[i].price+"</p></div><div class='xsPrice'><span onclick=spendNew('";
+	      			  details+=list[i].commodityId+"')>购买</span></div></li>";
+	      			  $("#dataSet").append(details);
+					}
+			  });
+		}
+		
+		function spend(style, number,accountMallId){
+			$.post("../../buyGoodsHtml",{goodsName : style,pointsNum : number,accountMallId:accountMallId},function(data){
+				if(data.state=='1111'){
+					window.location.href='useRecord.html';
+				}else{
+					alert("余额不够！！！");
+				}
+			});
+		}
+		
+		function spendNew(commodityId){
+			$.post("../../buyGoodsHtmlNew",{commodityId : commodityId},function(data){
+				if(data.state=='1111'){
+					window.location.href='useRecord.html';
+				}else{
+					alert("余额不够！！！");
+				}
+			});
+		}
+	</script>
+</head>
+<body>
+<header>
+	<i  onClick="javascript:history.back(-1);"></i> <span>商品列表</span>
+</header>
+
+<article>
+
+<ul  id="dataSet" >
+	<!-- <li>
+		<img src="../img/sp1.jpg">
+		<div class="xsDivXsqd">
+			<p >JD50元购物卡</p>
+    		<p class="p2">积分：500</p>
+		</div>
+		<div class="xsPrice">
+			<span onclick="spend('购物卡','500','2')">购买</span>
+		</div>
+	</li> -->
+</ul>
+</article>
+</body>
+</html>

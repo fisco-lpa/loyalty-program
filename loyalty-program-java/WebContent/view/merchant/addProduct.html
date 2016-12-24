@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="UwYwsyDtXR">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="MobileOptimized" content="320">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>上传商品</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../static/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/scsp.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../../static/js/jquery.base64.js"></script>
+	<script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
+	<script type="text/javascript">
+	var tpObj;
+	$(function(){
+		load();
+		
+		$("#result").hide();
+		if(!(window.FileReader && window.File && window.FileList && window.Blob)){
+		    alert('您的浏览器不支持fileReader');
+		    $("#tp").hide();
+		    return false; 
+		}
+		
+		$("#sctp").on("click",function(e){
+			tpObj = this;
+			$("#upimg").click();
+		});
+		
+		$("#upimg").on("change",function(e){
+		    var files = this.files;
+		    if(files.length){
+		        checkFile(this.files);
+			}
+		});
+	});
+	
+	// 图片处理
+	function checkFile(files){
+		var file = files[0];
+		var reader = new FileReader();
+		if(!/image\/\w+/.test(file.type)){
+			alert("请确保文件为图像类型");
+	        return false;
+	    }
+	    // onload是异步操作
+		reader.onload = function(e){
+	    	var tp = '<img src="'+e.target.result+'" alt="" style="width: 2rem;height: 2rem;border-radius: 0.15rem;"/>'
+            tpObj.innerHTML=tp;
+            $("#sctp").css("border","0");
+            $("#imgBase").val(e.target.result);
+		}
+		reader.readAsDataURL(file);
+	}
+	
+	function submit(){
+		$.post("../../saveCommodity",$('#addProduct').serialize(),function(data){
+			if(data.state=='1'){
+				 window.location.href= 'productMaintain.html';
+			}else{
+				alert("发送失败！");
+			}
+		});
+	}
+	
+	function load(){
+		var commodityId = $.cookie('commodityId');
+		if(commodityId==null || commodityId=="") return;
+		$.get("../../getCommodityList",{commodityId:commodityId},function(data){
+			var list = data.pageInfo.list;
+			for (var i = 0; i < list.length; i++) {
+				  $("#commodityId").val(list[i].commodityId);
+				  $("#commodityName").val(list[i].commodityName);
+				  $("#stockAmount").val(list[i].stockAmount);
+				  $("#price").val(list[i].price);
+				  if(commodityId!=""&&commodityId!=null){
+				  	$("#imgId").val(list[i].imgId);
+				  	var tp = '<img src="'+list[i].imgBase+'" alt="" style="width: 2rem;height: 2rem;border-radius: 0.15rem;"/>'
+		            $("#sctp").html(tp);
+				  	$("#sctp").css("border","0");
+				  }
+				}
+		  });
+	}
+	</script>
+</head>
+<body>
+<header>
+	<i onClick="javascript:history.back(-1);"></i>
+	<span>上传商品</span>
+</header>
+
+<article>
+<form id="addProduct">
+<ul style="padding-top: 0.2rem; ">
+	<li >
+	   <span>产品名称</span>
+       <input type="text" id="commodityName" name="commodityName" class="input_text" placeholder="请输入名称标题20字以内">
+       <input type="hidden" id="commodityId" name="commodityId">
+       <input type="hidden" id="imgId" name="imgId">
+       <input type="hidden" id="imgBase" name="imgBase">
+	</li>
+
+    <li >
+       <span style="margin-right: 0.56rem;">积分价</span>
+       <input type="text" id="price" name="price" class="input_text" placeholder="请输入商品销价">
+    </li>
+
+    <li >
+       <span >库存数量</span>
+       <input type="text" id="stockAmount" name="stockAmount" class="input_text" placeholder="请输入商品库存">
+    </li>
+    <li style="height: 3.5rem;">
+       <p style="margin: 0 0.3rem;">商品图片</p>
+       <div id="tp">
+            <div class="fortified" id="sctp"></div>
+       </div>
+	   <input type="file" id="upimg" style="display: none;"/>  
+    </li>
+
+</ul>
+</form>
+</article>
+
+<footer>
+    <button class="btn_sure" id="login" onclick="submit()">确认</button>
+</footer>
+
+</body>
+</html>     

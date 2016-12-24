@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head lang="en">
+	<meta charset="utf-8">
+	<meta name="baidu-site-verification" content="UwYwsyDtXR">
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="MobileOptimized" content="320">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>承兑管理</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../static/css/comment/head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/comment/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/credit/credit-accept.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../../static/js/common/common.js"></script>
+	<script type="text/javascript" src="../../static/js/common/cookies.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function (){
+			getList();
+			$("#img_select").click(function(){
+				$("#mask").css("display","block");
+				$("#div_choose").show();
+			});
+			$("#btn_close").click(function(){
+				$("#mask").css("display","none");
+				$("#div_choose").hide();
+			});
+			$('i').bind('click',function(){
+				history.back(-1);
+			});
+			$('#it_search').bind('input propertychange', function() {  
+				search();
+		    }); 
+		});
+		
+		function search(){
+			var name = $("#it_search").val();  
+	        if (name == "") {  
+	            $("ul li").show();  
+	        } else {  
+	            $("ul li").each(function() {  
+	                        var m_name = $(this).attr("m_name");  
+	                        if (m_name.indexOf(name) != -1) {  
+	                            $(this).show();  
+	                        } else {  
+	                            $(this).hide();  
+	                        }  
+	                    });  
+	        }  
+		}
+		
+		function getList(){
+			var merchant = getCookie('merchant');
+			var time = getCookie('time');
+			if(merchant != null && merchant != ''){
+				 delCookie('merchant');
+				 delCookie('time');
+			}
+			$.ajax({
+				type:"get",
+				data:{'merchant':merchant,'time':time},
+				url:'../../creditParty/getAcceptList',
+				success: function(data){
+					var list = data;
+					$("ul li").remove();
+					for(var i=0;i<list.length;i++){
+						var vo = list[i];
+						if(null != vo){
+							var img = vo.imgBase;
+							if(img==""&&img==null){
+								img = "../../static/img/default_sj.jpg";
+							}
+							var time = dateFormatUtil(vo.createTime);
+							$("#list").append('<li m_name="'+vo.rollOutAccountName+'"><img src="'+
+									img+'"><div class="div_credit"><p>'+vo.rollOutAccountName+'</p>'+
+									'<p class="p_num">'+vo.transAmount+'</p></div><div class="div_accept"><p style="margin-bottom: 0.15rem;">'+
+									'<input class="input_list_time" type="text" value="'+time+'" disabled="disabled" /></p></div>');
+						}
+					}
+				}
+			});
+		}
+		
+	</script>
+</head>
+
+<body>
+<header>
+	<i></i><span>承兑管理</span>	
+</header>
+<div class="div_search">
+	<input id="it_search" type="text" placeholder="商户ID、商户名称" /><img id="img_select" class="img_select" src="../../static/img/ico5.png">
+</div>
+<article class="list">
+	<ul id="list">
+		<!-- <li>
+			<img src="../img/sm.png">
+			<div class="div_credit">
+				<p style="">富德生命人寿</p>
+				<p class="p_num">1000</p>
+			</div>
+			<div class="div_accept">
+				<p style="margin-bottom: 0.15rem;"><input class="input_list_time" type="text" value="2016-11-23" disabled="disabled" /></p>
+			</div>
+		</li> -->
+	</ul>
+</article>
+
+<div id="mask" class="mask"></div>
+<div class="div_change" id="div_choose">
+	<p class="p_choose">筛选</p>
+	<p>起始时间<img class="img_time" src="../../static/img/rt.png" /></p>
+	<p>截止时间<img class="img_time" src="../../static/img/rt.png" /></p>
+	<p class="p_btn"><input type="button" class="btn_close" value="关闭" id="btn_close" /><input type="button" class="btn_sure" value="确定" id="btn_sure" /></p>
+
+</div>
+
+</body>
+</html>

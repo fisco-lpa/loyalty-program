@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<head lang="en">
+	<meta charset="utf-8">
+	<meta name="baidu-site-verification" content="UwYwsyDtXR">
+	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="MobileOptimized" content="320">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>授信页</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../static/css/comment/head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/comment/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/credit/credit.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function (){
+			getList();
+			$("#select").click(function(){
+				$("#mask").css("display","block");
+				$("#div_choose").show();
+				
+			});
+			$("#i_colse").click(function(){
+				$("#mask").css("display","none");
+				$("#div_choose").hide();
+			});
+			$("#btn_save").click(function(){
+				var transAmount = $("#transAmount").val();
+				var accountId = $("#accountId").val();
+				if("" == accountId){
+					alert("请选择商户");
+					return;
+				}
+				if("" == transAmount){
+					alert("请选填写积分数量");
+					return;
+				}
+				$.ajax({
+					type:"post",
+					url:"../../creditParty/credit",
+					data: {"rollInAccount":$("#accountId").val(),"transAmount":$("#transAmount").val()},
+					success: function(data){
+						location.href = 'credit-index.html';
+					}
+				});
+			});
+			$('#back').bind('click',function(){
+				history.back(-1);
+			})
+			
+		});
+		function getList(){
+			$.ajax({
+				type:"get",
+				url:'../../creditParty/getMerchants',
+				success: function(data){
+					var list = data;
+					$("#merchants li").remove();
+					for(var i=0;i<list.length;i++){
+						var merchant = list[i];
+						if(null != merchant){
+							$("#merchants").append('<li class="ee">'+merchant.userName+'<input type="hidden" value="'+merchant.accountId+'" /></li>');
+						}
+					}
+					$(".ee").bind('click',function(){
+						$("#merchant").val($(this).text());
+						$("#accountId").val($(this).children('input').val());
+						$("#mask").css("display","none");
+						$("#div_choose").hide();
+					}); 
+				}
+			});
+		}
+	</script>
+</head>
+<body>
+<header>
+	<i id="back"></i><span>授信积分</span><a href="credit-query.html">授信记录</a>
+</header>
+<article class="list">
+	<ul>
+		<li id="select" class="ico1">商户名称<input type="text" disabled="disabled" id="merchant" placeholder="请选择商家" /></li>
+		<li class="ico2">授予积分额度<input  type="text" id="transAmount" placeholder="请输入授信额度" ></li>
+	</ul>
+</article>
+<center><input class="btn_sure"  type="button" id="btn_save" value="确定" /></center>
+<input type="hidden" id="accountId" />
+<div id="mask" class="mask"></div>
+<div class="div_change" id="div_choose">
+	<div>选择商户<i id="i_colse" class="i_close"></i></div>
+	<ul id="merchants"></ul>
+</div>
+</body>
+</html>

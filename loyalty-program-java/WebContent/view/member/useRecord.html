@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="UwYwsyDtXR">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="MobileOptimized" content="320">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>积分消费记录</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../static/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../static/css/search-head.css">
+	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/useRecord.css">
+	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../../static/js/dateFormat.js"></script>
+	<script type="text/javascript">
+		$(function(){  
+			load();
+		});
+		
+		function load(){
+			$.get("../../userOutHtml",{page:1,rows:10} ,function(data){
+				$("#dataSet li").remove();
+				var list = data.list;
+				for (var i = 0; i < list.length; i++) {
+	      			  var details = "<li><img src='";
+	      			  details+=list[i].imgBase+"'><div class='xsDivXsqd'><p class='p1'>";
+	      			  details+=list[i].describe+"</p><p class='p2'>积分：";
+	      			  details+=list[i].transAmount+"</p></div><div class='xsPrice'><p class='p3'>";
+	      			  var createTime = new Date(parseInt(list[i].createTime)).format("yyyy-MM-dd");
+	      			  details+=createTime+"</p> <p class='p4'>";
+	      			  details+=list[i].transAmount+"</p></div></li>";
+	      			  $("#dataSet").append(details);
+					}
+			  });
+		}
+		
+	</script>
+</head>
+<body>
+<header>
+	<i  onClick="javascript:history.back(-1);"></i> <span>积分消费记录</span>
+</header>
+
+<article>
+
+<ul  id="dataSet" >
+	<!-- <li>
+		<img src="../img/sp1.jpg">
+		<div class="xsDivXsqd">
+			<p >JD500元购物卡</p>
+    		<p class="p2">积分：5000</p>
+		</div>
+		<div class="xsPrice">
+			<p class="p3">16-12-12 14:13</p>
+			<p class="p4">-5000000</p>
+		</div>
+	</li>	 -->
+</ul>
+</article>
+</body>
+</html>
