@@ -6,7 +6,7 @@
 		<id column="commodity_id" jdbcType="VARCHAR" property="commodityId" />
 		<result column="commodity_name" jdbcType="VARCHAR" property="commodityName" />
 		<result column="price" jdbcType="INTEGER" property="price" />
-		<result column="stock_amount" jdbcType="VARCHAR" property="stockAmount" />
+		<result column="stock_amount" jdbcType="INTEGER" property="stockAmount" />
 		<result column="account_id" jdbcType="VARCHAR" property="accountId" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />

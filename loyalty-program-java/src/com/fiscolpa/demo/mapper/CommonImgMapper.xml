@@ -5,7 +5,7 @@
 	<resultMap id="BaseResultMap" type="com.fiscolpa.demo.model.CommonImg">
 		<id column="img_id" jdbcType="VARCHAR" property="imgId" />
 		<result column="associate_id" jdbcType="VARCHAR" property="associateId" />
-		<result column="img_type" jdbcType="INTEGER" property="imgType" />
+		<result column="img_type" jdbcType="VARCHAR" property="imgType" />
 		<result column="img_base" jdbcType="LONGVARCHAR" property="imgBase" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />

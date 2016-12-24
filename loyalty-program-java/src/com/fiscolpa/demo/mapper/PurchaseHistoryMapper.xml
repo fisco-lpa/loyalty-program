@@ -5,12 +5,12 @@
 	<resultMap id="BaseResultMap" type="com.fiscolpa.demo.model.PurchaseHistory">
 		<id column="purchase_id" jdbcType="VARCHAR" property="purchaseId" />
 		<result column="user_id" jdbcType="VARCHAR" property="userId" />
-		<result column="user_name" jdbcType="INTEGER" property="userName" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
 		<result column="commodity_id" jdbcType="VARCHAR" property="commodityId" />
 		<result column="commodity_name" jdbcType="VARCHAR" property="commodityName" />
-		<result column="commodity_price" jdbcType="LONGVARCHAR" property="commodityPrice" />
-		<result column="merchant_id" jdbcType="LONGVARCHAR" property="merchantId" />
-		<result column="merchant_name" jdbcType="LONGVARCHAR" property="merchantName" />
+		<result column="commodity_price" jdbcType="INTEGER" property="commodityPrice" />
+		<result column="merchant_id" jdbcType="VARCHAR" property="merchantId" />
+		<result column="merchant_name" jdbcType="VARCHAR" property="merchantName" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
 		<result column="create_user" property="createUser" jdbcType="VARCHAR" />
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
