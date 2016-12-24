@@ -1,0 +1,2 @@
+1. This directory is underlying source code of fabric framework,but we have made some changes, that is why we need to maintain it on our github repository.
+2. The source code of this directory is modified based on fabric v0.6
