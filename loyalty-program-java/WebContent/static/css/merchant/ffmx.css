@@ -1,0 +1,71 @@
+body {
+	font-size: 0.28rem;
+}
+
+article{
+	 margin-top: 0.2rem;
+}
+
+article ul{
+	padding-top: 0.2rem;
+}
+
+article ul li{
+	border-bottom: 0.03rem solid #edecea;
+    height: 1rem;background: #FFFFFF;
+}
+article ul li span{
+	color: #D1D1D1;
+}
+
+/*article ul li i{
+	float: left;
+    height: 1rem;
+    width: 1rem;
+    margin: 0rem 0.2rem;
+    text-align: center;
+    line-height: 1rem;
+}*/
+
+.tupDiv{
+	height: 1.5rem;
+    width: 4.8rem;
+    margin: 0 auto;
+}
+
+.tupDiv i{
+	float: left;
+    background: #f5f5f5 url(../../img/qietu.png) top right no-repeat;
+    background-size: 7.5rem 5rem;
+    background-position: -3.4rem -2.9rem;
+    height: 1.2rem;
+    width: 1.2rem;
+    margin-top: 0.3rem;
+}
+
+.rightDiv{
+	float: left;
+    margin-top: 0.4rem;
+    margin-left: 0.2rem;
+}
+
+
+.xsDiv{
+	float: left;
+    line-height: 1rem;
+    font-size: 0.24rem;
+    width: 65%;
+}
+
+.xsDescribe{
+	color: #D1D1D1;
+	padding-right: 0.8rem;;
+}
+
+img{
+    width: 0.8rem;
+    height: 0.8rem;
+    margin: 0.1rem 0.2rem;
+    border-radius: 50%;
+    float: left;
+}

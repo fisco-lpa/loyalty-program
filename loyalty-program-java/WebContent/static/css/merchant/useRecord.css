@@ -1,0 +1,60 @@
+body {
+	font-size: 0.28rem;
+}
+
+article ul{
+	padding-top: 0.2rem;
+}
+
+article ul li{
+	border-bottom: 0.03rem solid #edecea;
+    height: 1rem;background: #FFFFFF;
+}
+
+.xsDivXsqd{
+	float: left;
+	height: 1rem;
+	width: 3rem;
+}
+.p1{
+	margin-top: 0.05rem;
+}
+
+.p2{
+	font-size: 0.24rem;
+	color: #D1D1D1;
+	margin-top: 0.15rem;
+}
+
+.xsPrice{
+    /* line-height: 1rem; */
+    float: right;
+    margin-right: 0.2rem;
+}
+
+.xsPrice span{
+	line-height: 1rem;
+    border: 0.03rem solid rgb(186, 16, 16);
+    border-radius: 0.1rem;
+    padding: 0.05rem 0.2rem;
+    color: rgb(186, 16, 16);
+}
+
+.p3{
+ 	font-size: 0.24rem;
+    margin: 0.08rem 0;
+    color: #D1D1D1;
+ }
+ 
+.p4{
+ 	color: #68d71c;
+ 	float: right;
+ }
+ 
+ img{
+    width: 1.1rem;
+    height: 0.8rem;
+    margin: 0.1rem 0.2rem;
+    border-radius: 10%;
+    float: left;
+}

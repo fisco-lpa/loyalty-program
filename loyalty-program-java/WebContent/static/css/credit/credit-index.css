@@ -1,0 +1,88 @@
+header span{
+	margin-left: 0.45rem;
+}
+.logo {
+	  padding-top: 0.4rem;
+	  position: relative;
+	  align-content: center;
+	  height: 2rem;
+	  font-size: 0.4rem;
+	  color: #FFFEFE;
+	  background-color: #989595;
+}
+.logo img {
+	position: relative;
+	width: 1.2rem;
+	height: 1.2rem;
+	border-radius: 50%;
+	margin-left: 0.2rem;
+	float: left;
+	vertical-align:baseline;
+}
+.logo p{
+	position: relative;
+	float: left;
+	margin-left: 0.3rem;
+	/*margin-top: 0.1rem;*/
+}
+.logo small {
+	color: #d9d8d4;
+	display: block;
+	margin-top: 0.1rem;
+}
+.logo input{
+	font-size:0.3rem;
+    border-radius: 0.15rem;
+    background-color: #D2CDCD;
+    width: 0.7rem;
+    text-align: center;
+    margin-left: 0.1rem;
+    margin-bottom: 0.05rem;
+    padding: 0.03rem 0rem;
+}
+.list {
+	position: relative;
+	margin-top: 0.2rem;
+	padding-left: 1rem;
+	background: #fff;
+	font-size: 0.3rem;
+}
+.list li {
+	height: 1rem;
+	line-height: 1rem;
+	position: relative;
+	/*background: #fff url(../../img/re.png) top right no-repeat;*/
+	/*background-size: 0.78rem 1rem;*/
+	border-bottom: 0.03rem solid #EFEEEE;
+	/*padding-left: 0.3rem;*/
+
+}
+.list li:last-child {
+	border-bottom: none;
+}
+.list li::before,
+.list li::after {
+	background: url(../../img/qietu.png) no-repeat;
+	background-size: 7.5rem 5rem;
+	position: absolute;
+	content: "";
+}
+.list li::after {
+	left: -0.85rem;
+	width: 1rem;
+	height: 1rem;
+}
+.list li::before {
+	  right: 0rem;
+	  top: 50%;
+	  margin-top: -0.4rem;
+	  background-position: -2rem -1.1rem;
+	  width: 0.8rem;
+	  height: 0.8rem;
+}
+.list li.ico1::after {
+	background-position: 0 0.16rem;
+}
+.list li.ico2::after {
+	background-position: -1.83rem 0.16rem;
+}

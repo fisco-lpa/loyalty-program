@@ -1,0 +1,61 @@
+header{
+	margin-bottom: 0.2rem;
+}
+
+body {
+	font-size: 0.28rem;
+}
+
+footer{
+	margin-top: 0.25rem;
+}
+
+.list {
+	padding-left: 1.1rem;
+	background: #fff;
+}
+.list li {
+	height: 1rem;
+    line-height: 1rem;
+	position: relative;
+/*	background: #fff url(../img/re.png) top right no-repeat;
+	background-size: 0.78rem 1rem;*/
+	border-bottom: 0.03rem solid #EFEEEE;
+	padding-left: 0.1rem;
+}
+.list li:last-child {
+	border-bottom: none;
+}
+.list li::before,
+.list li::after {
+	background: url(../../img/qietu.png) no-repeat;
+	background-size: 7.5rem 5rem;
+	position: absolute;
+	content: "";
+}
+.list li::after {
+	left: -1rem;
+	top: 0.1rem;
+	width: 0.9rem;
+	height: 0.9rem;
+}
+.list li.ico1::after {
+	background-position: -0.95rem -2.1rem;
+}
+.list li.ico2::after {
+	background-position: -0.95rem 0.05rem;
+}
+.list li.ico3::after {
+	background-position: -2.72rem 0.13rem;
+}
+
+
+.input_text {
+	color: #999;
+	height: 0.7rem;
+    width: 4.1rem;
+	padding: 0 0.2rem;
+	/*float: left;*/
+	margin-top: 0.15rem;
+	font-size: 0.28rem;
+}

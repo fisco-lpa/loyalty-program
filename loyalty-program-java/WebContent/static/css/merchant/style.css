@@ -1,0 +1,177 @@
+*{margin:0px;padding:0px;-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-touch-callout:none;-webkit-user-select:none;-webkit-appearance:none;outline:none;word-break:break-all;box-sizing:border-box;-webkit-box-sizing:border-box;}
+html,body{width:100%;height:100%;font-family:"Microsoft YaHei", Arial; font-size: 50px; color: #333;}
+input{-webkit-user-select:initial;font-family:"Microsoft YaHei", Arial;border:none;}
+i{font-style: normal}
+a{text-decoration:none;}
+ul,ol,li{list-style:none;}
+h1,h2,h3,h4,h5,h6{font-weight: normal;}
+img{border:0;}
+.clearfix{zoom:1;}
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden;}
+.dsn {display: none;}
+@media only screen and (min-width: 320px){
+	html {
+		font-size: 48.5px !important;
+	}
+}
+@media only screen and (min-width: 340px){
+	html {
+		font-size: 51.5px !important;
+	}
+}
+@media only screen and (min-width: 360px){
+	html {
+		font-size: 54.5px !important;
+	}
+}
+@media only screen and (min-width: 375px){
+	html {
+		font-size: 56.5px !important;
+	}
+}
+@media only screen and (min-width: 401px){
+	html {
+		font-size: 62.5px !important;
+	}
+}
+@media only screen and (min-width: 428px){
+	html {
+		font-size: 66.875px !important;
+	}
+}
+@media only screen and (min-width: 481px){
+	html {
+		font-size: 75px !important;
+	}
+}
+@media only screen and (min-width: 569px){
+	html {
+		font-size: 87.5px !important;
+	}
+}
+@media only screen and (min-width: 641px){
+	html {
+		font-size: 100px !important;
+	}
+}
+.fl {float: left;}
+.fr {float: right;}
+body {
+	background-color: #f5f5f5;
+	background-size: 100% auto;
+	font-size: 0.28rem;
+}
+
+header {
+	text-align: center;
+	background: #5c5c5c;
+	padding-bottom: 0.1rem;
+	margin-bottom: 0.2rem;
+
+}
+
+.logo {
+	padding-top: 2.1rem;
+	position: relative;
+	color: #fff;
+}
+.logo img {
+	position: absolute;
+	width: 20%;
+	border-radius: 50%;
+	left: 40%;
+	top: 0.6rem;
+}
+.logo small {
+	color: #d9d8d4;
+	display: block;
+}
+
+.jf {
+	color: #d9d8d4;
+	margin-top: 0.3rem;
+}
+.jf li {
+	float: left;
+	width: 33%;
+	text-align: center;
+	line-height: 0.5rem;
+	position: relative;
+}
+.jf li::before {
+	border-right: 1px solid #949590;
+	position: absolute;
+	right: 0;
+	top: 0.3rem;
+    height: 0.5rem;
+	content: "";
+}
+.jf li:last-child::before {
+	display: none;
+}
+
+.list {
+	padding-left: 1.1rem;
+	background: #fff;
+}
+.list li {
+	height: 1rem;
+    line-height: 1rem;
+	position: relative;
+/*	background: #fff url(../img/re.png) top right no-repeat;
+	background-size: 0.78rem 1rem;*/
+	border-bottom: 0.03rem solid #EFEEEE;
+	padding-left: 0.1rem;
+}
+.list li:last-child {
+	border-bottom: none;
+}
+.list li::before,
+.list li::after {
+	background: url(../../img/qietu.png) no-repeat;
+	background-size: 7.5rem 5rem;
+	position: absolute;
+	content: "";
+}
+.list li::after {
+	left: -1rem;
+	top: 0.1rem;
+	width: 0.9rem;
+	height: 0.9rem;
+}
+.list li::before {
+	right: 0rem;
+	top: 50%;
+	margin-top: -0.4rem;
+	background-position: -2rem -1.1rem;
+	width: 0.8rem;
+	height: 0.8rem;
+}
+.list li.ico1::after {
+	background-position: 0rem 0.1rem;
+}
+.list li.ico2::after {
+	background-position: 0 -1.1rem;
+}
+.list li.ico3::after {
+	background-position: 0.005rem -3.3rem;
+}
+.list li.ico4::after {
+	background-position: 0 -2.1rem;
+}
+.list li.ico5::after {
+	background-position: -2.68rem -2.05rem;
+}
+.list li.ico6::after {
+	background-position: -4.45rem -1.2rem;
+}
+
+.list li.ico7::after {
+	background-position: -1.05rem -3.18rem;
+}
+.list li.ico8::after {
+	background-position: -2.55rem -3.3rem;
+}
+.list li.ico9::after {
+	background-position: -1.03rem -4.05rem;
+}

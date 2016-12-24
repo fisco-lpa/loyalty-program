@@ -1,0 +1,67 @@
+
+body {
+	font-size: 0.28rem;
+}
+
+/* ul{
+	padding-top: 0.2rem;
+} */
+
+li{
+	background: url(../../img/voucher.png) no-repeat;
+    height: 1rem;
+    background-size: 100%;
+   /* margin-bottom: 0.06rem;*/
+}
+
+.voucherLeft{
+	padding: 0.1rem 0.12rem;
+    width: 35%;
+    float: left;
+    margin: 0;
+    text-align:center; 
+}
+
+.voucherRight{
+	padding: 0.1rem 0.12rem;
+    /*width: 5rem;
+    height: 1.3rem;*/
+    float: left;
+   /* margin-right: 1rem*/
+}
+
+.voucherRightDf{
+	 margin: 0 0.2rem; 
+	 float: left;
+}
+.ffConfirm{
+	text-align: center;
+    background: red;
+    margin: 0.3rem;
+    border-radius: 10px;
+    height: 1rem;
+    line-height: 1rem;
+}
+
+footer{
+	margin-top: 0.25rem;
+}
+
+.p1{
+	color: #ED3609;
+	margin: 0.05rem 0;
+}
+
+.p2{
+	font-size: 0.24rem;
+	color: #D1D1D1;
+}
+
+.p3{
+	margin: 0.05rem 0;
+}
+
+.p4{
+	font-size: 0.24rem;
+	color: #D1D1D1;
+}

@@ -1,0 +1,74 @@
+body {
+	font-size: 0.28rem;
+}
+
+/*header {
+	text-align: center;
+	background: #5c5c5c;
+	padding-bottom: 0.3rem;
+	height: 1rem;
+}
+
+header i{
+	background: url(../../img/qietu.png) no-repeat;
+	background-position: -3.4rem -1.1rem;
+	float: left;
+	height: 1rem;
+	width: 1rem;
+}
+
+header span{
+	float: left;
+    margin-top: 0.3rem;
+    color: white;
+}*/
+
+article ul{
+	padding-top: 0.2rem;
+}
+
+article ul li{
+	border-bottom: 0.03rem solid #edecea;
+    height: 1.3rem;background: #FFFFFF;
+}
+
+/*article ul li i{
+	float: left;
+    height: 1.1rem;
+    width: 2rem;
+    margin: 0.1rem 0.4rem;
+    text-align: center;
+}*/
+
+.xsDiv{
+	float: left;
+	margin: 0.15rem 0.15rem 0.15rem 0;
+}
+
+.xsTitle{
+	font-size: 28px;
+}
+
+.xsDescribe{
+	font-size: 24px;
+	color: #D1D1D1;
+}
+
+.xsPrice{
+	float: left;
+	margin: 0.4rem;
+	margin-left: 1.65rem;
+    margin-right: 0;
+}
+
+.xsPrice p{
+ 	color: #F00;
+ }
+
+img{
+    width: 0.8rem;
+    height: 0.8rem;
+    margin: 0.1rem 0.3rem;
+    border-radius: 50%;
+    float: left;
+}

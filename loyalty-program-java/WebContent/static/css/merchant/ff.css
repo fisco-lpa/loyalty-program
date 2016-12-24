@@ -1,0 +1,118 @@
+body {
+	font-size: 0.28rem;
+}
+
+/* ul{
+	padding-top: 0.2rem;
+} */
+
+.list {
+	padding-left: 1.1rem;
+	background: #fff;
+}
+.list li {
+	height: 1rem;
+    line-height: 1rem;
+	border-bottom: 0.03rem solid #edecea;
+	position: relative;
+	padding-left: 0.1rem;
+}
+.list li:last-child {
+	border-bottom: none;
+}
+.list li::before,
+.list li::after {
+	background: url(../../img/qietu.png) no-repeat;
+	background-size: 7rem 5rem;
+	position: absolute;
+	content: "";
+}
+.list li::after {
+	left: -1rem;
+    top: 0.1rem;
+    width: 0.9rem;
+    height: 0.9rem;
+}
+/*.list li::before {
+	right: 0.1rem;
+	top: 50%;
+	margin-top: -0.4rem;
+	background-position: -0.1rem 0;
+	width: 0.8rem;
+	height: 0.8rem;
+}*/
+.list li.ico1::after {
+	background-position: -0.75rem 0rem;
+}
+.list li.ico2::after {
+	background-position: -0.75rem -1.1rem;
+}
+.list li i{
+	width: 1.6rem;
+    height: 0.5rem;
+    float: right;
+    margin-right: 0.2rem;
+    margin-top: 0.23rem;
+    background: url(../../img/qietu.png) no-repeat;
+    background-size: 7.5rem 5rem;
+    background-position: -5.08rem 0rem;
+}
+
+.input_text {
+	color: #999;
+	height: 0.7rem;
+	padding: 0 0.2rem;
+	margin-top: 0.15rem;
+	font-size: 0.28rem;
+}
+
+.ffConfirm{
+	text-align: center;
+    background: rgb(186, 16, 16);
+    margin: 0.2rem 0.1rem;
+    border-radius: 0.1rem;
+    height: 1rem;
+    line-height: 1rem;
+}
+
+.tupDiv{
+	background: #fff;
+    text-align: center;
+    height: 0.85rem;
+    margin-bottom: 0.2rem;
+}
+
+
+
+.leftDiv{
+	float: left;
+    width: 50%;
+    line-height:0.85rem;
+}
+
+.leftDiv p{
+	height: 0.6rem;
+}
+.leftDiv i{
+	background: url(../../img/qietu.png) no-repeat;
+    background-size: 7.5rem 5rem;
+    background-position: -6.2rem -1.35rem;
+    height: 0.25rem;
+    margin-left: 42%;
+    display: block;
+}
+
+footer{
+	margin-top: 0.25rem;
+}
+
+/* .grNoChoose{
+	color:#333;
+	display: none;
+}
+
+.grChoose{
+	color:#333;
+	display: none;
+}
+ */
