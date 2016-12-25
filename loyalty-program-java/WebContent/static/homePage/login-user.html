@@ -1,26 +1,85 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<head lang="en">
-	<meta charset="utf-8">
-	<meta name="baidu-site-verification" content="UwYwsyDtXR">
-	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<meta name="MobileOptimized" content="320">
-	<meta name="format-detection" content="telephone=no">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-	<title>用户登陆页</title>
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="../css/head.css">
-	<link rel="stylesheet" type="text/css" href="../css/search-head.css">
+<head lang="en">
+    <meta charset="utf-8">
+    <meta name="baidu-site-verification" content="UwYwsyDtXR">
+    <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="MobileOptimized" content="320">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>商户/授信方注册页</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../css/head.css">
+    <link rel="stylesheet" type="text/css" href="../css/search-head.css">
 	<link rel="stylesheet" type="text/css" href="../css/comment/login-user.css">
 	<script type="text/javascript" src="../js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../js/jquery.cookie.js"></script>
 	<script type="text/javascript">
-		$(document).ready(function (){
-			$("#login").click(function(){
-				alert("登陆");
-			})
+	$(function(){
+		load();
+		$("#login").click(function(){
+			var userRole =  $("#userRole").val();
+			if(userRole==""){
+				doLogin();
+			}else{
+				submit();
+			}
 		})
+	})
+	
+	function load(){
+			var userRole = $.cookie('userRole');
+			$("#userRole").val(userRole);
+	}
+	
+	function doLogin(){
+		$.post("../../doLogin", {userName:$("#userName").val(),password:$("#password").val()},
+				function(data) {
+				var type = Number(data.userType);           
+				switch(type)
+				{
+				case 1:
+					window.location.href='../../view/credit/credit-index.html';
+				  break;
+				case 2:
+					window.location.href='../../view/merchant/merchant.html';
+				  break;
+				case 3:
+					window.location.href='../../view/member/memberCente.html';
+				  break;
+				default:
+				  alert("请重新输入");
+				}
+		});
+	}
+	
+	function submit(){
+		var password = $("#password").val();
+		if(password==null){
+			 alert("验证码不能为空");
+			 return;
+		}
+		$.post("../../registerUser",  {userName:$("#userName").val(),userPassword:$("#password").val(),userType:$("#userRole").val()},
+				function(data) {
+			if(data.state != 1 ) return ;
+			var userRole = Number($("#userRole").val());
+			switch(userRole)
+			{
+			case 1:
+				window.location.href='../../view/credit/credit-index.html';
+			  break;
+			case 2:
+				window.location.href='../../view/merchant/merchant.html';
+			  break;
+			case 3:
+				window.location.href='../../view/member/memberCente.html';
+			  break;
+			default:
+			  alert("请重新输入");
+			}
+		});
+	}
 	</script>
 </head>
 <body>
@@ -29,8 +88,8 @@
 </header>
 <article class="list">
 	<ul>
-		<li class="ico1">手机号<input type="text" id="name" placeholder="请输入手机号" /></li>
-		<li class="ico2">验证码<input type="button" class="input_send" id="input_send" value="发送" /><input class="input_pwd"  type="password" id="pwd" placeholder="请输入验证码" ></li>
+		<li class="ico1">手机号<input type="text" id="userName" name="userName" placeholder="请输入手机号" /><input type="hidden" id="userRole" name="userType" value="3"></li>
+		<li class="ico2">验证码<input type="button" class="input_send" id="input_send" value="发送" /><input class="input_pwd"  type="password" id="password" name="userPassword" placeholder="请输入验证码" ></li>
 		<li class="ico3"><button class="btn_sure" id="login">登陆</button></li>
 		<li class="ico4"><a class="a_sign" href="login.html" >商户/授信方登陆 </a> <a class="a_change" href="">忘记密码</a> </li>
 	</ul>

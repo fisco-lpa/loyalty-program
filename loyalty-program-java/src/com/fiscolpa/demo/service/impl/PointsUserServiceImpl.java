@@ -42,9 +42,10 @@ public class PointsUserServiceImpl extends BaseService<PointsUser> implements Po
 		pointsUser.setUserId(UUIDGenerator.getUUID());
 		pointsUser.setCreateTime(date);
 		pointsUser.setUpdateTime(date);
+		pointsUser.setCreateUser(pointsUser.getUserName());
+		pointsUser.setUpdateUser(pointsUser.getUserName());
 		if("3".equals(pointsUser.getUserType())){
-			pointsUser.setUserName(pointsUser.getPhoneNumber());
-			pointsUser.setUserPassword("1234");
+			pointsUser.setPhoneNumber(pointsUser.getUserName());
 		}
 		pointsUserMapper.insert(pointsUser);
 		
@@ -55,6 +56,8 @@ public class PointsUserServiceImpl extends BaseService<PointsUser> implements Po
 		acc.setAccountTypeId(pointsUser.getUserType());
 		acc.setCreateTime(date);
 		acc.setUpdateTime(date);
+		acc.setCreateUser(pointsUser.getUserName());
+		acc.setUpdateUser(pointsUser.getUserName());
 		return accountMapper.insert(acc);
 	}
 
