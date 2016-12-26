@@ -17,6 +17,10 @@
 	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
 	<script type="text/javascript" src="../../static/js/dateFormat.js"></script>
+	
+	<script type="text/javascript" src="../../static/js/alertPopShow.js"></script>
+	<link rel="stylesheet" type="text/css" href="../../static/css/common.css">
+	
 	<script type="text/javascript">
 		$(function(){  
 			load();
@@ -44,17 +48,21 @@
 				}else{
 					alert("余额不够！！！");
 				}
-			});
+			}); 
 		}
 		
 		function spendNew(commodityId){
-			$.post("../../buyGoodsHtmlNew",{commodityId : commodityId},function(data){
-				if(data.state=='1111'){
-					window.location.href='useRecord.html';
-				}else{
-					alert("余额不够！！！");
-				}
-			});
+			if(confirm('亲，您确认购买吗?')){
+				$.post("../../buyGoodsHtmlNew",{commodityId : commodityId},function(data){
+					if(data.state=='1111'){
+						window.location.href='useRecord.html';
+					}else{
+						alert("亲，您余额不足,快去参与活动赢积分哦！");
+					}
+				});
+			}else{
+				alert("亲，您取消购买");
+			}
 		}
 	</script>
 </head>

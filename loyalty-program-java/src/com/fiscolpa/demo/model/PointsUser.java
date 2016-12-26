@@ -141,7 +141,11 @@ public class PointsUser {
 		this.img = img;
 	}
 
+	public PointsUser(){}
 	
+	public PointsUser(String userName){
+		this.userName = userName;
+	}
 
 	
     

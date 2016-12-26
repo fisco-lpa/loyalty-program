@@ -27,9 +27,9 @@
 			var list = data.pageInfo.list;
 			for (var i = 0; i < list.length; i++) {
       			  var details = '<li onclick="updateCommodity(\''+list[i].commodityId+'\')"><img src="';
-      			  details+=list[i].imgBase+'"><div class="xsDiv"><p>';
-      			  details+=list[i].commodityName+'</p> <p class="xsDescribe">库存：';
-      			  details+=list[i].stockAmount+'</p><p class="xsDescribe">销量：';
+      			  details+=list[i].imgBase+'"><div class="xsDiv"><p class="p6">';
+      			  details+=list[i].commodityName+'</p> <p class="p5">库存：';
+      			  details+=list[i].stockAmount+'</p><p class="p5">销量：';
       			  details+=list[i].salesCount+'</p></div><div class="xsPrice"><p>';
       			  details+=list[i].price+'</p></div>';
       			  $("#dataSet").append(details);

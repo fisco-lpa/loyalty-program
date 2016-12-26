@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.service.PointsUserService;
 
+import tk.mybatis.mapper.util.StringUtil;
+
 @RestController
 public class UserController {
 	
@@ -25,7 +27,11 @@ public class UserController {
 	
 	@RequestMapping(value="/registerUser")
 	public @ResponseBody Map<String, Object> registerUser(HttpSession session,HttpServletRequest request,@ModelAttribute("pu") PointsUser pu){
-		int val = ps.insertPointsUser(pu);
+		int val = 0;
+		if(StringUtil.isEmpty(pu.getUserName()) || StringUtil.isEmpty(pu.getUserPassword())){
+			val = 999;
+		}
+		val = ps.insertPointsUser(pu);
 		if(val==1){
 			lc.doLogin(pu.getUserName(), pu.getUserPassword(), session);
 		}

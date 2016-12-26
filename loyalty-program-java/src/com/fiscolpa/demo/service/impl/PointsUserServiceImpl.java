@@ -39,14 +39,18 @@ public class PointsUserServiceImpl extends BaseService<PointsUser> implements Po
 	@Transactional
 	public int insertPointsUser(PointsUser pointsUser){
 		Date date= new Date();
+		if("3".equals(pointsUser.getUserType())){
+			pointsUser.setPhoneNumber(pointsUser.getUserName());
+			pointsUser.setUserPassword("1234");
+		}
+		PointsUser pu = new PointsUser(pointsUser.getUserName());
+		pu = pointsUserMapper.selectOne(pu);
+		if(pu!=null) return 0;
 		pointsUser.setUserId(UUIDGenerator.getUUID());
 		pointsUser.setCreateTime(date);
 		pointsUser.setUpdateTime(date);
 		pointsUser.setCreateUser(pointsUser.getUserName());
 		pointsUser.setUpdateUser(pointsUser.getUserName());
-		if("3".equals(pointsUser.getUserType())){
-			pointsUser.setPhoneNumber(pointsUser.getUserName());
-		}
 		pointsUserMapper.insert(pointsUser);
 		
 		Account acc = new Account();
