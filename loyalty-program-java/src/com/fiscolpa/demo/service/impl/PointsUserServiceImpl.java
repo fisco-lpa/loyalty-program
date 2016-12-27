@@ -41,7 +41,6 @@ public class PointsUserServiceImpl extends BaseService<PointsUser> implements Po
 		Date date= new Date();
 		if("3".equals(pointsUser.getUserType())){
 			pointsUser.setPhoneNumber(pointsUser.getUserName());
-			pointsUser.setUserPassword("1234");
 		}
 		PointsUser pu = new PointsUser(pointsUser.getUserName());
 		pu = pointsUserMapper.selectOne(pu);

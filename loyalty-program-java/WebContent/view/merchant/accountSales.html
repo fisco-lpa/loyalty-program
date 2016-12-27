@@ -15,6 +15,7 @@
 	<!-- <link rel="stylesheet" type="text/css" href="css/xsqd.css"> -->
 	<link rel="stylesheet" type="text/css" href="../../static/css/merchant/spgl.css">
 	<script type="text/javascript" src="../../static/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="../../static/js/dateFormat.js"></script>
 	<script type="text/javascript">
 		$(function(){  
 			load();
@@ -27,17 +28,14 @@
 				for (var i = 0; i < list.length; i++) {
 					var details = '<li><img src="../../static/img/sp2.jpg"><div class="xsDivXsqd"><p class="p6">';
 					details+=list[i].commodityName+'</p> <p class="p5">购买时间：';
-					details+=formatDate(list[i].createTime)+'</p> <p class="p5">购买者：';
+					var createTime = new Date(parseInt(list[i].createTime)).format("yyyy-MM-dd hh:mm");
+					details+=createTime+'</p> <p class="p5">购买者：';
 					details+=list[i].userName+'</p> </div> <div class="xsPrice"> <p>';
 					details+=list[i].commodityPrice+'</p> </div> </li>';
 					$("#dataSet").append(details);
 				}
 			});
 		}
-		
-		function  formatDate(now)   {     
-			return new Date(parseInt(now)).toLocaleString().substr(0,17).replace(/上午|下午/g, "") ;  
-        } 
 	</script>
 </head>
 <body>
