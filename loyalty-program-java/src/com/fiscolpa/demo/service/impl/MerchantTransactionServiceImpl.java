@@ -136,36 +136,37 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		}
 		
 		if(salist.size()<=0) return "00002";//交易失败
-		
-		//组装区块连账户
-		Map<Object, Object> aOut = BeanToMap.Bean2Map(out);
-		aOut.put("operFlag", PointsTransactionEnum.UPDATE.getSign());
-		Map<Object, Object> iOut = BeanToMap.Bean2Map(in);
-		iOut.put("operFlag", PointsTransactionEnum.UPDATE.getSign());
-		
-		List<Map<Object, Object>> aList = new ArrayList<Map<Object, Object>>();
-		aList.add(aOut);
-		aList.add(iOut);
-		
-		List<PointsTransationDetailExtends> pList = new ArrayList<PointsTransationDetailExtends>(); 
-		pList.addAll(salist);
-		pList.addAll(upList);
-		
-		Map<String, Object> map = new HashMap<>();
-		map.put("accountList", aList);
-		map.put("pointsTransaction", BeanToMap.Bean2Map(pt));
-		map.put("pointsTransactionDetailList", BeanToMap.Bean2MapList(pList));
-		
-		String json = JSONObject.fromObject(map).toString();
-	/*	Boolean result = false;
-		try {
-			result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
-		} catch (IOException e) {
-			e.printStackTrace();
+		//区块链
+		if(PointsTransactionEnum.FABRIC_SWITCH.getSign().equals(pt.getFabricSwitch())){
+			//组装区块连账户
+			Map<Object, Object> aOut = BeanToMap.Bean2Map(out);
+			aOut.put("operFlag", PointsTransactionEnum.UPDATE.getSign());
+			Map<Object, Object> iOut = BeanToMap.Bean2Map(in);
+			iOut.put("operFlag", PointsTransactionEnum.UPDATE.getSign());
+			
+			List<Map<Object, Object>> aList = new ArrayList<Map<Object, Object>>();
+			aList.add(aOut);
+			aList.add(iOut);
+			
+			List<PointsTransationDetailExtends> pList = new ArrayList<PointsTransationDetailExtends>(); 
+			pList.addAll(salist);
+			pList.addAll(upList);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("accountList", aList);
+			map.put("pointsTransaction", BeanToMap.Bean2Map(pt));
+			map.put("pointsTransactionDetailList", BeanToMap.Bean2MapList(pList));
+			
+			String json = JSONObject.fromObject(map).toString();
+			Boolean result = false;
+			try {
+				result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			if(!result) return "00003";//区块连交易失败
 		}
-		
-		if(!result) return "00003";//区块连交易失败
-*/		
 		mtm.insertTransation(ptList);
 		mtm.insertTransationDetail(salist);
 		mtm.updateCurBalance(upList);
@@ -242,22 +243,24 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		}
 		if(salist.size()<=0) return "00002";//交易失败
 		
-		List<PointsTransationDetailExtends> pList = new ArrayList<PointsTransationDetailExtends>(); 
-		pList.addAll(salist);
-		pList.addAll(upList);
-		
-		List<Map<Object, Object>> it = BeanToMap.Bean2MapList(ptList);
-		List<Map<Object, Object>> itd = BeanToMap.Bean2MapList(pList);
-		
-		Map<String, Object> map1 = new HashMap<>();
-		map1.put("pointsTransaction", it);
-		map1.put("pointsTransactionDetailList", itd);
-		
-		String json = JSONObject.fromObject(map1).toString();
-		/*Boolean result = HttpTool.sendToFabric(json, "invoke", "AccpetPoints");
-		
-		if(!result) return "00003";//区块连交易失败
-*/
+		//区块链
+		if(PointsTransactionEnum.FABRIC_SWITCH.getSign().equals(ptd.getFabricSwitch())){
+			List<PointsTransationDetailExtends> pList = new ArrayList<PointsTransationDetailExtends>(); 
+			pList.addAll(salist);
+			pList.addAll(upList);
+			
+			List<Map<Object, Object>> it = BeanToMap.Bean2MapList(ptList);
+			List<Map<Object, Object>> itd = BeanToMap.Bean2MapList(pList);
+			
+			Map<String, Object> map1 = new HashMap<>();
+			map1.put("pointsTransaction", it);
+			map1.put("pointsTransactionDetailList", itd);
+			
+			String json = JSONObject.fromObject(map1).toString();
+			Boolean result = HttpTool.sendToFabric(json, "invoke", "AccpetPoints");
+			
+			if(!result) return "00003";//区块连交易失败
+		}
 		mtm.insertTransation(ptList);
 		mtm.insertTransationDetail(salist);
 		mtm.updateCurBalance(upList);

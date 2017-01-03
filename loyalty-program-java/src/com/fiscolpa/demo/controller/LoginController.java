@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fiscolpa.demo.model.Account;
+import com.fiscolpa.demo.model.DataDictionary;
 import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.service.AccountService;
+import com.fiscolpa.demo.service.DataDictionaryService;
 import com.fiscolpa.demo.service.PointsUserService;
 import com.fiscolpa.demo.util.MenusUtil;
 
@@ -30,6 +32,9 @@ public class LoginController {
 	
 	@Autowired
 	private AccountService accountService;
+	
+	@Autowired
+	private DataDictionaryService dds;
 
     @RequestMapping("/toLogin")
     public String toLogin() {
@@ -56,6 +61,10 @@ public class LoginController {
     		session.setAttribute("userimg", currentUser.getImg());
     		session.setAttribute("user", currentUser);
     		session.setAttribute("menus", MenusUtil.getMenus(String.valueOf(currentUser.getUserType())));
+    		DataDictionary dd = dds.selectOne(new DataDictionary("fabric_switch"));
+    		String fabricSwitch = dd==null?null:dd.getDictionaryValue();
+    		logger.info("Data Dictionary fabric_switch:" + fabricSwitch);
+        	session.setAttribute("fabricSwitch", fabricSwitch);
     		map.put("userType", currentUser.getUserType()); 
     		return map;
 		} else {

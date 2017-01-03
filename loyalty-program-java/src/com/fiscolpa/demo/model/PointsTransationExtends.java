@@ -38,6 +38,8 @@ public class PointsTransationExtends extends PointsModel{
     private String creditParty;
     //查询判断列
     private String queryColumn;
+    //区块链调用标示
+    private String fabricSwitch;
 	public String getDetailId() {
 		return detailId;
 	}
@@ -145,6 +147,12 @@ public class PointsTransationExtends extends PointsModel{
 	}
 	public void setRollOutAccountName(String rollOutAccountName) {
 		this.rollOutAccountName = rollOutAccountName;
+	}
+	public String getFabricSwitch() {
+		return fabricSwitch;
+	}
+	public void setFabricSwitch(String fabricSwitch) {
+		this.fabricSwitch = fabricSwitch;
 	}
     
 }

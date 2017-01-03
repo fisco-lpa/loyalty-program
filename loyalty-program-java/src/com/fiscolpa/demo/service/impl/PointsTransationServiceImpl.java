@@ -1,9 +1,12 @@
 package com.fiscolpa.demo.service.impl;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +18,14 @@ import com.fiscolpa.demo.model.Account;
 import com.fiscolpa.demo.model.PointsTransation;
 import com.fiscolpa.demo.model.PointsTransationDetail;
 import com.fiscolpa.demo.service.PointsTransationService;
+import com.fiscolpa.demo.util.BeanToMap;
+import com.fiscolpa.demo.util.HttpTool;
+import com.fiscolpa.demo.util.PointsTransactionEnum;
 import com.fiscolpa.demo.util.UUIDGenerator;
 import com.fiscolpa.demo.vo.PointsTransationDetailVo;
 import com.fiscolpa.demo.vo.PointsTransationVo;
+
+import net.sf.json.JSONObject;
 
 @Service("pointsTransationService")
 public class PointsTransationServiceImpl implements PointsTransationService {
@@ -46,7 +54,7 @@ public class PointsTransationServiceImpl implements PointsTransationService {
 	}
 
 	@Override
-	public int addCredit(PointsTransation pointsTransation) {
+	public int addCredit(PointsTransation pointsTransation,String fabricSwitch) {
 		//insert交易表
 		String transId = new StringBuffer("PT").append(UUIDGenerator.getUUID()).toString();
 		pointsTransation.setTransId(transId);
@@ -99,35 +107,35 @@ public class PointsTransationServiceImpl implements PointsTransationService {
 		account.setUpdateUser(pointsTransation.getCreateUser());
 		account.setUpdateTime(time);
 		
-		
-		//调用区块链接口
-//		Map<String, Object> map = new HashMap<>();
-//		
-//		Map<String, Object> accountMap = BeanToMap.Bean2Map(account);
-//		accountMap.put("operFlag", "1");
-//		Map<String, Object> pointsTransationMap = BeanToMap.Bean2Map(pointsTransation);
-//		pointsTransationMap.put("operFlag", "0");
-//		Map<String, Object> pointsTransationDetailMap = BeanToMap.Bean2Map(pointsTransationDetail);
-//		pointsTransationDetailMap.put("operFlag", "0");
-//		map.put("account", accountMap);
-//		map.put("pointsTransaction", pointsTransationMap);
-//		map.put("pointsTransactionDetail", pointsTransationDetailMap);
-//		String json = JSONObject.fromObject(map).toString();
-//		Boolean result = false;
-//		try {
-//			result = HttpTool.sendToFabric(json, "invoke", "CreditPoints");
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		if (result) {//校验区块链结果
-			//更新本机数据库
-			pointsTransationMapper.insert(pointsTransation);
-			pointsTransationDetailMapper.insert(pointsTransationDetail);
-			accountMapper.updateByPrimaryKeySelective(account);
-//			return 0;
-//		}
-		return 1;
+		//区块链
+		if(PointsTransactionEnum.FABRIC_SWITCH.getSign().equals(fabricSwitch)){
+			//调用区块链接口
+			Map<String, Object> map = new HashMap<>();
+			
+			Map<String, Object> accountMap = BeanToMap.Bean2Map(account);
+			accountMap.put("operFlag", "1");
+			Map<String, Object> pointsTransationMap = BeanToMap.Bean2Map(pointsTransation);
+			pointsTransationMap.put("operFlag", "0");
+			Map<String, Object> pointsTransationDetailMap = BeanToMap.Bean2Map(pointsTransationDetail);
+			pointsTransationDetailMap.put("operFlag", "0");
+			map.put("account", accountMap);
+			map.put("pointsTransaction", pointsTransationMap);
+			map.put("pointsTransactionDetail", pointsTransationDetailMap);
+			String json = JSONObject.fromObject(map).toString();
+			Boolean result = false;
+			try {
+				result = HttpTool.sendToFabric(json, "invoke", "CreditPoints");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(!result) return 1;//区块连交易失败	
+		}
+		//更新本机数据库
+		pointsTransationMapper.insert(pointsTransation);
+		pointsTransationDetailMapper.insert(pointsTransationDetail);
+		accountMapper.updateByPrimaryKeySelective(account);
+		return 0;
 	}
 
 	

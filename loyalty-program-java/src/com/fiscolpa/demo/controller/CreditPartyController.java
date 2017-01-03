@@ -17,6 +17,7 @@ import com.fiscolpa.demo.model.PointsTransation;
 import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.service.AccountService;
 import com.fiscolpa.demo.service.PointsTransationService;
+import com.fiscolpa.demo.util.PointsTransactionEnum;
 import com.fiscolpa.demo.vo.AccountVo;
 import com.fiscolpa.demo.vo.PointsTransationDetailVo;
 import com.fiscolpa.demo.vo.PointsTransationVo;
@@ -50,7 +51,7 @@ public class CreditPartyController {
     	PointsUser user = (PointsUser)session.getAttribute("user");
     	pointsTransation.setCreateUser(user.getUserId());
     	pointsTransation.setRollOutAccount(user.getAccountId());
-    	pointsTransationService.addCredit(pointsTransation);
+    	pointsTransationService.addCredit(pointsTransation,(String) session.getAttribute(PointsTransactionEnum.FABRIC_SWITCH.getBeginning()));
     	return "ok";
     }
     /**

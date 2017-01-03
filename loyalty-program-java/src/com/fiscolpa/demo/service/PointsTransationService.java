@@ -29,5 +29,5 @@ public interface PointsTransationService  {
 	 * @param pointsTransation
 	 * @return
 	 */
-	int addCredit(PointsTransation pointsTransation);
+	int addCredit(PointsTransation pointsTransation,String fabricSwitch);
 }

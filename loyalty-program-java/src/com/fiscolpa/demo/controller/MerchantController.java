@@ -118,6 +118,7 @@ public class MerchantController {
 		Map<String,String> map = new HashMap<String, String>();
 		PointsUser currentUser = (PointsUser) session.getAttribute("user");
 		pt.setRollOutAccount(currentUser.getAccountId());
+		pt.setFabricSwitch((String) session.getAttribute(PointsTransactionEnum.FABRIC_SWITCH.getBeginning()));
 		map.put("state", mts.sevePoints(pt));
 		return map;
 	}
@@ -173,6 +174,7 @@ public class MerchantController {
 		ptd.setRollInAccount(currentUser.getAccountId());
 		ptd.setTransferType(PointsTransactionEnum.BUY.getSign());
 		ptd.setCurBalance(0);
+		ptd.setFabricSwitch((String) session.getAttribute(PointsTransactionEnum.FABRIC_SWITCH.getBeginning()));
 		String state = null;
 		try {
 			state = mts.seveAccept(ptd);

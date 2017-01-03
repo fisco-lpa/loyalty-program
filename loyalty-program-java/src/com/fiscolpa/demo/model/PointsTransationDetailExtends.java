@@ -13,7 +13,6 @@ public class PointsTransationDetailExtends extends PointsModel {
 
 	private String status;
 
-
 	private String rollOutAccount;
 
 	private String rollInAccount;
@@ -33,6 +32,9 @@ public class PointsTransationDetailExtends extends PointsModel {
 	private String transferType;
 
 	private String creditCreateTime;
+	
+	//区块链调用标示
+    private String fabricSwitch;
 
 	public String getDetailId() {
 		return detailId;
@@ -160,6 +162,14 @@ public class PointsTransationDetailExtends extends PointsModel {
 
 	public void setRollInAccountName(String rollInAccountName) {
 		this.rollInAccountName = rollInAccountName;
+	}
+
+	public String getFabricSwitch() {
+		return fabricSwitch;
+	}
+
+	public void setFabricSwitch(String fabricSwitch) {
+		this.fabricSwitch = fabricSwitch;
 	}
 
 }

@@ -1,6 +1,7 @@
 
 package com.fiscolpa.demo.controller;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +32,7 @@ import com.fiscolpa.demo.service.PointsExchangeTransationService;
 import com.fiscolpa.demo.service.PurchaseHistoryService;
 import com.fiscolpa.demo.service.UserAccountService;
 import com.fiscolpa.demo.util.BeanToMap;
+import com.fiscolpa.demo.util.HttpTool;
 import com.fiscolpa.demo.util.IDCreator;
 import com.fiscolpa.demo.util.PointsTransactionEnum;
 import com.fiscolpa.demo.util.UUIDGenerator;
@@ -191,34 +193,35 @@ public class UserExchngeGoodsController {
 		//保存购买记录
 		phs.save(ph);
 		cs.updateNotNull(new Commodity(commodityId, cy.getStockAmount()-1));
-		//组装区块连账户
-		//存储账户
-		List<Account> aList = new ArrayList<Account>();
-		aList.add(out);
-		aList.add(in);
 	
-		
-		Map<String, Object> map = new HashMap<>();
-		map.put("accountList",BeanToMap.ListToMapForInsert(aList,"1"));
-		
-		map.put("pointsTransaction", BeanToMap.BeanToMapForInsert(pointsTransation,"0"));
-		List list = BeanToMap.ListToMapForInsert(salist,"0");
-		list.addAll(BeanToMap.ListToMapForInsert(upList,"1"));
-		map.put("pointsTransactionDetailList",list);
-		String json = JSONObject.fromObject(map).toString();
-		
-		/*Boolean result = false;
-		try {
-			result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
-		} catch (IOException e) {
-			e.printStackTrace();
+		String fabricSwitch = (String) session.getAttribute(PointsTransactionEnum.FABRIC_SWITCH.getBeginning());
+		//区块链
+		if(PointsTransactionEnum.FABRIC_SWITCH.getSign().equals(fabricSwitch)){
+			//组装区块连账户
+			//存储账户
+			List<Account> aList = new ArrayList<Account>();
+			aList.add(out);
+			aList.add(in);
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("accountList",BeanToMap.ListToMapForInsert(aList,"1"));
+			
+			map.put("pointsTransaction", BeanToMap.BeanToMapForInsert(pointsTransation,"0"));
+			List list = BeanToMap.ListToMapForInsert(salist,"0");
+			list.addAll(BeanToMap.ListToMapForInsert(upList,"1"));
+			map.put("pointsTransactionDetailList",list);
+			String json = JSONObject.fromObject(map).toString();
+			
+			Boolean result = false;
+			try {
+				result = HttpTool.sendToFabric(json, "invoke", "ConsumePoints");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			if(!result) return "00003";//区块连交易失败
 		}
 		
-		if(!result) return "00003";//区块连交易失败
-		*/
-		
 		if (i== 1) {
-			//交易不正常
 			return "1111";
 		} 
 

@@ -49,7 +49,16 @@ public enum PointsTransactionEnum {
 	/**
 	 * 用户("2","YHIMG_","用户图片UUID开头")
 	 */
-	IMG_USER("2","YHIMG_","用户图片UUID开头")
+	IMG_USER("2","YHIMG_","用户图片UUID开头"),
+	
+	
+	
+	
+	
+	/**
+	 * 区块链开关("0","fabricSwitch","区块链开关")
+	 */
+	FABRIC_SWITCH("0","fabricSwitch","区块链开关")
 	;
 
 	private String sign;//标示
