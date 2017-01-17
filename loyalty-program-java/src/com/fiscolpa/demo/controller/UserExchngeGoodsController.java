@@ -26,9 +26,11 @@ import com.fiscolpa.demo.model.PointsTransation;
 import com.fiscolpa.demo.model.PointsTransationDetail;
 import com.fiscolpa.demo.model.PointsUser;
 import com.fiscolpa.demo.model.PurchaseHistory;
+import com.fiscolpa.demo.service.AccountService;
 import com.fiscolpa.demo.service.CommodityService;
 import com.fiscolpa.demo.service.MerchantTransactionService;
 import com.fiscolpa.demo.service.PointsExchangeTransationService;
+import com.fiscolpa.demo.service.PointsUserService;
 import com.fiscolpa.demo.service.PurchaseHistoryService;
 import com.fiscolpa.demo.service.UserAccountService;
 import com.fiscolpa.demo.util.BeanToMap;
@@ -48,6 +50,9 @@ public class UserExchngeGoodsController {
 	
 	@Autowired
 	private CommodityService cs;
+	
+	@Autowired
+	private AccountService as;
 	
 	@Autowired
 	private PurchaseHistoryService phs;
@@ -104,6 +109,7 @@ public class UserExchngeGoodsController {
 		//修改用户的余额
 		Account out = new Account();
 		out.setAccountId(currentUser.getAccountId());
+		out.setAccountTypeId(as.selectByKey(out).getAccountTypeId());
 		out.setAccountBalance(account_balance-NeedJiFen);
 		out.setUpdateTime(date);
 		out.setUpdateUser(currentUser.getCreateUser());
@@ -112,6 +118,7 @@ public class UserExchngeGoodsController {
 		int account_balance2	=pointsExchangeTransationService.selectAccountBalance(accountMallId);
 		Account in = new Account();
 		in.setAccountId(accountMallId);
+		in.setAccountTypeId(as.selectByKey(in).getAccountTypeId());
 		in.setAccountBalance(account_balance2+NeedJiFen);
 		in.setUpdateTime(date);
 		in.setUpdateUser(currentUser.getCreateUser());

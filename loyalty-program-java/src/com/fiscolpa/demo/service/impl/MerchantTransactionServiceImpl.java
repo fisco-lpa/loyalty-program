@@ -15,6 +15,7 @@ import com.fiscolpa.demo.mapper.MerchantTransactionMapper;
 import com.fiscolpa.demo.model.PointsTransationExtends;
 import com.fiscolpa.demo.model.Account;
 import com.fiscolpa.demo.model.PointsTransationDetailExtends;
+import com.fiscolpa.demo.service.AccountService;
 import com.fiscolpa.demo.service.MerchantTransactionService;
 import com.fiscolpa.demo.service.UserAccountService;
 import com.fiscolpa.demo.util.BeanToMap;
@@ -34,6 +35,9 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 	
 	@Autowired
 	private UserAccountService ua;
+	
+	@Autowired
+	private AccountService as;
 	
 	@Override
 	public String queryPoints(PointsTransationExtends pt) {
@@ -64,12 +68,14 @@ public class MerchantTransactionServiceImpl implements MerchantTransactionServic
 		//修改商户的
 		Account out = new Account();
 		out.setAccountId(pt.getRollOutAccount());
+		out.setAccountTypeId(as.selectByKey(out).getAccountTypeId());
 		out.setAccountBalance(balance-pt.getTransAmount());
 		
 		//修改会员的
 		int  userBalance = ua.sumByPrimaryKey(pt.getRollInAccount());
 		Account in = new Account();
 		in.setAccountId(pt.getRollInAccount());
+		in.setAccountTypeId(as.selectByKey(in).getAccountTypeId());
 		in.setAccountBalance(userBalance+pt.getTransAmount());
 		
 		String  dateTime = DateUtil.getDateTime();
